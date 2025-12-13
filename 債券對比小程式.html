@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>債券成本對比小程式</title>
+    <style>
+        /* === 全域設定，確保邊界對齊 === */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", Arial, sans-serif;
+            background: #f5f6fa;
+            margin: 0;
+            padding: 0;
+            color: #222;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: #123456;
+        }
+
+        .subtitle {
+            color: #555;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        /* === 計算模式選擇 === */
+        .mode-selector {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .mode-selector label {
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .mode-selector select {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        /* === 債券輸入容器 === */
+        .bonds-container {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .bond-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 320px;
+        }
+
+        /* === 表單卡片 === */
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            border: 1px solid #d0d8e8;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            padding: 1rem;
+            flex: 1;
+        }
+
+        .card__body h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #2a4d84;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .hint-text {
+            font-size: 0.85rem;
+            color: #555;
+            margin-top: 4px;
+        }
+
+        /* === 結果卡片 === */
+        .result-card {
+            background: #f8fbff;
+            border: 1px solid #d0d8e8;
+            border-radius: 10px;
+            margin-top: 1rem;
+            padding: 1rem;
+            flex: 1;
+            position: relative;
+        }
+
+        .result-card h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #123456;
+            border-left: 4px solid #2a7ade;
+            padding-left: 0.5rem;
+        }
+
+        .result-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .result-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.6rem 0.8rem;
+            border-bottom: 1px solid #e9eef5;
+            font-size: 0.95rem;
+        }
+
+        .result-list li:last-child {
+            border-bottom: none;
+        }
+
+        .result-list li span {
+            color: #333;
+        }
+
+        .result-list li strong {
+            color: #085f73;
+        }
+
+        .result-list li.highlight {
+            background: #f5f2ef;
+            border-radius: 6px;
+            margin: 0.4rem 0;
+            font-weight: bold;
+        }
+
+        /* === 較優債券強調效果 === */
+        .highlight-winner {
+            background: #fff9e6 !important;
+            border: 2px solid #f5b400 !important;
+            box-shadow: 0 0 15px rgba(245, 180, 0, 0.3);
+        }
+
+        .highlight-winner::after {
+            content: "🎉";
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: 1.4rem;
+        }
+
+        /* === 比較結果 === */
+        .comparison-summary {
+            margin-top: 2rem;
+        }
+
+        .comparison-summary h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #123456;
+        }
+
+        .summary-items {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .summary-item {
+            flex: 1;
+            min-width: 320px;
+            background: #f3fdf6;
+            border: 1px solid #d8e9d8;
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .summary-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #123456;
+        }
+
+        .summary-value {
+            background: #e9f5ee;
+            border: 1px solid #bcd8c7;
+            padding: 0.7rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        /* === 按鈕 === */
+        .btn {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: center;
+            border: none;
+        }
+
+        .btn--secondary {
+            background: #eee;
+            color: #333;
+        }
+
+        .btn--secondary:hover {
+            background: #ddd;
+        }
+
+        .btn--lg {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .action-section {
+            margin-top: 2rem;
+        }
+
+        /* === 比較表格樣式 === */
+        .comparison-table-container {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table-container h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .compare-table th,
+        .compare-table td {
+            border: 1px solid #e0e0e0;
+            padding: 0.75rem;
+            text-align: center;
+        }
+
+        .compare-table th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .compare-table td {
+            font-size: 0.95rem;
+        }
+
+        .compare-table .highlight {
+            background: #fff3cd;
+            font-weight: 600;
+        }
+
+        .compare-table tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        /* === 響應式設計 === */
+        @media (max-width: 768px) {
+            .bonds-container {
+                flex-direction: column;
+            }
+            
+            .bond-section {
+                min-width: 100%;
+            }
+            
+            .summary-items {
+                flex-direction: column;
+            }
+            
+            .summary-item {
+                min-width: 100%;
+            }
+        }
+    </style>
+    <script src="github-sync.js"></script>
+</head>
+<body>
+    <a href="guide.html" style="position:fixed;top:10px;left:10px;padding:8px 16px;background:rgba(0,0,0,0.7);color:#fff;text-decoration:none;border-radius:6px;font-size:14px;z-index:9999;">← 返回指南</a>
+    <div class="container">
+        <header class="header">
+            <h1>債券成本對比小程式</h1>
+            <p class="subtitle">比較兩種債券的投資回報率（支援簡易模式 / 專業模式）</p>
+        </header>
+
+        <div class="mode-selector">
+            <label for="calcMode">計算模式：</label>
+            <select id="calcMode">
+                <option value="simple">簡易模式（原本公式）</option>
+                <option value="pro">專業模式（Dirty Price / 應計利息 / 半年付息等）</option>
+            </select>
+        </div>
+
+        <div class="bonds-container">
+            <!-- 債券 A -->
+            <div class="bond-section" id="bondA">
+                <div class="card">
+                    <div class="card__body">
+                        <h2>債券 A</h2>
+                        <div class="form-group">
+                            <label class="form-label">債券類型</label>
+                            <select id="bondTypeA" class="form-control">
+                                <option value="government">國債</option>
+                                <option value="corporate">公司債</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">票面息率 (%)</label>
+                            <input type="number" id="couponRateA" class="form-control" step="0.01" placeholder="例如：3.5">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">面值 ($)</label>
+                            <input type="number" id="faceValueA" class="form-control" step="0.01" placeholder="例如：10000">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">現購買價 (Clean Price)</label>
+                            <input type="number" id="marketPriceA" class="form-control" step="0.01" placeholder="例如：98.5">
+                            <p class="hint-text" id="actualPriceA">實際買入價格：-</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">付息頻率</label>
+                            <select id="freqA" class="form-control">
+                                <option value="2">半年付</option>
+                                <option value="1">年付</option>
+                                <option value="4">季付</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">買入日期</label>
+                            <input type="date" id="purchaseDateA" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">到期日期</label>
+                            <input type="date" id="maturityDateA" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="result-card">
+                    <h2>債券 A 結果</h2>
+                    <ul class="result-list">
+                        <li><span>持有天數：</span><strong id="holdingDaysA">-</strong></li>
+                        <li><span>票息收益：</span><strong id="couponIncomeA">-</strong></li>
+                        <li><span>資本收益：</span><strong id="capitalGainA">-</strong></li>
+                        <li class="highlight"><span>總收益：</span><strong id="totalReturnA">-</strong></li>
+                        <li class="highlight"><span>扣除成本後收益：</span><strong id="profitAfterCostA">-</strong></li>
+                        <li><span>年化息率：</span><strong id="annualizedYieldRateA">-</strong></li>
+                        <li><span>扣除成本後年化息率：</span><strong id="annualizedYieldRateAfterCostA">-</strong></li>
+                        <li><span>IRR（內部報酬率）：</span><strong id="irrA">-</strong></li>
+                        <li><span>扣成本後 IRR：</span><strong id="irrAfterCostA">-</strong></li>
+                        <li><span>YTM（到期收益率）：</span><strong id="ytmA">-</strong></li>
+                        <li><span>扣成本後 YTM：</span><strong id="ytmAfterCostA">-</strong></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 債券 B -->
+            <div class="bond-section" id="bondB">
+                <div class="card">
+                    <div class="card__body">
+                        <h2>債券 B</h2>
+                        <div class="form-group">
+                            <label class="form-label">債券類型</label>
+                            <select id="bondTypeB" class="form-control">
+                                <option value="government">國債</option>
+                                <option value="corporate">公司債</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">票面息率 (%)</label>
+                            <input type="number" id="couponRateB" class="form-control" step="0.01" placeholder="例如：3.5">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">面值 ($)</label>
+                            <input type="number" id="faceValueB" class="form-control" step="0.01" placeholder="例如：10000">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">現購買價 (Clean Price)</label>
+                            <input type="number" id="marketPriceB" class="form-control" step="0.01" placeholder="例如：98.5">
+                            <p class="hint-text" id="actualPriceB">實際買入價格：-</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">付息頻率</label>
+                            <select id="freqB" class="form-control">
+                                <option value="2">半年付</option>
+                                <option value="1">年付</option>
+                                <option value="4">季付</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">買入日期</label>
+                            <input type="date" id="purchaseDateB" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">到期日期</label>
+                            <input type="date" id="maturityDateB" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="result-card">
+                    <h2>債券 B 結果</h2>
+                    <ul class="result-list">
+                        <li><span>持有天數：</span><strong id="holdingDaysB">-</strong></li>
+                        <li><span>票息收益：</span><strong id="couponIncomeB">-</strong></li>
+                        <li><span>資本收益：</span><strong id="capitalGainB">-</strong></li>
+                        <li class="highlight"><span>總收益：</span><strong id="totalReturnB">-</strong></li>
+                        <li class="highlight"><span>扣除成本後收益：</span><strong id="profitAfterCostB">-</strong></li>
+                        <li><span>年化息率：</span><strong id="annualizedYieldRateB">-</strong></li>
+                        <li><span>扣除成本後年化息率：</span><strong id="annualizedYieldRateAfterCostB">-</strong></li>
+                        <li><span>IRR（內部報酬率）：</span><strong id="irrB">-</strong></li>
+                        <li><span>扣成本後 IRR：</span><strong id="irrAfterCostB">-</strong></li>
+                        <li><span>YTM（到期收益率）：</span><strong id="ytmB">-</strong></li>
+                        <li><span>扣成本後 YTM：</span><strong id="ytmAfterCostB">-</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison-summary">
+            <h3>比較結果</h3>
+            <div class="summary-items">
+                <div class="summary-item">
+                    <div class="summary-label">總收益比較</div>
+                    <div class="summary-value" id="returnComparison">請完成兩個債券的資料輸入</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">扣除成本後收益比較</div>
+                    <div class="summary-value" id="costComparison">請完成兩個債券的資料輸入</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">年化息率比較</div>
+                    <div class="summary-value" id="yieldComparison">請完成兩個債券的資料輸入</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">扣除成本後年化息率比較</div>
+                    <div class="summary-value" id="yieldAfterCostComparison">請完成兩個債券的資料輸入</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-section">
+            <button id="resetBtn" class="btn btn--secondary btn--lg">重置所有資料</button>
+        </div>
+
+        <div class="comparison-table-container">
+            <h3>詳細比較表格</h3>
+            <table class="compare-table">
+                <thead>
+                    <tr>
+                        <th>指標</th>
+                        <th>債券 A</th>
+                        <th>債券 B</th>
+                        <th>優勝</th>
+                    </tr>
+                </thead>
+                <tbody id="comparisonTableBody">
+                    <tr><td colspan="4">請完成兩個債券的資料輸入</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================
+        // 債券比較小程式 - 增強版（含 IRR、YTM、比較總表格）
+        // =========================================================
+
+     // GitHub 同步設定
+const DATA_FILENAME = 'bond-compare-data.json';
+
+// 自動載入 GitHub 數據
+(async function initGitHubSync() {
+    if (typeof GitHubSync !== 'undefined' && GitHubSync.isConfigured()) {
+        const data = await GitHubSync.loadFromGitHub(DATA_FILENAME);
+        if (data) {
+            // 如果有載入資料的函數，在這裡呼叫
+            console.log('從 GitHub 載入數據:', data);
+            GitHubSync.showSyncStatus('✅ 已從 GitHub 載入');
+        }
+    }
+})();
+
+// 在現有的導出函數中加入 GitHub 同步
+function syncToGitHub(data) {
+    if (typeof GitHubSync !== 'undefined' && GitHubSync.isConfigured()) {
+        GitHubSync.saveToGitHub(DATA_FILENAME, data);
+    }
+}
+        class BondCalculator {
+            constructor() {
+                this.bondA = this.initBond();
+                this.bondB = this.initBond();
+                this.calcMode = "simple";
+                this.init();
+            }
+
+            initBond() {
+                return {
+                    bondType: "government",
+                    couponRate: 0,
+                    faceValue: 0,
+                    cleanPrice: 0,
+                    purchasePrice: 0,
+                    freq: 2,
+                    purchaseDate: null,
+                    maturityDate: null,
+                    results: {}
+                };
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.updateAllCalculations();
+            }
+
+            setupEventListeners() {
+                document.getElementById("calcMode").addEventListener("change", (e) => {
+                    this.calcMode = e.target.value;
+                    this.updateAllCalculations();
+                });
+
+                ["bondTypeA","couponRateA","faceValueA","marketPriceA","freqA","purchaseDateA","maturityDateA"].forEach(id => {
+                    document.getElementById(id).addEventListener("input", () => this.handleInput("A"));
+                });
+
+                ["bondTypeB","couponRateB","faceValueB","marketPriceB","freqB","purchaseDateB","maturityDateB"].forEach(id => {
+                    document.getElementById(id).addEventListener("input", () => this.handleInput("B"));
+                });
+
+                document.getElementById("resetBtn").addEventListener("click", () => this.resetAll());
+            }
+
+            handleInput(tag) {
+                this.updateBondData(tag);
+                this.calculateBond(tag);
+                this.updateDisplay(tag);
+                this.updateComparison();
+                this.updateComparisonTable();
+            }
+
+            updateBondData(tag) {
+                const bond = tag === "A" ? this.bondA : this.bondB;
+                const s = tag;
+
+                bond.bondType = document.getElementById(`bondType${s}`).value;
+                bond.couponRate = parseFloat(document.getElementById(`couponRate${s}`).value) || 0;
+                bond.faceValue = parseFloat(document.getElementById(`faceValue${s}`).value) || 0;
+                bond.cleanPrice = parseFloat(document.getElementById(`marketPrice${s}`).value) || 0;
+                bond.freq = parseInt(document.getElementById(`freq${s}`).value) || 2;
+
+                const pd = document.getElementById(`purchaseDate${s}`).value;
+                const md = document.getElementById(`maturityDate${s}`).value;
+                bond.purchaseDate = pd ? new Date(pd) : null;
+                bond.maturityDate = md ? new Date(md) : null;
+
+                const disp = document.getElementById(`actualPrice${s}`);
+                if (this.calcMode === "simple") {
+                    if (bond.cleanPrice > 0 && bond.faceValue > 0) {
+                        bond.purchasePrice = bond.cleanPrice * (bond.faceValue / 100);
+                        disp.textContent = `實際買入價格：$${bond.purchasePrice.toFixed(2)}`;
+                    } else {
+                        bond.purchasePrice = 0;
+                        disp.textContent = "實際買入價格：-";
+                    }
+                } else {
+                    if (bond.cleanPrice > 0 && bond.faceValue > 0 && bond.purchaseDate) {
+                        const acc = this.calcAccruedInterest(bond);
+                        bond.purchasePrice = (bond.cleanPrice + acc) * (bond.faceValue / 100);
+                        disp.textContent = `實際買入價格：$${bond.purchasePrice.toFixed(2)}（含應計利息 ${acc.toFixed(4)}）`;
+                    } else {
+                        bond.purchasePrice = 0;
+                        disp.textContent = "實際買入價格：-";
+                    }
+                }
+            }
+
+            calcAccruedInterest(bond) {
+                if (bond.couponRate <= 0 || !bond.maturityDate || !bond.purchaseDate) return 0;
+                const freq = bond.freq;
+                const periodMonths = 12 / freq;
+                let d = new Date(bond.maturityDate);
+
+                while (true) {
+                    let prev = new Date(d);
+                    prev.setMonth(prev.getMonth() - periodMonths);
+                    if (prev <= bond.purchaseDate) {
+                        const lastCoupon = new Date(prev);
+                        const nextCoupon = new Date(prev);
+                        nextCoupon.setMonth(nextCoupon.getMonth() + periodMonths);
+                        const diff1 = (bond.purchaseDate - lastCoupon) / (1000 * 3600 * 24);
+                        const diff2 = (nextCoupon - lastCoupon) / (1000 * 3600 * 24);
+                        return (diff1 / diff2) * (bond.couponRate / freq);
+                    }
+                    d = prev;
+                }
+            }
+
+            calculateBond(tag) {
+                const bond = tag === "A" ? this.bondA : this.bondB;
+                
+                bond.results = {
+                    holdingDays: 0,
+                    couponIncome: 0,
+                    capitalGain: 0,
+                    totalReturn: 0,
+                    cost: 0,
+                    profitAfterCost: 0,
+                    annualizedYieldRate: 0,
+                    annualizedYieldRateAfterCost: 0,
+                    irr: 0,
+                    irrAfterCost: 0,
+                    ytm: 0,
+                    ytmAfterCost: 0,
+                    isValid: false
+                };
+
+                if (!this.validateBondInputs(bond)) return;
+
+                const holdingDays = Math.floor((bond.maturityDate - bond.purchaseDate) / (1000 * 3600 * 24));
+                bond.results.holdingDays = holdingDays;
+                if (holdingDays <= 0) return;
+
+                // 基本計算
+                if (this.calcMode === "simple") {
+                    bond.results.couponIncome = (bond.faceValue * bond.couponRate / 100 / 365) * holdingDays;
+                } else {
+                    bond.results.couponIncome = this.calcCouponIncomePro(bond);
+                }
+
+                bond.results.capitalGain = bond.faceValue - bond.purchasePrice;
+                bond.results.totalReturn = bond.results.couponIncome + bond.results.capitalGain;
+                bond.results.cost = bond.bondType === "government" ? 5 : bond.faceValue * 0.001;
+                bond.results.profitAfterCost = bond.results.totalReturn - bond.results.cost;
+
+                const yr = holdingDays / 365;
+                bond.results.annualizedYieldRate = (bond.results.totalReturn / bond.purchasePrice) / yr * 100;
+                bond.results.annualizedYieldRateAfterCost = (bond.results.profitAfterCost / bond.purchasePrice) / yr * 100;
+
+                // 計算 IRR
+                bond.results.irr = this.calcIRR(bond, false);
+                bond.results.irrAfterCost = this.calcIRR(bond, true);
+
+                // 計算 YTM
+                bond.results.ytm = this.calcYTM(bond, false);
+                bond.results.ytmAfterCost = this.calcYTM(bond, true);
+
+                bond.results.isValid = true;
+            }
+
+            calcCouponIncomePro(bond) {
+                if (bond.couponRate <= 0) return 0;
+                const freq = bond.freq;
+                const couponEach = (bond.couponRate / 100 * bond.faceValue) / freq;
+                const purchase = new Date(bond.purchaseDate);
+                const maturity = new Date(bond.maturityDate);
+                const periodMonths = 12 / freq;
+
+                let payDates = [];
+                let d = new Date(maturity);
+
+                while (true) {
+                    payDates.push(new Date(d));
+                    let prev = new Date(d);
+                    prev.setMonth(prev.getMonth() - periodMonths);
+                    if (prev < purchase) break;
+                    d = prev;
+                }
+
+                let count = 0;
+                for (const pd of payDates) {
+                    if (pd > purchase && pd <= maturity) count++;
+                }
+                return count * couponEach;
+            }
+
+            // IRR 計算（使用牛頓法）
+            calcIRR(bond, afterCost = false) {
+                if (!bond.purchaseDate || !bond.maturityDate) return 0;
+                
+                const cashFlows = this.getCashFlows(bond, afterCost);
+                if (cashFlows.length === 0) return 0;
+
+                let rate = 0.05; // 初始猜測 5%
+                const maxIterations = 50;
+                const tolerance = 0.00001;
+
+                for (let i = 0; i < maxIterations; i++) {
+                    const npv = this.calcNPV(cashFlows, rate);
+                    const dnpv = this.calcNPVDerivative(cashFlows, rate);
+                    if (Math.abs(dnpv) < tolerance) break;
+                    
+                    const newRate = rate - npv / dnpv;
+                    if (Math.abs(newRate - rate) < tolerance) break;
+                    rate = newRate;
+                }
+                return rate * 100;
+            }
+
+            // YTM 計算
+            calcYTM(bond, afterCost = false) {
+                if (!bond.purchaseDate || !bond.maturityDate || bond.purchasePrice === 0) return 0;
+                
+                const years = (bond.maturityDate - bond.purchaseDate) / (365 * 24 * 60 * 60 * 1000);
+                if (years <= 0) return 0;
+
+                const totalIncome = afterCost ? bond.results.profitAfterCost : bond.results.totalReturn;
+                const finalValue = bond.purchasePrice + totalIncome;
+                
+                // YTM = ((FV/PV)^(1/n) - 1) * 100
+                return (Math.pow(finalValue / bond.purchasePrice, 1 / years) - 1) * 100;
+            }
+
+            getCashFlows(bond, afterCost) {
+                const flows = [];
+                if (!bond.purchaseDate || !bond.maturityDate) return flows;
+
+                // 初始投資（負值）
+                flows.push({
+                    date: new Date(bond.purchaseDate),
+                    amount: -bond.purchasePrice
+                });
+
+                // 票息收入
+                if (bond.couponRate > 0) {
+                    const freq = bond.freq;
+                    const couponEach = (bond.couponRate / 100 * bond.faceValue) / freq;
+                    const periodMonths = 12 / freq;
+                    
+                    let d = new Date(bond.maturityDate);
+                    let payDates = [];
+                    
+                    while (d > bond.purchaseDate) {
+                        if (d <= bond.maturityDate) {
+                            payDates.push(new Date(d));
+                        }
+                        d.setMonth(d.getMonth() - periodMonths);
+                    }
+                    
+                    payDates.forEach(date => {
+                        flows.push({
+                            date: date,
+                            amount: couponEach
+                        });
+                    });
+                }
+
+                // 到期還本
+                let finalAmount = bond.faceValue;
+                if (afterCost) {
+                    finalAmount -= bond.results.cost;
+                }
+                
+                flows.push({
+                    date: new Date(bond.maturityDate),
+                    amount: finalAmount
+                });
+
+                return flows;
+            }
+
+            calcNPV(cashFlows, rate) {
+                if (cashFlows.length === 0) return 0;
+                const startDate = cashFlows[0].date;
+                let npv = 0;
+
+                cashFlows.forEach(flow => {
+                    const days = (flow.date - startDate) / (1000 * 60 * 60 * 24);
+                    const years = days / 365;
+                    npv += flow.amount / Math.pow(1 + rate, years);
+                });
+                return npv;
+            }
+
+            calcNPVDerivative(cashFlows, rate) {
+                if (cashFlows.length === 0) return 0;
+                const startDate = cashFlows[0].date;
+                let dnpv = 0;
+
+                cashFlows.forEach(flow => {
+                    const days = (flow.date - startDate) / (1000 * 60 * 60 * 24);
+                    const years = days / 365;
+                    dnpv -= years * flow.amount / Math.pow(1 + rate, years + 1);
+                });
+                return dnpv;
+            }
+
+            validateBondInputs(bond) {
+                return (
+                    bond.faceValue > 0 &&
+                    bond.cleanPrice > 0 &&
+                    bond.purchaseDate &&
+                    bond.maturityDate &&
+                    bond.maturityDate > bond.purchaseDate
+                );
+            }
+
+            updateDisplay(tag) {
+                const r = tag === "A" ? this.bondA.results : this.bondB.results;
+                if (!r.isValid) {
+                    this.clearDisplays(tag);
+                    return;
+                }
+
+                document.getElementById(`holdingDays${tag}`).textContent = r.holdingDays + " 天";
+                document.getElementById(`couponIncome${tag}`).textContent = "$" + r.couponIncome.toFixed(2);
+                document.getElementById(`capitalGain${tag}`).textContent = "$" + r.capitalGain.toFixed(2);
+                document.getElementById(`totalReturn${tag}`).textContent = "$" + r.totalReturn.toFixed(2);
+                document.getElementById(`profitAfterCost${tag}`).textContent = "$" + r.profitAfterCost.toFixed(2);
+                document.getElementById(`annualizedYieldRate${tag}`).textContent = r.annualizedYieldRate.toFixed(2) + "%";
+                document.getElementById(`annualizedYieldRateAfterCost${tag}`).textContent = r.annualizedYieldRateAfterCost.toFixed(2) + "%";
+                document.getElementById(`irr${tag}`).textContent = r.irr.toFixed(2) + "%";
+                document.getElementById(`irrAfterCost${tag}`).textContent = r.irrAfterCost.toFixed(2) + "%";
+                document.getElementById(`ytm${tag}`).textContent = r.ytm.toFixed(2) + "%";
+                document.getElementById(`ytmAfterCost${tag}`).textContent = r.ytmAfterCost.toFixed(2) + "%";
+            }
+
+            clearDisplays(tag) {
+                ["holdingDays","couponIncome","capitalGain","totalReturn","profitAfterCost",
+                 "annualizedYieldRate","annualizedYieldRateAfterCost","irr","irrAfterCost","ytm","ytmAfterCost"].forEach(f => {
+                    const el = document.getElementById(`${f}${tag}`);
+                    if (el) el.textContent = "-";
+                });
+            }
+
+            updateComparison() {
+                const A = this.bondA.results;
+                const B = this.bondB.results;
+
+                const boxes = {
+                    r: document.getElementById("returnComparison"),
+                    c: document.getElementById("costComparison"),
+                    y: document.getElementById("yieldComparison"),
+                    yc: document.getElementById("yieldAfterCostComparison")
+                };
+
+                document.querySelectorAll(".result-card").forEach(el => {
+                    el.classList.remove("highlight-winner");
+                });
+
+                if (!A.isValid || !B.isValid) {
+                    Object.values(boxes).forEach(el => el.textContent = "請完成兩個債券的資料輸入");
+                    return;
+                }
+
+                const compare = (x, y, name) => {
+                    if (x > y) return `債券 A 較優<br>${name} 多 ${(x - y).toFixed(2)}`;
+                    if (y > x) return `債券 B 較優<br>${name} 多 ${(y - x).toFixed(2)}`;
+                    return `兩者相同<br>${name} 差異 0.00`;
+                };
+
+                boxes.r.innerHTML = compare(A.totalReturn, B.totalReturn, "總收益");
+                boxes.c.innerHTML = compare(A.profitAfterCost, B.profitAfterCost, "扣除成本後收益");
+                boxes.y.innerHTML = compare(A.annualizedYieldRate, B.annualizedYieldRate, "年化息率 (%)");
+                boxes.yc.innerHTML = compare(A.annualizedYieldRateAfterCost, B.annualizedYieldRateAfterCost, "扣除成本後年化 (%)");
+
+                if (A.profitAfterCost > B.profitAfterCost) {
+                    document.querySelector("#bondA .result-card").classList.add("highlight-winner");
+                } else if (B.profitAfterCost > A.profitAfterCost) {
+                    document.querySelector("#bondB .result-card").classList.add("highlight-winner");
+                }
+            }
+
+            updateComparisonTable() {
+                const table = document.getElementById("comparisonTableBody");
+                if (!table) return;
+
+                const A = this.bondA.results;
+                const B = this.bondB.results;
+
+                if (!A.isValid || !B.isValid) {
+                    table.innerHTML = '<tr><td colspan="4">請完成兩個債券的資料輸入</td></tr>';
+                    return;
+                }
+
+                const rows = [
+                    { label: "總收益", a: A.totalReturn, b: B.totalReturn, format: "$" },
+                    { label: "扣成本後收益", a: A.profitAfterCost, b: B.profitAfterCost, format: "$" },
+                    { label: "年化息率", a: A.annualizedYieldRate, b: B.annualizedYieldRate, format: "%" },
+                    { label: "扣成本後年化", a: A.annualizedYieldRateAfterCost, b: B.annualizedYieldRateAfterCost, format: "%" },
+                    { label: "IRR", a: A.irr, b: B.irr, format: "%" },
+                    { label: "扣成本後 IRR", a: A.irrAfterCost, b: B.irrAfterCost, format: "%" },
+                    { label: "YTM", a: A.ytm, b: B.ytm, format: "%" },
+                    { label: "扣成本後 YTM", a: A.ytmAfterCost, b: B.ytmAfterCost, format: "%" }
+                ];
+
+                let html = '';
+                rows.forEach(row => {
+                    const winner = row.a > row.b ? "A" : row.b > row.a ? "B" : "平手";
+                    const aClass = winner === "A" ? "highlight" : "";
+                    const bClass = winner === "B" ? "highlight" : "";
+                    const winnerClass = winner !== "平手" ? "highlight" : "";
+
+                    const aVal = row.format === "$" ? `$${row.a.toFixed(2)}` : `${row.a.toFixed(2)}%`;
+                    const bVal = row.format === "$" ? `$${row.b.toFixed(2)}` : `${row.b.toFixed(2)}%`;
+
+                    html += `
+                        <tr>
+                            <td>${row.label}</td>
+                            <td class="${aClass}">${aVal}</td>
+                            <td class="${bClass}">${bVal}</td>
+                            <td class="${winnerClass}">${winner}</td>
+                        </tr>
+                    `;
+                });
+                table.innerHTML = html;
+            }
+
+            resetAll() {
+                ["bondTypeA","couponRateA","faceValueA","marketPriceA","freqA","purchaseDateA","maturityDateA",
+                 "bondTypeB","couponRateB","faceValueB","marketPriceB","freqB","purchaseDateB","maturityDateB"].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el.tagName === "SELECT") {
+                        // Don't clear selects, just reset to default
+                    } else {
+                        el.value = "";
+                    }
+                });
+
+                document.getElementById("bondTypeA").value = "government";
+                document.getElementById("bondTypeB").value = "government";
+                document.getElementById("freqA").value = "2";
+                document.getElementById("freqB").value = "2";
+                document.getElementById("actualPriceA").textContent = "實際買入價格：-";
+                document.getElementById("actualPriceB").textContent = "實際買入價格：-";
+
+                this.bondA = this.initBond();
+                this.bondB = this.initBond();
+                this.updateAllCalculations();
+            }
+
+            updateAllCalculations() {
+                this.handleInput("A");
+                this.handleInput("B");
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => new BondCalculator());
+    </script>
+</body>
+</html>
