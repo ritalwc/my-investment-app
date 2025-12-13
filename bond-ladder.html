@@ -939,6 +939,61 @@
     <div class="tooltip" id="tooltip" style="display: none;"></div>
 
     <script>
+        // === GitHub 同步整合 ===
+const DATA_FILENAME = 'bond-compare-data.json';
+
+// 頁面載入時自動從 GitHub 載入數據
+window.addEventListener('DOMContentLoaded', async () => {
+    if (GitHubSync.isConfigured()) {
+        const data = await GitHubSync.loadFromGitHub(DATA_FILENAME);
+        if (data) {
+            // 恢復數據到表單（根據你的原有邏輯）
+            try {
+                restoreFormData(data);
+                GitHubSync.showSyncStatus('✅ 已從 GitHub 載入數據');
+            } catch(e) {
+                console.error('恢復數據失敗:', e);
+            }
+        }
+    }
+});
+
+// 修改原有的導出函數，同時保存到 GitHub
+const originalExportFunction = typeof exportData === 'function' ? exportData : null;
+
+function saveAndSync() {
+    const data = collectFormData(); // 收集當前表單數據
+    
+    // 保存到 localStorage
+    localStorage.setItem(DATA_FILENAME, JSON.stringify(data));
+    
+    // 同步到 GitHub
+    if (GitHubSync.isConfigured()) {
+        GitHubSync.saveToGitHub(DATA_FILENAME, data).then(success => {
+            if (success) {
+                GitHubSync.showSyncStatus('✅ 已同步到 GitHub');
+            }
+        });
+    }
+}
+
+// 輔助函數：收集表單數據（根據原有結構調整）
+function collectFormData() {
+    // 這裡根據原有的表單結構收集數據
+    return {
+        bondA: {
+            // ... 根據原有結構
+        },
+        bondB: {
+            // ... 根據原有結構
+        },
+        timestamp: new Date().toISOString()
+    };
+}
+
+function restoreFormData(data) {
+    // 根據原有結構恢復數據到表單
+}
         // GitHub 同步設定
 const DATA_FILENAME = 'bond-ladder-data.json';
 
