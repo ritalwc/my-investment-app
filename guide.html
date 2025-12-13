@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投資工具 - 指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            padding: 40px 0;
+        }
+        .logo {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+        h1 {
+            color: #fff;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+        }
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .tool-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+            text-decoration: none;
+            display: block;
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        .tool-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+        .tool-title {
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .tool-desc {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .github-setup {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 16px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        .github-setup h2 {
+            color: #ffc107;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .github-setup label {
+            color: rgba(255, 255, 255, 0.8);
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .github-setup input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .github-setup input:focus {
+            outline: none;
+            border-color: #ffc107;
+        }
+        .github-setup button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            background: #ffc107;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .github-setup button:hover {
+            background: #ffca2c;
+        }
+        .status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .status.success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+        }
+        .status.error {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+        .logout-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="logout-btn" onclick="sessionStorage.removeItem('authenticated')">🚪 登出</a>
+    
+    <div class="container">
+        <header>
+            <div class="logo">💼</div>
+            <h1>投資工具系統</h1>
+            <p class="subtitle">選擇您需要的工具</p>
+        </header>
+
+        <div class="tools-grid">
+            <a href="bond-compare.html" class="tool-card">
+                <div class="tool-icon">⚖️</div>
+                <div class="tool-title">債券成本對比小程式</div>
+                <div class="tool-desc">比較兩種債券的投資回報率，支援簡易模式與專業模式計算</div>
+            </a>
+
+            <a href="bond-ladder.html" class="tool-card">
+                <div class="tool-icon">🏦</div>
+                <div class="tool-title">美債梯視覺化工具</div>
+                <div class="tool-desc">專業版債券投資組合管理，包含年化收益分析和智能再平衡</div>
+            </a>
+
+            <a href="stock-calculator.html" class="tool-card">
+                <div class="tool-icon">📈</div>
+                <div class="tool-title">進階股票盈虧試算器</div>
+                <div class="tool-desc">計算股票盈虧、損益兩平價，支援反推賣出價功能</div>
+            </a>
+
+            <a href="portfolio-analyzer.html" class="tool-card">
+                <div class="tool-icon">📊</div>
+                <div class="tool-title">投資組合分析器</div>
+                <div class="tool-desc">分析資產配置，查看股票、債券、定期的分佈比例</div>
+            </a>
+
+            <a href="savings-tracker.html" class="tool-card">
+                <div class="tool-icon">🐷</div>
+                <div class="tool-title">存錢罐＋定投記錄</div>
+                <div class="tool-desc">管理股息存錢罐、港股清單和美股定投記錄</div>
+            </a>
+        </div>
+
+        <div class="github-setup">
+            <h2>⚙️ GitHub 同步設定</h2>
+            <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px; font-size: 14px;">
+                設定後，各工具的數據將自動同步到您的 GitHub，無需每次手動載入
+            </p>
+            <label>GitHub 用戶名</label>
+            <input type="text" id="github-username" placeholder="例如：your-username">
+            <label>Repository 名稱</label>
+            <input type="text" id="github-repo" placeholder="例如：investment-tools">
+            <label>Personal Access Token</label>
+            <input type="password" id="github-token" placeholder="ghp_xxxxxxxxxxxx">
+            <button onclick="saveGitHubConfig()">💾 儲存設定</button>
+            <button onclick="testGitHubConnection()" style="margin-left: 10px; background: #2196F3;">🔗 測試連接</button>
+            <div id="github-status"></div>
+        </div>
+    </div>
+
+    <script>
+        // 檢查登入狀態
+        if (sessionStorage.getItem('authenticated') !== 'true') {
+            window.location.href = 'index.html';
+        }
+
+        // 載入已儲存的設定
+        window.onload = function() {
+            const config = JSON.parse(localStorage.getItem('githubConfig') || '{}');
+            if (config.username) document.getElementById('github-username').value = config.username;
+            if (config.repo) document.getElementById('github-repo').value = config.repo;
+            if (config.token) document.getElementById('github-token').value = config.token;
+        };
+
+        function saveGitHubConfig() {
+            const config = {
+                username: document.getElementById('github-username').value.trim(),
+                repo: document.getElementById('github-repo').value.trim(),
+                token: document.getElementById('github-token').value.trim()
+            };
+            
+            if (!config.username || !config.repo || !config.token) {
+                showStatus('請填寫所有欄位', 'error');
+                return;
+            }
+            
+            localStorage.setItem('githubConfig', JSON.stringify(config));
+            showStatus('設定已儲存！', 'success');
+        }
+
+        async function testGitHubConnection() {
+            const config = JSON.parse(localStorage.getItem('githubConfig') || '{}');
+            
+            if (!config.username || !config.repo || !config.token) {
+                showStatus('請先儲存設定', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`https://api.github.com/repos/${config.username}/${config.repo}`, {
+                    headers: {
+                        'Authorization': `token ${config.token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (response.ok) {
+                    showStatus('✅ 連接成功！GitHub 同步已就緒', 'success');
+                } else if (response.status === 404) {
+                    showStatus('❌ Repository 不存在，請檢查名稱', 'error');
+                } else if (response.status === 401) {
+                    showStatus('❌ Token 無效，請重新生成', 'error');
+                } else {
+                    showStatus('❌ 連接失敗：' + response.status, 'error');
+                }
+            } catch (error) {
+                showStatus('❌ 網絡錯誤：' + error.message, 'error');
+            }
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('github-status');
+            statusDiv.className = 'status ' + type;
+            statusDiv.textContent = message;
+            statusDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
