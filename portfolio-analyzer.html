@@ -241,6 +241,8 @@
             <button class="btn-secondary" onclick="document.getElementById('importFile').click()">導入資料 (JSON)</button>
             <input type="file" id="importFile" style="display: none;" onchange="importData(this)">
             <button class="btn-danger" onclick="resetData()">重置所有資料</button>
+            <button class="btn-primary" onclick="syncToGitHub()">同步到 GitHub</button>
+<button class="btn-secondary" onclick="loadFromGitHub()">從 GitHub 載入</button>
         </div>
     </div>
 
@@ -526,8 +528,7 @@ async function loadFromGitHub() {
                     <td>
                         <button class="btn-secondary" style="padding: 5px 10px; font-size: 0.8em;" onclick="editAsset(${index})">修改</button>
                         <button class="btn-danger" style="padding: 5px 10px; font-size: 0.8em;" onclick="deleteAsset(${index})">刪除</button>
-                        <button class="btn-primary" onclick="syncToGitHub()">同步到 GitHub</button>
-<button class="btn-secondary" onclick="loadFromGitHub()">從 GitHub 載入</button>
+                        
                     </td>
                 </tr>
             `;
