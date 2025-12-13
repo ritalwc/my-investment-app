@@ -1,0 +1,98 @@
+{
+  "hkdLogs": [
+    {
+      "id": 1764647430164,
+      "date": "2025-12-02T03:50:30.164Z",
+      "note": "2025 11月",
+      "amount": 6111.2,
+      "type": "deposit"
+    },
+    {
+      "id": 1764647421407,
+      "date": "2025-12-02T03:50:21.407Z",
+      "note": "2025 11月6賣出3417",
+      "amount": 91.25,
+      "type": "deposit"
+    },
+    {
+      "id": 1764647409358,
+      "date": "2025-12-02T03:50:09.358Z",
+      "note": "2025 10月",
+      "amount": 1199,
+      "type": "deposit"
+    }
+  ],
+  "usdLogs": [
+    {
+      "id": 1764657602836,
+      "date": "2025-12-02T06:40:02.836Z",
+      "note": "2.625 債券利息",
+      "amount": 5,
+      "type": "deposit",
+      "category": "bond"
+    },
+    {
+      "id": 1764657584520,
+      "date": "2025-12-02T06:39:44.519Z",
+      "note": "2025 11月 (30% 債券池)",
+      "amount": 6.81,
+      "type": "deposit",
+      "category": "bond"
+    },
+    {
+      "id": 1764657584519,
+      "date": "2025-12-02T06:39:44.519Z",
+      "note": "2025 11月 (70% 股票池)",
+      "amount": 15.9,
+      "type": "deposit",
+      "category": "equity"
+    },
+    {
+      "id": 1764657573122,
+      "date": "2025-12-02T06:39:33.121Z",
+      "note": "2025 10月 (30% 債券池)",
+      "amount": 5.46,
+      "type": "deposit",
+      "category": "bond"
+    },
+    {
+      "id": 1764657573121,
+      "date": "2025-12-02T06:39:33.121Z",
+      "note": "2025 10月 (70% 股票池)",
+      "amount": 12.75,
+      "type": "deposit",
+      "category": "equity"
+    }
+  ],
+  "hkStocks": [
+    {
+      "id": 1764657350984,
+      "code": "3466",
+      "purchased": false
+    },
+    {
+      "id": 1764658427944,
+      "code": "3195",
+      "purchased": false
+    },
+    {
+      "id": 1764658431992,
+      "code": "3476",
+      "purchased": false
+    },
+    {
+      "id": 1764658434976,
+      "code": "3070",
+      "purchased": false
+    }
+  ],
+  "usStockLogs": [
+    {
+      "id": 1764658457240,
+      "monthStr": "2025-12",
+      "splg": 2,
+      "vxus": 2
+    }
+  ],
+  "lastUpdated": "2025-12-13T15:22:38.613Z"
+}
