@@ -743,7 +743,7 @@
             margin-left: 4px;
         }
     </style>
-    <script src="github-sync.js"></script>
+  
 </head>
 <body>
     <a href="guide.html" style="position:fixed;top:10px;left:10px;padding:8px 16px;background:rgba(0,0,0,0.7);color:#fff;text-decoration:none;border-radius:6px;font-size:14px;z-index:9999;">← 返回指南</a>
@@ -942,7 +942,7 @@
 
     <div class="toast" id="toast"></div>
     <div class="tooltip" id="tooltip" style="display: none;"></div>
-
+<script src="github-sync.js"></script>
 <script>
     // ==================== GitHub 同步設定 ====================
     const DATA_FILENAME = 'bond-ladder-data.json';
@@ -954,35 +954,51 @@
 
     // ==================== GitHub 同步函數 ====================
     async function syncToGitHub() {
-        if (typeof GitHubSync === 'undefined' || !GitHubSync.isConfigured()) {
-            showToast('請先在 guide.html 設定 GitHub Token', 'error');
-            return;
-        }
-        
-        const success = await GitHubSync.saveToGitHub(DATA_FILENAME, bonds);
-        if (success) {
-            showToast('已同步到 GitHub！', 'success');
-        } else {
-            showToast('同步失敗，請檢查設定', 'error');
-        }
+    // 檢查 GitHubSync 是否存在
+    if (typeof GitHubSync === 'undefined') {
+        showToast('GitHub 同步模組未載入，請確認 github-sync.js 檔案存在', 'error');
+        console.error('GitHubSync is undefined. 請確認 github-sync.js 路徑正確');
+        return;
     }
+    
+    if (!GitHubSync.isConfigured()) {
+        showToast('請先在 guide.html 設定 GitHub Token', 'error');
+        return;
+    }
+    
+    showToast('同步中...', 'success');
+    const success = await GitHubSync.saveToGitHub(DATA_FILENAME, bonds);
+    if (success) {
+        showToast('已同步到 GitHub！', 'success');
+    } else {
+        showToast('同步失敗，請檢查設定', 'error');
+    }
+}
 
     async function loadFromGitHub() {
-        if (typeof GitHubSync === 'undefined' || !GitHubSync.isConfigured()) {
-            showToast('請先在 guide.html 設定 GitHub Token', 'error');
-            return;
-        }
-        
-        const data = await GitHubSync.loadFromGitHub(DATA_FILENAME);
-        if (data && Array.isArray(data)) {
-            bonds = data;
-            saveBonds();
-            renderAll();
-            showToast(`已從 GitHub 載入 ${bonds.length} 筆資料！`, 'success');
-        } else {
-            showToast('GitHub 上沒有找到資料', 'error');
-        }
+    if (typeof GitHubSync === 'undefined') {
+        showToast('GitHub 同步模組未載入', 'error');
+        return;
     }
+    
+    if (!GitHubSync.isConfigured()) {
+        showToast('請先在 guide.html 設定 GitHub Token', 'error');
+        return;
+    }
+    
+    showToast('載入中...', 'success');
+    const data = await GitHubSync.loadFromGitHub(DATA_FILENAME);
+    if (data && Array.isArray(data)) {
+        bonds = data;
+        saveBonds();
+        renderAll();
+        showToast(`已從 GitHub 載入 ${bonds.length} 筆資料！`, 'success');
+    } else if (data === null) {
+        showToast('GitHub 上沒有找到資料，或檔案不存在', 'error');
+    } else {
+        showToast('載入的資料格式不正確', 'error');
+    }
+}
 
     // ==================== 工具函數 ====================
     function formatDate(dateStr) {
