@@ -793,21 +793,26 @@
                 </div>
             </div>
             <div class="btn-group">
-                <button class="btn btn-primary" onclick="addBond()">
-                    ➕ 新增債券
-                </button>
-                <button class="btn btn-success" onclick="exportData()">
-                    💾 導出資料
-                </button>
-                <button class="btn btn-warning" onclick="document.getElementById('importFile').click()">
-                    📂 導入資料
-                </button>
-                <input type="file" id="importFile" class="hidden-input" accept=".json" onchange="importData(event)">
-                <button class="btn btn-danger" onclick="resetData()">
-                    🗑️ 重設所有資料
-                </button>
-            </div>
-        </div>
+    <button class="btn btn-primary" onclick="addBond()">
+        ➕ 新增債券
+    </button>
+    <button class="btn btn-success" onclick="exportData()">
+        💾 導出資料
+    </button>
+    <button class="btn btn-warning" onclick="document.getElementById('importFile').click()">
+        📂 導入資料
+    </button>
+    <input type="file" id="importFile" class="hidden-input" accept=".json" onchange="importData(event)">
+    <button class="btn btn-danger" onclick="resetData()">
+        🗑️ 重設所有資料
+    </button>
+    <button class="btn btn-secondary" onclick="syncToGitHub()">
+        ☁️ 同步到 GitHub
+    </button>
+    <button class="btn btn-secondary" onclick="loadFromGitHub()">
+        📥 從 GitHub 載入
+    </button>
+</div>
 
         <!-- 投資組合統計 (移到上面) -->
         <div class="card">
@@ -939,835 +944,770 @@
     <div class="tooltip" id="tooltip" style="display: none;"></div>
 
     <script>
-        // === GitHub 同步整合 ===
-const DATA_FILENAME = 'bond-ladder.json';
-
-// 頁面載入時自動從 GitHub 載入數據
-window.addEventListener('DOMContentLoaded', async () => {
-    if (GitHubSync.isConfigured()) {
-        const data = await GitHubSync.loadFromGitHub(DATA_FILENAME);
-        if (data) {
-            // 恢復數據到表單（根據你的原有邏輯）
-            try {
-                restoreFormData(data);
-                GitHubSync.showSyncStatus('✅ 已從 GitHub 載入數據');
-            } catch(e) {
-                console.error('恢復數據失敗:', e);
-            }
-        }
-    }
-});
-
-// 修改原有的導出函數，同時保存到 GitHub
-const originalExportFunction = typeof exportData === 'function' ? exportData : null;
-
-function saveAndSync() {
-    const data = collectFormData(); // 收集當前表單數據
+<script>
+    // ==================== GitHub 同步設定 ====================
+    const DATA_FILENAME = 'bond-ladder-data.json';
     
-    // 保存到 localStorage
-    localStorage.setItem(DATA_FILENAME, JSON.stringify(data));
-    
-    // 同步到 GitHub
-    if (GitHubSync.isConfigured()) {
-        GitHubSync.saveToGitHub(DATA_FILENAME, data).then(success => {
-            if (success) {
-                GitHubSync.showSyncStatus('✅ 已同步到 GitHub');
-            }
-        });
+    // ==================== 資料管理 ====================
+    let bonds = JSON.parse(localStorage.getItem('bonds') || '[]');
+    let sortField = 'maturityDate';
+    let sortDirection = 'asc';
+
+    // ==================== GitHub 同步函數 ====================
+    async function syncToGitHub() {
+        if (typeof GitHubSync === 'undefined' || !GitHubSync.isConfigured()) {
+            showToast('請先在 guide.html 設定 GitHub Token', 'error');
+            return;
+        }
+        
+        const success = await GitHubSync.saveToGitHub(DATA_FILENAME, bonds);
+        if (success) {
+            showToast('已同步到 GitHub！', 'success');
+        } else {
+            showToast('同步失敗，請檢查設定', 'error');
+        }
     }
-}
 
-// 輔助函數：收集表單數據（根據原有結構調整）
-function collectFormData() {
-    // 這裡根據原有的表單結構收集數據
-    return {
-        bondA: {
-            // ... 根據原有結構
-        },
-        bondB: {
-            // ... 根據原有結構
-        },
-        timestamp: new Date().toISOString()
-    };
-}
-
-function restoreFormData(data) {
-    // 根據原有結構恢復數據到表單
-}
-        // GitHub 同步設定
-const DATA_FILENAME = 'bond-ladder-data.json';
-
-// 自動載入 GitHub 數據
-(async function initGitHubSync() {
-    if (typeof GitHubSync !== 'undefined' && GitHubSync.isConfigured()) {
+    async function loadFromGitHub() {
+        if (typeof GitHubSync === 'undefined' || !GitHubSync.isConfigured()) {
+            showToast('請先在 guide.html 設定 GitHub Token', 'error');
+            return;
+        }
+        
         const data = await GitHubSync.loadFromGitHub(DATA_FILENAME);
-        if (data) {
-            // 如果有載入資料的函數，在這裡呼叫
-            console.log('從 GitHub 載入數據:', data);
-            GitHubSync.showSyncStatus('✅ 已從 GitHub 載入');
-        }
-    }
-})();
-
-// 在現有的導出函數中加入 GitHub 同步
-function syncToGitHub(data) {
-    if (typeof GitHubSync !== 'undefined' && GitHubSync.isConfigured()) {
-        GitHubSync.saveToGitHub(DATA_FILENAME, data);
-    }
-}
-        // ==================== 資料管理 ====================
-        let bonds = JSON.parse(localStorage.getItem('bonds') || '[]');
-        let sortField = 'maturityDate';
-        let sortDirection = 'asc';
-
-        // ==================== 工具函數 ====================
-        function formatDate(dateStr) {
-            if (!dateStr) return '-';
-            const date = new Date(dateStr);
-            return date.toLocaleDateString('zh-TW');
-        }
-
-        function formatCurrency(amount) {
-            return new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(amount);
-        }
-
-        function formatPercent(value, decimals = 2) {
-            return value.toFixed(decimals) + '%';
-        }
-
-        function getDaysFromToday(dateStr) {
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            const target = new Date(dateStr);
-            target.setHours(0, 0, 0, 0);
-            const diff = target - today;
-            return Math.ceil(diff / (1000 * 60 * 60 * 24));
-        }
-
-        function getYearsFromToday(dateStr) {
-            return getDaysFromToday(dateStr) / 365;
-        }
-
-        function getInterestMonths(maturityDate) {
-            const date = new Date(maturityDate);
-            const maturityMonth = date.getMonth() + 1;
-            const sixMonthsAgo = ((maturityMonth - 1 + 6) % 12) + 1;
-            return [maturityMonth, sixMonthsAgo].sort((a, b) => a - b);
-        }
-
-        // 計算到期收益率 (YTM) - 使用近似公式
-        function calculateYTM(faceValue, purchasePrice, couponRate, yearsToMaturity) {
-            if (yearsToMaturity <= 0) return 0;
-            
-            const annualCoupon = faceValue * (couponRate / 100);
-            const capitalGain = (faceValue - purchasePrice) / yearsToMaturity;
-            const averageValue = (faceValue + purchasePrice) / 2;
-            
-            const ytm = ((annualCoupon + capitalGain) / averageValue) * 100;
-            return ytm;
-        }
-
-        // 計算當前收益率 (Current Yield)
-        function calculateCurrentYield(faceValue, purchasePrice, couponRate) {
-            const annualCoupon = faceValue * (couponRate / 100);
-            return (annualCoupon / purchasePrice) * 100;
-        }
-
-        // 計算每檔債券的半年付息金額
-        function getSemiAnnualPayment(bond) {
-            return (bond.faceValue * (bond.couponRate / 100)) / 2;
-        }
-
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = `toast ${type} show`;
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-
-        function generateId() {
-            return Date.now().toString(36) + Math.random().toString(36).substr(2);
-        }
-
-        // ==================== 債券操作 ====================
-        function addBond() {
-            const purchaseDate = document.getElementById('purchaseDate').value;
-            const name = document.getElementById('bondName').value.trim();
-            const maturityDate = document.getElementById('maturityDate').value;
-            const faceValue = parseFloat(document.getElementById('faceValue').value);
-            const purchasePrice = parseFloat(document.getElementById('purchasePrice').value);
-            const couponRate = parseFloat(document.getElementById('couponRate').value);
-            const type = document.getElementById('bondType').value;
-
-            if (!purchaseDate) {
-                showToast('請選擇購買日期', 'error');
-                return;
-            }
-            if (!name) {
-                showToast('請輸入債券名稱', 'error');
-                return;
-            }
-            if (!maturityDate) {
-                showToast('請選擇到期日', 'error');
-                return;
-            }
-            if (!faceValue || faceValue <= 0) {
-                showToast('請輸入有效面額', 'error');
-                return;
-            }
-            if (!purchasePrice || purchasePrice <= 0) {
-                showToast('請輸入有效購買價格', 'error');
-                return;
-            }
-            if (isNaN(couponRate) || couponRate < 0) {
-                showToast('請輸入有效票面利率', 'error');
-                return;
-            }
-            if (new Date(maturityDate) <= new Date(purchaseDate)) {
-                showToast('到期日必須晚於購買日期', 'error');
-                return;
-            }
-
-            const bond = {
-                id: generateId(),
-                purchaseDate,
-                name,
-                maturityDate,
-                faceValue,
-                purchasePrice,
-                couponRate,
-                type
-            };
-
-            bonds.push(bond);
+        if (data && Array.isArray(data)) {
+            bonds = data;
             saveBonds();
             renderAll();
-            clearForm();
-            showToast('債券新增成功！');
+            showToast(`已從 GitHub 載入 ${bonds.length} 筆資料！`, 'success');
+        } else {
+            showToast('GitHub 上沒有找到資料', 'error');
+        }
+    }
+
+    // ==================== 工具函數 ====================
+    function formatDate(dateStr) {
+        if (!dateStr) return '-';
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('zh-TW');
+    }
+
+    function formatCurrency(amount) {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(amount);
+    }
+
+    function formatPercent(value, decimals = 2) {
+        return value.toFixed(decimals) + '%';
+    }
+
+    function getDaysFromToday(dateStr) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const target = new Date(dateStr);
+        target.setHours(0, 0, 0, 0);
+        const diff = target - today;
+        return Math.ceil(diff / (1000 * 60 * 60 * 24));
+    }
+
+    function getYearsFromToday(dateStr) {
+        return getDaysFromToday(dateStr) / 365;
+    }
+
+    function getInterestMonths(maturityDate) {
+        const date = new Date(maturityDate);
+        const maturityMonth = date.getMonth() + 1;
+        const sixMonthsAgo = ((maturityMonth - 1 + 6) % 12) + 1;
+        return [maturityMonth, sixMonthsAgo].sort((a, b) => a - b);
+    }
+
+    function calculateYTM(faceValue, purchasePrice, couponRate, yearsToMaturity) {
+        if (yearsToMaturity <= 0) return 0;
+        const annualCoupon = faceValue * (couponRate / 100);
+        const capitalGain = (faceValue - purchasePrice) / yearsToMaturity;
+        const averageValue = (faceValue + purchasePrice) / 2;
+        const ytm = ((annualCoupon + capitalGain) / averageValue) * 100;
+        return ytm;
+    }
+
+    function calculateCurrentYield(faceValue, purchasePrice, couponRate) {
+        const annualCoupon = faceValue * (couponRate / 100);
+        return (annualCoupon / purchasePrice) * 100;
+    }
+
+    function getSemiAnnualPayment(bond) {
+        return (bond.faceValue * (bond.couponRate / 100)) / 2;
+    }
+
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = `toast ${type} show`;
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
+    function generateId() {
+        return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    }
+
+    // ==================== 債券操作 ====================
+    function addBond() {
+        const purchaseDate = document.getElementById('purchaseDate').value;
+        const name = document.getElementById('bondName').value.trim();
+        const maturityDate = document.getElementById('maturityDate').value;
+        const faceValue = parseFloat(document.getElementById('faceValue').value);
+        const purchasePrice = parseFloat(document.getElementById('purchasePrice').value);
+        const couponRate = parseFloat(document.getElementById('couponRate').value);
+        const type = document.getElementById('bondType').value;
+
+        if (!purchaseDate) {
+            showToast('請選擇購買日期', 'error');
+            return;
+        }
+        if (!name) {
+            showToast('請輸入債券名稱', 'error');
+            return;
+        }
+        if (!maturityDate) {
+            showToast('請選擇到期日', 'error');
+            return;
+        }
+        if (!faceValue || faceValue <= 0) {
+            showToast('請輸入有效面額', 'error');
+            return;
+        }
+        if (!purchasePrice || purchasePrice <= 0) {
+            showToast('請輸入有效購買價格', 'error');
+            return;
+        }
+        if (isNaN(couponRate) || couponRate < 0) {
+            showToast('請輸入有效票面利率', 'error');
+            return;
+        }
+        if (new Date(maturityDate) <= new Date(purchaseDate)) {
+            showToast('到期日必須晚於購買日期', 'error');
+            return;
         }
 
-        function deleteBond(id) {
-            if (confirm('確定要刪除此債券嗎？')) {
-                bonds = bonds.filter(b => b.id !== id);
-                saveBonds();
-                renderAll();
-                showToast('債券已刪除');
-            }
+        const bond = {
+            id: generateId(),
+            purchaseDate,
+            name,
+            maturityDate,
+            faceValue,
+            purchasePrice,
+            couponRate,
+            type
+        };
+
+        bonds.push(bond);
+        saveBonds();
+        renderAll();
+        clearForm();
+        showToast('債券新增成功！');
+    }
+
+    function deleteBond(id) {
+        if (confirm('確定要刪除此債券嗎？')) {
+            bonds = bonds.filter(b => b.id !== id);
+            saveBonds();
+            renderAll();
+            showToast('債券已刪除');
         }
+    }
 
-        function saveBonds() {
-            localStorage.setItem('bonds', JSON.stringify(bonds));
+    function saveBonds() {
+        localStorage.setItem('bonds', JSON.stringify(bonds));
+    }
+
+    function clearForm() {
+        document.getElementById('purchaseDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('bondName').value = '';
+        document.getElementById('maturityDate').value = '';
+        document.getElementById('faceValue').value = '';
+        document.getElementById('purchasePrice').value = '';
+        document.getElementById('couponRate').value = '';
+        document.getElementById('bondType').value = '國債';
+    }
+
+    function exportData() {
+        if (bonds.length === 0) {
+            showToast('沒有資料可導出', 'error');
+            return;
         }
+        const dataStr = JSON.stringify(bonds, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `bond-ladder-${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('資料導出成功！');
+    }
 
-        function clearForm() {
-            document.getElementById('purchaseDate').value = new Date().toISOString().split('T')[0];
-            document.getElementById('bondName').value = '';
-            document.getElementById('maturityDate').value = '';
-            document.getElementById('faceValue').value = '';
-            document.getElementById('purchasePrice').value = '';
-            document.getElementById('couponRate').value = '';
-            document.getElementById('bondType').value = '國債';
-        }
+    function importData(event) {
+        const file = event.target.files[0];
+        if (!file) return;
 
-        function exportData() {
-            if (bonds.length === 0) {
-                showToast('沒有資料可導出', 'error');
-                return;
-            }
-            const dataStr = JSON.stringify(bonds, null, 2);
-            const blob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `bond-ladder-${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast('資料導出成功！');
-        }
-
-        function importData(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const imported = JSON.parse(e.target.result);
-                    if (!Array.isArray(imported)) {
-                        throw new Error('格式錯誤');
-                    }
-                    // 相容舊版資料 (amount -> faceValue/purchasePrice)
-                    bonds = imported.map(b => ({
-                        ...b,
-                        id: b.id || generateId(),
-                        faceValue: b.faceValue || b.amount || 0,
-                        purchasePrice: b.purchasePrice || b.amount || 0,
-                        couponRate: b.couponRate || 0
-                    }));
-                    saveBonds();
-                    renderAll();
-                    showToast(`成功導入 ${bonds.length} 筆債券資料！`);
-                } catch (err) {
-                    showToast('檔案格式錯誤，請選擇有效的 JSON 檔案', 'error');
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const imported = JSON.parse(e.target.result);
+                if (!Array.isArray(imported)) {
+                    throw new Error('格式錯誤');
                 }
-            };
-            reader.readAsText(file);
-            event.target.value = '';
-        }
-
-        function resetData() {
-            if (confirm('確定要清除所有資料嗎？此操作無法復原。')) {
-                bonds = [];
+                bonds = imported.map(b => ({
+                    ...b,
+                    id: b.id || generateId(),
+                    faceValue: b.faceValue || b.amount || 0,
+                    purchasePrice: b.purchasePrice || b.amount || 0,
+                    couponRate: b.couponRate || 0
+                }));
                 saveBonds();
                 renderAll();
-                showToast('所有資料已清除');
+                showToast(`成功導入 ${bonds.length} 筆債券資料！`);
+            } catch (err) {
+                showToast('檔案格式錯誤，請選擇有效的 JSON 檔案', 'error');
             }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+    }
+
+    function resetData() {
+        if (confirm('確定要清除所有資料嗎？此操作無法復原。')) {
+            bonds = [];
+            saveBonds();
+            renderAll();
+            showToast('所有資料已清除');
+        }
+    }
+
+    // ==================== 渲染函數 ====================
+    function renderAll() {
+        renderStats();
+        renderInterestCalendar();
+        renderLadderChart();
+        renderTable();
+    }
+
+    function renderStats() {
+        const container = document.getElementById('statsGrid');
+        const yieldBreakdown = document.getElementById('yieldBreakdown');
+        const annualIncomeCard = document.getElementById('annualIncomeCard');
+
+        if (bonds.length === 0) {
+            container.innerHTML = '<div style="text-align: center; color: #718096; padding: 20px; grid-column: 1/-1;">尚無資料，請先新增債券</div>';
+            yieldBreakdown.style.display = 'none';
+            annualIncomeCard.style.display = 'none';
+            return;
         }
 
-        // ==================== 渲染函數 ====================
-        function renderAll() {
-            renderStats();
-            renderInterestCalendar();
-            renderLadderChart();
-            renderTable();
-        }
+        const totalFaceValue = bonds.reduce((sum, b) => sum + b.faceValue, 0);
+        const totalCost = bonds.reduce((sum, b) => sum + b.purchasePrice, 0);
+        
+        const treasuryBonds = bonds.filter(b => b.type === '國債');
+        const corporateBonds = bonds.filter(b => b.type === '公司債');
+        const treasuryCost = treasuryBonds.reduce((sum, b) => sum + b.purchasePrice, 0);
+        const corporateCost = corporateBonds.reduce((sum, b) => sum + b.purchasePrice, 0);
 
-        // 統計資料與年化利率
-        function renderStats() {
-            const container = document.getElementById('statsGrid');
-            const yieldBreakdown = document.getElementById('yieldBreakdown');
-            const annualIncomeCard = document.getElementById('annualIncomeCard');
+        const today = new Date();
+        const fiveYearsLater = new Date(today);
+        fiveYearsLater.setFullYear(today.getFullYear() + 5);
+        
+        const shortTermBonds = bonds.filter(b => new Date(b.maturityDate) <= fiveYearsLater);
+        const longTermBonds = bonds.filter(b => new Date(b.maturityDate) > fiveYearsLater);
+        const shortTermCost = shortTermBonds.reduce((sum, b) => sum + b.purchasePrice, 0);
+        const longTermCost = longTermBonds.reduce((sum, b) => sum + b.purchasePrice, 0);
 
-            if (bonds.length === 0) {
-                container.innerHTML = '<div style="text-align: center; color: #718096; padding: 20px; grid-column: 1/-1;">尚無資料，請先新增債券</div>';
-                yieldBreakdown.style.display = 'none';
-                annualIncomeCard.style.display = 'none';
-                return;
-            }
+        const annualCouponIncome = bonds.reduce((sum, b) => sum + (b.faceValue * (b.couponRate / 100)), 0);
+        const weightedCouponRate = bonds.reduce((sum, b) => sum + (b.couponRate * b.faceValue), 0) / totalFaceValue;
+        const weightedCurrentYield = bonds.reduce((sum, b) => {
+            const currentYield = calculateCurrentYield(b.faceValue, b.purchasePrice, b.couponRate);
+            return sum + (currentYield * b.purchasePrice);
+        }, 0) / totalCost;
 
-            const totalFaceValue = bonds.reduce((sum, b) => sum + b.faceValue, 0);
-            const totalCost = bonds.reduce((sum, b) => sum + b.purchasePrice, 0);
-            
-            const treasuryBonds = bonds.filter(b => b.type === '國債');
-            const corporateBonds = bonds.filter(b => b.type === '公司債');
-            const treasuryCost = treasuryBonds.reduce((sum, b) => sum + b.purchasePrice, 0);
-            const corporateCost = corporateBonds.reduce((sum, b) => sum + b.purchasePrice, 0);
+        const weightedYTM = bonds.reduce((sum, b) => {
+            const yearsToMaturity = getYearsFromToday(b.maturityDate);
+            const ytm = calculateYTM(b.faceValue, b.purchasePrice, b.couponRate, yearsToMaturity);
+            return sum + (ytm * b.purchasePrice);
+        }, 0) / totalCost;
 
-            const today = new Date();
-            const fiveYearsLater = new Date(today);
-            fiveYearsLater.setFullYear(today.getFullYear() + 5);
-            
-            const shortTermBonds = bonds.filter(b => new Date(b.maturityDate) <= fiveYearsLater);
-            const longTermBonds = bonds.filter(b => new Date(b.maturityDate) > fiveYearsLater);
-            const shortTermCost = shortTermBonds.reduce((sum, b) => sum + b.purchasePrice, 0);
-            const longTermCost = longTermBonds.reduce((sum, b) => sum + b.purchasePrice, 0);
+        const avgDays = bonds.reduce((sum, b) => sum + Math.max(0, getDaysFromToday(b.maturityDate)), 0) / bonds.length;
+        const sortedByMaturity = [...bonds].sort((a, b) => new Date(a.maturityDate) - new Date(b.maturityDate));
+        const nextMaturing = sortedByMaturity.find(b => getDaysFromToday(b.maturityDate) > 0);
 
-            // 計算年度票息收入
-            const annualCouponIncome = bonds.reduce((sum, b) => sum + (b.faceValue * (b.couponRate / 100)), 0);
+        container.innerHTML = `
+            <div class="stat-card highlight">
+                <div class="stat-value">${formatCurrency(totalCost)}</div>
+                <div class="stat-label">總投資成本</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${formatCurrency(totalFaceValue)}</div>
+                <div class="stat-label">總面額</div>
+            </div>
+            <div class="stat-card yield-highlight">
+                <div class="stat-value">${formatPercent(weightedYTM)}</div>
+                <div class="stat-label">加權平均 YTM</div>
+            </div>
+            <div class="stat-card yield-highlight">
+                <div class="stat-value">${formatPercent(weightedCurrentYield)}</div>
+                <div class="stat-label">加權平均當前收益率</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${formatPercent(weightedCouponRate)}</div>
+                <div class="stat-label">加權平均票面利率</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${bonds.length}</div>
+                <div class="stat-label">債券數量</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${formatCurrency(treasuryCost)}</div>
+                <div class="stat-label">國債 (${totalCost > 0 ? ((treasuryCost / totalCost) * 100).toFixed(1) : 0}%)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${formatCurrency(corporateCost)}</div>
+                <div class="stat-label">公司債 (${totalCost > 0 ? ((corporateCost / totalCost) * 100).toFixed(1) : 0}%)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${formatCurrency(shortTermCost)}</div>
+                <div class="stat-label">5年內到期 (${totalCost > 0 ? ((shortTermCost / totalCost) * 100).toFixed(1) : 0}%)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${formatCurrency(longTermCost)}</div>
+                <div class="stat-label">5年以上到期 (${totalCost > 0 ? ((longTermCost / totalCost) * 100).toFixed(1) : 0}%)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${Math.round(avgDays).toLocaleString()}</div>
+                <div class="stat-label">平均到期天數</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${nextMaturing ? getDaysFromToday(nextMaturing.maturityDate).toLocaleString() : '-'}</div>
+                <div class="stat-label">最近到期 (天)</div>
+            </div>
+        `;
 
-            // 計算加權平均票面利率 (以面額加權)
-            const weightedCouponRate = bonds.reduce((sum, b) => sum + (b.couponRate * b.faceValue), 0) / totalFaceValue;
+        yieldBreakdown.style.display = 'block';
+        document.getElementById('yieldContent').innerHTML = `
+            <div class="yield-item">
+                <span>加權平均 YTM (到期收益率)</span>
+                <strong>${formatPercent(weightedYTM)}</strong>
+            </div>
+            <div class="yield-item">
+                <span>加權平均當前收益率 (Current Yield)</span>
+                <strong>${formatPercent(weightedCurrentYield)}</strong>
+            </div>
+            <div class="yield-item">
+                <span>加權平均票面利率 (Coupon Rate)</span>
+                <strong>${formatPercent(weightedCouponRate)}</strong>
+            </div>
+            <div class="yield-item">
+                <span>預估到期總回收 (面額總和)</span>
+                <strong>${formatCurrency(totalFaceValue)}</strong>
+            </div>
+            <div class="yield-item">
+                <span>預估資本利得/損失</span>
+                <strong style="color: ${totalFaceValue - totalCost >= 0 ? '#38a169' : '#e53e3e'}">${formatCurrency(totalFaceValue - totalCost)}</strong>
+            </div>
+        `;
 
-            // 計算加權平均當前收益率 (以成本加權)
-            const weightedCurrentYield = bonds.reduce((sum, b) => {
-                const currentYield = calculateCurrentYield(b.faceValue, b.purchasePrice, b.couponRate);
-                return sum + (currentYield * b.purchasePrice);
-            }, 0) / totalCost;
+        annualIncomeCard.style.display = 'block';
+        const monthlyIncome = annualCouponIncome / 12;
+        const treasuryAnnualIncome = treasuryBonds.reduce((sum, b) => sum + (b.faceValue * (b.couponRate / 100)), 0);
+        const corporateAnnualIncome = corporateBonds.reduce((sum, b) => sum + (b.faceValue * (b.couponRate / 100)), 0);
 
-            // 計算加權平均 YTM (以成本加權)
-            const weightedYTM = bonds.reduce((sum, b) => {
-                const yearsToMaturity = getYearsFromToday(b.maturityDate);
-                const ytm = calculateYTM(b.faceValue, b.purchasePrice, b.couponRate, yearsToMaturity);
-                return sum + (ytm * b.purchasePrice);
-            }, 0) / totalCost;
+        document.getElementById('annualIncomeContent').innerHTML = `
+            <div class="yield-item">
+                <span>年度票息總收入</span>
+                <strong style="color: #6b46c1">${formatCurrency(annualCouponIncome)}</strong>
+            </div>
+            <div class="yield-item">
+                <span>月均票息收入</span>
+                <strong>${formatCurrency(monthlyIncome)}</strong>
+            </div>
+            <div class="yield-item">
+                <span>國債年度票息</span>
+                <strong>${formatCurrency(treasuryAnnualIncome)}</strong>
+            </div>
+            <div class="yield-item">
+                <span>公司債年度票息</span>
+                <strong>${formatCurrency(corporateAnnualIncome)}</strong>
+            </div>
+        `;
+    }
 
-            // 平均到期天數
-            const avgDays = bonds.reduce((sum, b) => sum + Math.max(0, getDaysFromToday(b.maturityDate)), 0) / bonds.length;
-
-            // 下一個到期的債券
-            const sortedByMaturity = [...bonds].sort((a, b) => new Date(a.maturityDate) - new Date(b.maturityDate));
-            const nextMaturing = sortedByMaturity.find(b => getDaysFromToday(b.maturityDate) > 0);
-
-            container.innerHTML = `
-                <div class="stat-card highlight">
-                    <div class="stat-value">${formatCurrency(totalCost)}</div>
-                    <div class="stat-label">總投資成本</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">${formatCurrency(totalFaceValue)}</div>
-                    <div class="stat-label">總面額</div>
-                </div>
-                <div class="stat-card yield-highlight">
-                    <div class="stat-value">${formatPercent(weightedYTM)}</div>
-                    <div class="stat-label">加權平均 YTM</div>
-                </div>
-                <div class="stat-card yield-highlight">
-                    <div class="stat-value">${formatPercent(weightedCurrentYield)}</div>
-                    <div class="stat-label">加權平均當前收益率</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">${formatPercent(weightedCouponRate)}</div>
-                    <div class="stat-label">加權平均票面利率</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">${bonds.length}</div>
-                    <div class="stat-label">債券數量</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">${formatCurrency(treasuryCost)}</div>
-                    <div class="stat-label">國債 (${totalCost > 0 ? ((treasuryCost / totalCost) * 100).toFixed(1) : 0}%)</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">${formatCurrency(corporateCost)}</div>
-                    <div class="stat-label">公司債 (${totalCost > 0 ? ((corporateCost / totalCost) * 100).toFixed(1) : 0}%)</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">${formatCurrency(shortTermCost)}</div>
-                    <div class="stat-label">5年內到期 (${totalCost > 0 ? ((shortTermCost / totalCost) * 100).toFixed(1) : 0}%)</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">${formatCurrency(longTermCost)}</div>
-                    <div class="stat-label">5年以上到期 (${totalCost > 0 ? ((longTermCost / totalCost) * 100).toFixed(1) : 0}%)</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">${Math.round(avgDays).toLocaleString()}</div>
-                    <div class="stat-label">平均到期天數</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">${nextMaturing ? getDaysFromToday(nextMaturing.maturityDate).toLocaleString() : '-'}</div>
-                    <div class="stat-label">最近到期 (天)</div>
-                </div>
-            `;
-
-            // 年化收益詳細分析
-            yieldBreakdown.style.display = 'block';
-            document.getElementById('yieldContent').innerHTML = `
-                <div class="yield-item">
-                    <span>加權平均 YTM (到期收益率)</span>
-                    <strong>${formatPercent(weightedYTM)}</strong>
-                </div>
-                <div class="yield-item">
-                    <span>加權平均當前收益率 (Current Yield)</span>
-                    <strong>${formatPercent(weightedCurrentYield)}</strong>
-                </div>
-                <div class="yield-item">
-                    <span>加權平均票面利率 (Coupon Rate)</span>
-                    <strong>${formatPercent(weightedCouponRate)}</strong>
-                </div>
-                <div class="yield-item">
-                    <span>預估到期總回收 (面額總和)</span>
-                    <strong>${formatCurrency(totalFaceValue)}</strong>
-                </div>
-                <div class="yield-item">
-                    <span>預估資本利得/損失</span>
-                    <strong style="color: ${totalFaceValue - totalCost >= 0 ? '#38a169' : '#e53e3e'}">${formatCurrency(totalFaceValue - totalCost)}</strong>
-                </div>
-            `;
-
-            // 預估年度收入
-            annualIncomeCard.style.display = 'block';
-            const monthlyIncome = annualCouponIncome / 12;
-            
-            // 按類型分類年收入
-            const treasuryAnnualIncome = treasuryBonds.reduce((sum, b) => sum + (b.faceValue * (b.couponRate / 100)), 0);
-            const corporateAnnualIncome = corporateBonds.reduce((sum, b) => sum + (b.faceValue * (b.couponRate / 100)), 0);
-
-            document.getElementById('annualIncomeContent').innerHTML = `
-                <div class="yield-item">
-                    <span>年度票息總收入</span>
-                    <strong style="color: #6b46c1">${formatCurrency(annualCouponIncome)}</strong>
-                </div>
-                <div class="yield-item">
-                    <span>月均票息收入</span>
-                    <strong>${formatCurrency(monthlyIncome)}</strong>
-                </div>
-                <div class="yield-item">
-                    <span>國債年度票息</span>
-                    <strong>${formatCurrency(treasuryAnnualIncome)}</strong>
-                </div>
-                <div class="yield-item">
-                    <span>公司債年度票息</span>
-                    <strong>${formatCurrency(corporateAnnualIncome)}</strong>
-                </div>
-            `;
-        }
-
-        // 債息月份分析
-        function renderInterestCalendar() {
-            const container = document.getElementById('interestCalendar');
-            const monthNames = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
-            
-            const monthData = Array(12).fill(null).map(() => ({ bonds: [], amount: 0 }));
-            
-            bonds.forEach(bond => {
-                const months = getInterestMonths(bond.maturityDate);
-                const semiAnnualPayment = getSemiAnnualPayment(bond);
-                months.forEach(m => {
-                    monthData[m - 1].bonds.push(bond.name);
-                    monthData[m - 1].amount += semiAnnualPayment;
-                });
+    function renderInterestCalendar() {
+        const container = document.getElementById('interestCalendar');
+        const monthNames = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+        
+        const monthData = Array(12).fill(null).map(() => ({ bonds: [], amount: 0 }));
+        
+        bonds.forEach(bond => {
+            const months = getInterestMonths(bond.maturityDate);
+            const semiAnnualPayment = getSemiAnnualPayment(bond);
+            months.forEach(m => {
+                monthData[m - 1].bonds.push(bond.name);
+                monthData[m - 1].amount += semiAnnualPayment;
             });
+        });
 
-            let html = '';
-            monthNames.forEach((name, index) => {
-                const data = monthData[index];
-                const hasInterest = data.bonds.length > 0;
-                html += `
-                    <div class="month-cell ${hasInterest ? 'has-interest' : ''}">
-                        <div class="month-name">${name}</div>
-                        <div class="month-count">${data.bonds.length}</div>
-                        ${hasInterest ? `<div class="month-amount">${formatCurrency(data.amount)}</div>` : ''}
-                        ${hasInterest ? `<div class="month-bonds">${data.bonds.join(', ')}</div>` : ''}
-                    </div>
-                `;
-            });
-
-            container.innerHTML = html;
-        }
-
-        // 債券梯圖表
-        function renderLadderChart() {
-            const container = document.getElementById('ladderChart');
-
-            if (bonds.length === 0) {
-                container.innerHTML = '<div class="ladder-empty">尚無債券資料，請先新增債券</div>';
-                return;
-            }
-
-            const sortedBonds = [...bonds].sort((a, b) => new Date(a.maturityDate) - new Date(b.maturityDate));
-
-            const today = new Date();
-            const allDates = sortedBonds.flatMap(b => [new Date(b.purchaseDate), new Date(b.maturityDate)]);
-            allDates.push(today);
-            
-            const minDate = new Date(Math.min(...allDates));
-            const maxDate = new Date(Math.max(...allDates));
-            
-            const range = maxDate - minDate;
-            const padding = range * 0.05;
-            const startDate = new Date(minDate.getTime() - padding);
-            const endDate = new Date(maxDate.getTime() + padding);
-            const totalRange = endDate - startDate;
-
-            const calcPercent = (date) => {
-                return ((new Date(date) - startDate) / totalRange) * 100;
-            };
-
-            const todayPercent = calcPercent(today);
-
-            let html = `
-                <div class="ladder-timeline">
-                    <span>${startDate.toLocaleDateString('zh-TW')}</span>
-                    <span>${endDate.toLocaleDateString('zh-TW')}</span>
+        let html = '';
+        monthNames.forEach((name, index) => {
+            const data = monthData[index];
+            const hasInterest = data.bonds.length > 0;
+            html += `
+                <div class="month-cell ${hasInterest ? 'has-interest' : ''}">
+                    <div class="month-name">${name}</div>
+                    <div class="month-count">${data.bonds.length}</div>
+                    ${hasInterest ? `<div class="month-amount">${formatCurrency(data.amount)}</div>` : ''}
+                    ${hasInterest ? `<div class="month-bonds">${data.bonds.join(', ')}</div>` : ''}
                 </div>
             `;
+        });
 
-            sortedBonds.forEach(bond => {
-                const purchasePercent = calcPercent(bond.purchaseDate);
-                const maturityPercent = calcPercent(bond.maturityDate);
-                const width = maturityPercent - purchasePercent;
-                const barClass = bond.type === '公司債' ? 'corporate' : 'treasury';
-                
-                const holdingDays = Math.ceil((new Date(bond.maturityDate) - new Date(bond.purchaseDate)) / (1000 * 60 * 60 * 24));
-                const daysToMaturity = getDaysFromToday(bond.maturityDate);
-                const yearsToMaturity = getYearsFromToday(bond.maturityDate);
-                const ytm = calculateYTM(bond.faceValue, bond.purchasePrice, bond.couponRate, yearsToMaturity);
-                const currentYield = calculateCurrentYield(bond.faceValue, bond.purchasePrice, bond.couponRate);
+        container.innerHTML = html;
+    }
 
-                html += `
-                    <div class="ladder-item">
-                        <div class="ladder-label" title="${bond.name}">${bond.name}</div>
-                        <div class="ladder-bar-container">
-                            <div class="today-marker" style="left: ${todayPercent}%;"></div>
-                            <div class="ladder-bar ${barClass}" 
-                                 style="left: ${purchasePercent}%; width: ${Math.max(width, 0.5)}%;"
-                                 onmouseenter="showBarTooltip(event, '${bond.name}', '${bond.type}', '${bond.purchaseDate}', '${bond.maturityDate}', ${holdingDays}, ${daysToMaturity}, ${bond.faceValue}, ${bond.purchasePrice}, ${bond.couponRate}, ${ytm.toFixed(3)}, ${currentYield.toFixed(3)})"
-                                 onmouseleave="hideTooltip()"
-                                 onmousemove="moveTooltip(event)">
-                            </div>
-                        </div>
-                        <div class="ladder-maturity">${bond.maturityDate}</div>
-                    </div>
-                `;
-            });
+    function renderLadderChart() {
+        const container = document.getElementById('ladderChart');
+
+        if (bonds.length === 0) {
+            container.innerHTML = '<div class="ladder-empty">尚無債券資料，請先新增債券</div>';
+            return;
+        }
+
+        const sortedBonds = [...bonds].sort((a, b) => new Date(a.maturityDate) - new Date(b.maturityDate));
+
+        const today = new Date();
+        const allDates = sortedBonds.flatMap(b => [new Date(b.purchaseDate), new Date(b.maturityDate)]);
+        allDates.push(today);
+        
+        const minDate = new Date(Math.min(...allDates));
+        const maxDate = new Date(Math.max(...allDates));
+        
+        const range = maxDate - minDate;
+        const padding = range * 0.05;
+        const startDate = new Date(minDate.getTime() - padding);
+        const endDate = new Date(maxDate.getTime() + padding);
+        const totalRange = endDate - startDate;
+
+        const calcPercent = (date) => {
+            return ((new Date(date) - startDate) / totalRange) * 100;
+        };
+
+        const todayPercent = calcPercent(today);
+
+        let html = `
+            <div class="ladder-timeline">
+                <span>${startDate.toLocaleDateString('zh-TW')}</span>
+                <span>${endDate.toLocaleDateString('zh-TW')}</span>
+            </div>
+        `;
+
+        sortedBonds.forEach(bond => {
+            const purchasePercent = calcPercent(bond.purchaseDate);
+            const maturityPercent = calcPercent(bond.maturityDate);
+            const width = maturityPercent - purchasePercent;
+            const barClass = bond.type === '公司債' ? 'corporate' : 'treasury';
+            
+            const holdingDays = Math.ceil((new Date(bond.maturityDate) - new Date(bond.purchaseDate)) / (1000 * 60 * 60 * 24));
+            const daysToMaturity = getDaysFromToday(bond.maturityDate);
+            const yearsToMaturity = getYearsFromToday(bond.maturityDate);
+            const ytm = calculateYTM(bond.faceValue, bond.purchasePrice, bond.couponRate, yearsToMaturity);
+            const currentYield = calculateCurrentYield(bond.faceValue, bond.purchasePrice, bond.couponRate);
 
             html += `
-                <div class="ladder-legend">
-                    <div class="ladder-legend-item">
-                        <div class="ladder-legend-color treasury"></div>
-                        <span>國債</span>
+                <div class="ladder-item">
+                    <div class="ladder-label" title="${bond.name}">${bond.name}</div>
+                    <div class="ladder-bar-container">
+                        <div class="today-marker" style="left: ${todayPercent}%;"></div>
+                        <div class="ladder-bar ${barClass}" 
+                             style="left: ${purchasePercent}%; width: ${Math.max(width, 0.5)}%;"
+                             onmouseenter="showBarTooltip(event, '${bond.name}', '${bond.type}', '${bond.purchaseDate}', '${bond.maturityDate}', ${holdingDays}, ${daysToMaturity}, ${bond.faceValue}, ${bond.purchasePrice}, ${bond.couponRate}, ${ytm.toFixed(3)}, ${currentYield.toFixed(3)})"
+                             onmouseleave="hideTooltip()"
+                             onmousemove="moveTooltip(event)">
+                        </div>
                     </div>
-                    <div class="ladder-legend-item">
-                        <div class="ladder-legend-color corporate"></div>
-                        <span>公司債</span>
-                    </div>
-                </div>
-                <div class="ladder-info-text">
-                    ← 購買日 ─── 持有期間 ─── 到期日 → （紅線為今天）
+                    <div class="ladder-maturity">${bond.maturityDate}</div>
                 </div>
             `;
-
-            container.innerHTML = html;
-        }
-
-        function showBarTooltip(event, name, type, purchaseDate, maturityDate, holdingDays, daysToMaturity, faceValue, purchasePrice, couponRate, ytm, currentYield) {
-            const tooltip = document.getElementById('tooltip');
-            tooltip.innerHTML = `
-                <strong>${name}</strong><br>
-                類型：${type}<br>
-                購買日：${purchaseDate}<br>
-                到期日：${maturityDate}<br>
-                持有天數：${holdingDays.toLocaleString()} 天<br>
-                距到期：${daysToMaturity.toLocaleString()} 天<br>
-                ─────────────<br>
-                面額：${formatCurrency(faceValue)}<br>
-                成本：${formatCurrency(purchasePrice)}<br>
-                票面利率：${couponRate}%<br>
-                當前收益率：${currentYield}%<br>
-                YTM：${ytm}%
-            `;
-            tooltip.style.display = 'block';
-            moveTooltip(event);
-        }
-
-        function moveTooltip(event) {
-            const tooltip = document.getElementById('tooltip');
-            tooltip.style.left = (event.clientX - tooltip.offsetWidth / 2) + 'px';
-            tooltip.style.top = (event.clientY + 20) + 'px';
-        }
-
-        function hideTooltip() {
-            document.getElementById('tooltip').style.display = 'none';
-        }
-
-        // 詳細列表
-        function renderTable() {
-            const tbody = document.getElementById('bondTableBody');
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-
-            let filtered = bonds.filter(b => b.name.toLowerCase().includes(searchTerm));
-
-            filtered.sort((a, b) => {
-                let aVal, bVal;
-                switch (sortField) {
-                    case 'name':
-                        aVal = a.name.toLowerCase();
-                        bVal = b.name.toLowerCase();
-                        break;
-                    case 'type':
-                        aVal = a.type;
-                        bVal = b.type;
-                        break;
-                    case 'couponRate':
-                        aVal = a.couponRate;
-                        bVal = b.couponRate;
-                        break;
-                    case 'ytm':
-                        aVal = calculateYTM(a.faceValue, a.purchasePrice, a.couponRate, getYearsFromToday(a.maturityDate));
-                        bVal = calculateYTM(b.faceValue, b.purchasePrice, b.couponRate, getYearsFromToday(b.maturityDate));
-                        break;
-                    case 'purchaseDate':
-                        aVal = new Date(a.purchaseDate);
-                        bVal = new Date(b.purchaseDate);
-                        break;
-                    case 'maturityDate':
-                        aVal = new Date(a.maturityDate);
-                        bVal = new Date(b.maturityDate);
-                        break;
-                    case 'daysToMaturity':
-                        aVal = getDaysFromToday(a.maturityDate);
-                        bVal = getDaysFromToday(b.maturityDate);
-                        break;
-                    case 'faceValue':
-                        aVal = a.faceValue;
-                        bVal = b.faceValue;
-                        break;
-                    case 'purchasePrice':
-                        aVal = a.purchasePrice;
-                        bVal = b.purchasePrice;
-                        break;
-                    default:
-                        aVal = new Date(a.maturityDate);
-                        bVal = new Date(b.maturityDate);
-                }
-                
-                if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
-                if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
-                return 0;
-            });
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="11" style="text-align: center; color: #718096; padding: 40px;">沒有符合條件的債券</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = filtered.map(bond => {
-                const interestMonths = getInterestMonths(bond.maturityDate);
-                const daysToMaturity = getDaysFromToday(bond.maturityDate);
-                const yearsToMaturity = getYearsFromToday(bond.maturityDate);
-                const ytm = calculateYTM(bond.faceValue, bond.purchasePrice, bond.couponRate, yearsToMaturity);
-                const badgeClass = bond.type === '國債' ? 'badge-treasury' : 'badge-corporate';
-                
-                return `
-                    <tr>
-                        <td><strong>${bond.name}</strong></td>
-                        <td><span class="badge ${badgeClass}">${bond.type}</span></td>
-                        <td>${bond.couponRate}%</td>
-                        <td style="color: ${ytm >= 0 ? '#38a169' : '#e53e3e'}; font-weight: 600;">${ytm.toFixed(2)}%</td>
-                        <td>${bond.purchaseDate}</td>
-                        <td>${bond.maturityDate}</td>
-                        <td>${daysToMaturity.toLocaleString()} 天</td>
-                        <td>${formatCurrency(bond.faceValue)}</td>
-                        <td>${formatCurrency(bond.purchasePrice)}</td>
-                        <td>
-                            <div class="interest-months">
-                                ${interestMonths.map(m => `<span class="interest-month-tag">${m}月</span>`).join('')}
-                            </div>
-                        </td>
-                        <td>
-                            <button class="btn btn-danger btn-sm" onclick="deleteBond('${bond.id}')">刪除</button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        function sortTable(field) {
-            if (sortField === field) {
-                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-            } else {
-                sortField = field;
-                sortDirection = 'asc';
-            }
-            renderTable();
-        }
-
-        // 再平衡計算
-        function calculateRebalance() {
-            const newInvestment = parseFloat(document.getElementById('newInvestment').value) || 0;
-            const targetTreasury = parseFloat(document.getElementById('targetTreasury').value) || 0;
-            const targetCorporate = parseFloat(document.getElementById('targetCorporate').value) || 0;
-            const targetShortTerm = parseFloat(document.getElementById('targetShortTerm').value) || 0;
-            const targetLongTerm = parseFloat(document.getElementById('targetLongTerm').value) || 0;
-
-            if (newInvestment <= 0) {
-                showToast('請輸入有效的投資金額', 'error');
-                return;
-            }
-
-            if (Math.abs(targetTreasury + targetCorporate - 100) > 0.01) {
-                showToast('類型比例總和必須為 100%', 'error');
-                return;
-            }
-
-            if (Math.abs(targetShortTerm + targetLongTerm - 100) > 0.01) {
-                showToast('年期比例總和必須為 100%', 'error');
-                return;
-            }
-
-            const currentTotal = bonds.reduce((sum, b) => sum + b.purchasePrice, 0);
-            const currentTreasury = bonds.filter(b => b.type === '國債').reduce((sum, b) => sum + b.purchasePrice, 0);
-            const currentCorporate = bonds.filter(b => b.type === '公司債').reduce((sum, b) => sum + b.purchasePrice, 0);
-
-            const today = new Date();
-            const fiveYearsLater = new Date(today);
-            fiveYearsLater.setFullYear(today.getFullYear() + 5);
-            
-            const currentShortTerm = bonds.filter(b => new Date(b.maturityDate) <= fiveYearsLater).reduce((sum, b) => sum + b.purchasePrice, 0);
-            const currentLongTerm = bonds.filter(b => new Date(b.maturityDate) > fiveYearsLater).reduce((sum, b) => sum + b.purchasePrice, 0);
-
-            const newTotal = currentTotal + newInvestment;
-            const targetTreasuryAmount = newTotal * (targetTreasury / 100);
-            const targetCorporateAmount = newTotal * (targetCorporate / 100);
-            const targetShortTermAmount = newTotal * (targetShortTerm / 100);
-            const targetLongTermAmount = newTotal * (targetLongTerm / 100);
-
-            const buyTreasury = Math.max(0, targetTreasuryAmount - currentTreasury);
-            const buyCorporate = Math.max(0, targetCorporateAmount - currentCorporate);
-            const buyShortTerm = Math.max(0, targetShortTermAmount - currentShortTerm);
-            const buyLongTerm = Math.max(0, targetLongTermAmount - currentLongTerm);
-
-            const totalTypeBuy = buyTreasury + buyCorporate;
-            const totalTermBuy = buyShortTerm + buyLongTerm;
-
-            let adjustedTreasury, adjustedCorporate, adjustedShortTerm, adjustedLongTerm;
-
-            if (totalTypeBuy > 0) {
-                adjustedTreasury = (buyTreasury / totalTypeBuy) * newInvestment;
-                adjustedCorporate = (buyCorporate / totalTypeBuy) * newInvestment;
-            } else {
-                adjustedTreasury = newInvestment * (targetTreasury / 100);
-                adjustedCorporate = newInvestment * (targetCorporate / 100);
-            }
-
-            if (totalTermBuy > 0) {
-                adjustedShortTerm = (buyShortTerm / totalTermBuy) * newInvestment;
-                adjustedLongTerm = (buyLongTerm / totalTermBuy) * newInvestment;
-            } else {
-                adjustedShortTerm = newInvestment * (targetShortTerm / 100);
-                adjustedLongTerm = newInvestment * (targetLongTerm / 100);
-            }
-
-            const resultContainer = document.getElementById('rebalanceResult');
-            const resultContent = document.getElementById('rebalanceContent');
-
-            resultContent.innerHTML = `
-                <div class="result-item">
-                    <span class="result-label">新投入總額</span>
-                    <span class="result-value">${formatCurrency(newInvestment)}</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">投入後總資產</span>
-                    <span class="result-value">${formatCurrency(newTotal)}</span>
-                </div>
-                <hr style="border-color: rgba(72, 187, 120, 0.3); margin: 12px 0;">
-                <div class="result-item">
-                    <span class="result-label">建議購買國債</span>
-                    <span class="result-value">${formatCurrency(adjustedTreasury)}</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">建議購買公司債</span>
-                    <span class="result-value">${formatCurrency(adjustedCorporate)}</span>
-                </div>
-                <hr style="border-color: rgba(72, 187, 120, 0.3); margin: 12px 0;">
-                <div class="result-item">
-                    <span class="result-label">建議購買 5年內到期</span>
-                    <span class="result-value">${formatCurrency(adjustedShortTerm)}</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">建議購買 5年以上到期</span>
-                    <span class="result-value">${formatCurrency(adjustedLongTerm)}</span>
-                </div>
-                <hr style="border-color: rgba(72, 187, 120, 0.3); margin: 12px 0;">
-                <div style="margin-top: 16px; padding: 12px; background: rgba(255,255,255,0.5); border-radius: 8px;">
-                    <strong>購買後預估比例：</strong><br>
-                    <div style="margin-top: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.9rem;">
-                        <span>國債：${((currentTreasury + adjustedTreasury) / newTotal * 100).toFixed(1)}%</span>
-                        <span>公司債：${((currentCorporate + adjustedCorporate) / newTotal * 100).toFixed(1)}%</span>
-                        <span>5年內：${((currentShortTerm + adjustedShortTerm) / newTotal * 100).toFixed(1)}%</span>
-                        <span>5年以上：${((currentLongTerm + adjustedLongTerm) / newTotal * 100).toFixed(1)}%</span>
-                    </div>
-                </div>
-            `;
-
-            resultContainer.style.display = 'block';
-            showToast('計算完成！');
-        }
-
-        // ==================== 初始化 ====================
-        document.addEventListener('DOMContentLoaded', function() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('purchaseDate').value = today;
-            
-            renderAll();
         });
-    </script>
+
+        html += `
+            <div class="ladder-legend">
+                <div class="ladder-legend-item">
+                    <div class="ladder-legend-color treasury"></div>
+                    <span>國債</span>
+                </div>
+                <div class="ladder-legend-item">
+                    <div class="ladder-legend-color corporate"></div>
+                    <span>公司債</span>
+                </div>
+            </div>
+            <div class="ladder-info-text">
+                ← 購買日 ─── 持有期間 ─── 到期日 → （紅線為今天）
+            </div>
+        `;
+
+        container.innerHTML = html;
+    }
+
+    function showBarTooltip(event, name, type, purchaseDate, maturityDate, holdingDays, daysToMaturity, faceValue, purchasePrice, couponRate, ytm, currentYield) {
+        const tooltip = document.getElementById('tooltip');
+        tooltip.innerHTML = `
+            <strong>${name}</strong><br>
+            類型：${type}<br>
+            購買日：${purchaseDate}<br>
+            到期日：${maturityDate}<br>
+            持有天數：${holdingDays.toLocaleString()} 天<br>
+            距到期：${daysToMaturity.toLocaleString()} 天<br>
+            ─────────────<br>
+            面額：${formatCurrency(faceValue)}<br>
+            成本：${formatCurrency(purchasePrice)}<br>
+            票面利率：${couponRate}%<br>
+            當前收益率：${currentYield}%<br>
+            YTM：${ytm}%
+        `;
+        tooltip.style.display = 'block';
+        moveTooltip(event);
+    }
+
+    function moveTooltip(event) {
+        const tooltip = document.getElementById('tooltip');
+        tooltip.style.left = (event.clientX - tooltip.offsetWidth / 2) + 'px';
+        tooltip.style.top = (event.clientY + 20) + 'px';
+    }
+
+    function hideTooltip() {
+        document.getElementById('tooltip').style.display = 'none';
+    }
+
+    function renderTable() {
+        const tbody = document.getElementById('bondTableBody');
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+        let filtered = bonds.filter(b => b.name.toLowerCase().includes(searchTerm));
+
+        filtered.sort((a, b) => {
+            let aVal, bVal;
+            switch (sortField) {
+                case 'name':
+                    aVal = a.name.toLowerCase();
+                    bVal = b.name.toLowerCase();
+                    break;
+                case 'type':
+                    aVal = a.type;
+                    bVal = b.type;
+                    break;
+                case 'couponRate':
+                    aVal = a.couponRate;
+                    bVal = b.couponRate;
+                    break;
+                case 'ytm':
+                    aVal = calculateYTM(a.faceValue, a.purchasePrice, a.couponRate, getYearsFromToday(a.maturityDate));
+                    bVal = calculateYTM(b.faceValue, b.purchasePrice, b.couponRate, getYearsFromToday(b.maturityDate));
+                    break;
+                case 'purchaseDate':
+                    aVal = new Date(a.purchaseDate);
+                    bVal = new Date(b.purchaseDate);
+                    break;
+                case 'maturityDate':
+                    aVal = new Date(a.maturityDate);
+                    bVal = new Date(b.maturityDate);
+                    break;
+                case 'daysToMaturity':
+                    aVal = getDaysFromToday(a.maturityDate);
+                    bVal = getDaysFromToday(b.maturityDate);
+                    break;
+                case 'faceValue':
+                    aVal = a.faceValue;
+                    bVal = b.faceValue;
+                    break;
+                case 'purchasePrice':
+                    aVal = a.purchasePrice;
+                    bVal = b.purchasePrice;
+                    break;
+                default:
+                    aVal = new Date(a.maturityDate);
+                    bVal = new Date(b.maturityDate);
+            }
+            
+            if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
+            if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
+            return 0;
+        });
+
+        if (filtered.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="11" style="text-align: center; color: #718096; padding: 40px;">沒有符合條件的債券</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = filtered.map(bond => {
+            const interestMonths = getInterestMonths(bond.maturityDate);
+            const daysToMaturity = getDaysFromToday(bond.maturityDate);
+            const yearsToMaturity = getYearsFromToday(bond.maturityDate);
+            const ytm = calculateYTM(bond.faceValue, bond.purchasePrice, bond.couponRate, yearsToMaturity);
+            const badgeClass = bond.type === '國債' ? 'badge-treasury' : 'badge-corporate';
+            
+            return `
+                <tr>
+                    <td><strong>${bond.name}</strong></td>
+                    <td><span class="badge ${badgeClass}">${bond.type}</span></td>
+                    <td>${bond.couponRate}%</td>
+                    <td style="color: ${ytm >= 0 ? '#38a169' : '#e53e3e'}; font-weight: 600;">${ytm.toFixed(2)}%</td>
+                    <td>${bond.purchaseDate}</td>
+                    <td>${bond.maturityDate}</td>
+                    <td>${daysToMaturity.toLocaleString()} 天</td>
+                    <td>${formatCurrency(bond.faceValue)}</td>
+                    <td>${formatCurrency(bond.purchasePrice)}</td>
+                    <td>
+                        <div class="interest-months">
+                            ${interestMonths.map(m => `<span class="interest-month-tag">${m}月</span>`).join('')}
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="deleteBond('${bond.id}')">刪除</button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    function sortTable(field) {
+        if (sortField === field) {
+            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            sortField = field;
+            sortDirection = 'asc';
+        }
+        renderTable();
+    }
+
+    function calculateRebalance() {
+        const newInvestment = parseFloat(document.getElementById('newInvestment').value) || 0;
+        const targetTreasury = parseFloat(document.getElementById('targetTreasury').value) || 0;
+        const targetCorporate = parseFloat(document.getElementById('targetCorporate').value) || 0;
+        const targetShortTerm = parseFloat(document.getElementById('targetShortTerm').value) || 0;
+        const targetLongTerm = parseFloat(document.getElementById('targetLongTerm').value) || 0;
+
+        if (newInvestment <= 0) {
+            showToast('請輸入有效的投資金額', 'error');
+            return;
+        }
+
+        if (Math.abs(targetTreasury + targetCorporate - 100) > 0.01) {
+            showToast('類型比例總和必須為 100%', 'error');
+            return;
+        }
+
+        if (Math.abs(targetShortTerm + targetLongTerm - 100) > 0.01) {
+            showToast('年期比例總和必須為 100%', 'error');
+            return;
+        }
+
+        const currentTotal = bonds.reduce((sum, b) => sum + b.purchasePrice, 0);
+        const currentTreasury = bonds.filter(b => b.type === '國債').reduce((sum, b) => sum + b.purchasePrice, 0);
+        const currentCorporate = bonds.filter(b => b.type === '公司債').reduce((sum, b) => sum + b.purchasePrice, 0);
+
+        const today = new Date();
+        const fiveYearsLater = new Date(today);
+        fiveYearsLater.setFullYear(today.getFullYear() + 5);
+        
+        const currentShortTerm = bonds.filter(b => new Date(b.maturityDate) <= fiveYearsLater).reduce((sum, b) => sum + b.purchasePrice, 0);
+        const currentLongTerm = bonds.filter(b => new Date(b.maturityDate) > fiveYearsLater).reduce((sum, b) => sum + b.purchasePrice, 0);
+
+        const newTotal = currentTotal + newInvestment;
+        const targetTreasuryAmount = newTotal * (targetTreasury / 100);
+        const targetCorporateAmount = newTotal * (targetCorporate / 100);
+        const targetShortTermAmount = newTotal * (targetShortTerm / 100);
+        const targetLongTermAmount = newTotal * (targetLongTerm / 100);
+
+        const buyTreasury = Math.max(0, targetTreasuryAmount - currentTreasury);
+        const buyCorporate = Math.max(0, targetCorporateAmount - currentCorporate);
+        const buyShortTerm = Math.max(0, targetShortTermAmount - currentShortTerm);
+        const buyLongTerm = Math.max(0, targetLongTermAmount - currentLongTerm);
+
+        const totalTypeBuy = buyTreasury + buyCorporate;
+        const totalTermBuy = buyShortTerm + buyLongTerm;
+
+        let adjustedTreasury, adjustedCorporate, adjustedShortTerm, adjustedLongTerm;
+
+        if (totalTypeBuy > 0) {
+            adjustedTreasury = (buyTreasury / totalTypeBuy) * newInvestment;
+            adjustedCorporate = (buyCorporate / totalTypeBuy) * newInvestment;
+        } else {
+            adjustedTreasury = newInvestment * (targetTreasury / 100);
+            adjustedCorporate = newInvestment * (targetCorporate / 100);
+        }
+
+        if (totalTermBuy > 0) {
+            adjustedShortTerm = (buyShortTerm / totalTermBuy) * newInvestment;
+            adjustedLongTerm = (buyLongTerm / totalTermBuy) * newInvestment;
+        } else {
+            adjustedShortTerm = newInvestment * (targetShortTerm / 100);
+            adjustedLongTerm = newInvestment * (targetLongTerm / 100);
+        }
+
+        const resultContainer = document.getElementById('rebalanceResult');
+        const resultContent = document.getElementById('rebalanceContent');
+
+        resultContent.innerHTML = `
+            <div class="result-item">
+                <span class="result-label">新投入總額</span>
+                <span class="result-value">${formatCurrency(newInvestment)}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">投入後總資產</span>
+                <span class="result-value">${formatCurrency(newTotal)}</span>
+            </div>
+            <hr style="border-color: rgba(72, 187, 120, 0.3); margin: 12px 0;">
+            <div class="result-item">
+                <span class="result-label">建議購買國債</span>
+                <span class="result-value">${formatCurrency(adjustedTreasury)}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">建議購買公司債</span>
+                <span class="result-value">${formatCurrency(adjustedCorporate)}</span>
+            </div>
+            <hr style="border-color: rgba(72, 187, 120, 0.3); margin: 12px 0;">
+            <div class="result-item">
+                <span class="result-label">建議購買 5年內到期</span>
+                <span class="result-value">${formatCurrency(adjustedShortTerm)}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">建議購買 5年以上到期</span>
+                <span class="result-value">${formatCurrency(adjustedLongTerm)}</span>
+            </div>
+            <hr style="border-color: rgba(72, 187, 120, 0.3); margin: 12px 0;">
+            <div style="margin-top: 16px; padding: 12px; background: rgba(255,255,255,0.5); border-radius: 8px;">
+                <strong>購買後預估比例：</strong><br>
+                <div style="margin-top: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.9rem;">
+                    <span>國債：${((currentTreasury + adjustedTreasury) / newTotal * 100).toFixed(1)}%</span>
+                    <span>公司債：${((currentCorporate + adjustedCorporate) / newTotal * 100).toFixed(1)}%</span>
+                    <span>5年內：${((currentShortTerm + adjustedShortTerm) / newTotal * 100).toFixed(1)}%</span>
+                    <span>5年以上：${((currentLongTerm + adjustedLongTerm) / newTotal * 100).toFixed(1)}%</span>
+                </div>
+            </div>
+        `;
+
+        resultContainer.style.display = 'block';
+        showToast('計算完成！');
+    }
+
+    // ==================== 初始化 ====================
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('purchaseDate').value = today;
+        renderAll();
+    });
+</script>
 </body>
 </html>
