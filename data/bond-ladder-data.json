@@ -1,0 +1,62 @@
+[
+  {
+    "id": "mj3wqstgc0nd3uuj2z8",
+    "purchaseDate": "2025-09-01",
+    "name": "2.625Dec31'25",
+    "maturityDate": "2025-12-31",
+    "faceValue": 4000,
+    "purchasePrice": 3984.06,
+    "couponRate": 2.625,
+    "type": "國債"
+  },
+  {
+    "id": "mj3wrofy2r4mhjr3x5g",
+    "purchaseDate": "2025-09-01",
+    "name": "4.5Mar31'26",
+    "maturityDate": "2026-03-31",
+    "faceValue": 4000,
+    "purchasePrice": 4016.42,
+    "couponRate": 4.5,
+    "type": "國債"
+  },
+  {
+    "id": "mj3wsuu62bun19grz7c",
+    "purchaseDate": "2025-12-13",
+    "name": "HNDA 2.3 Sep09'26",
+    "maturityDate": "2026-09-09",
+    "faceValue": 4000,
+    "purchasePrice": 3955.96,
+    "couponRate": 2.3,
+    "type": "公司債"
+  },
+  {
+    "id": "mj3wu2db41zn80qti6u",
+    "purchaseDate": "2025-09-01",
+    "name": "1.875Jun30'26",
+    "maturityDate": "2026-06-30",
+    "faceValue": 4000,
+    "purchasePrice": 3939.23,
+    "couponRate": 1.875,
+    "type": "國債"
+  },
+  {
+    "id": "mj3wv4ub1u3yu3ouf2e",
+    "purchaseDate": "2025-09-01",
+    "name": "3.5Sep30'26",
+    "maturityDate": "2026-09-30",
+    "faceValue": 4000,
+    "purchasePrice": 3990.79,
+    "couponRate": 3.5,
+    "type": "國債"
+  },
+  {
+    "id": "mj3wwdmfvrf8yn21zw",
+    "purchaseDate": "2025-12-12",
+    "name": "4.75Feb15'41",
+    "maturityDate": "2041-02-15",
+    "faceValue": 4000,
+    "purchasePrice": 4077.8,
+    "couponRate": 4.75,
+    "type": "國債"
+  }
+]
