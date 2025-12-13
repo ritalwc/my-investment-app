@@ -169,7 +169,7 @@
         .tab-content.active { display: block; }
 
     </style>
-    <script src="github-sync.js"></script>
+
 </head>
 <body>
 <a href="guide.html" style="position:fixed;top:10px;left:10px;padding:8px 16px;background:rgba(0,0,0,0.7);color:#fff;text-decoration:none;border-radius:6px;font-size:14px;z-index:9999;">← 返回指南</a>
@@ -177,14 +177,16 @@
     
     <!-- Global Actions -->
     <div class="flex-between mb-2">
-        <div style="font-weight: bold; color: #666;">資產管理 v2.2</div>
-        <div>
-            <button class="btn btn-secondary btn-sm" onclick="app.exportData()">📥 備份</button>
-            <input type="file" id="fileInput" style="display:none" onchange="app.importData(this)">
-            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('fileInput').click()">📤 載入</button>
-            <button class="btn btn-danger btn-sm" onclick="app.resetData()">🔄 重置</button>
-        </div>
+    <div style="font-weight: bold; color: #666;">資產管理 v2.2</div>
+    <div>
+        <button class="btn btn-success btn-sm" onclick="app.syncToGitHub()">☁️ 同步</button>
+        <button class="btn btn-info btn-sm" onclick="app.loadFromGitHub()">⬇️ 載入雲端</button>
+        <button class="btn btn-secondary btn-sm" onclick="app.exportData()">📥 備份</button>
+        <input type="file" id="fileInput" style="display:none" onchange="app.importData(this)">
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('fileInput').click()">📤 載入</button>
+        <button class="btn btn-danger btn-sm" onclick="app.resetData()">🔄 重置</button>
     </div>
+</div>
 
     <!-- Tab Navigation -->
     <div class="tab-nav">
@@ -344,44 +346,61 @@
         </div>
     </div>
 </div>
-
+<!-- 1. 移到 </body> 之前 -->
+<script src="github-sync.js"></script>
 <script>
-    // GitHub 同步設定
 const DATA_FILENAME = 'savings-tracker-data.json';
 
-// 自動載入 GitHub 數據
-(async function initGitHubSync() {
-    if (typeof GitHubSync !== 'undefined' && GitHubSync.isConfigured()) {
-        const data = await GitHubSync.loadFromGitHub(DATA_FILENAME);
-        if (data) {
-            // 如果有載入資料的函數，在這裡呼叫
-            console.log('從 GitHub 載入數據:', data);
-            GitHubSync.showSyncStatus('✅ 已從 GitHub 載入');
-        }
-    }
-})();
-
-// 在現有的導出函數中加入 GitHub 同步
-function syncToGitHub(data) {
-    if (typeof GitHubSync !== 'undefined' && GitHubSync.isConfigured()) {
-        GitHubSync.saveToGitHub(DATA_FILENAME, data);
-    }
-}
 const app = {
     data: {
         hkdLogs: [],
         usdLogs: [],
         hkStocks: [],
-        usStockLogs: [], // { id, monthStr, splg, vxus }
+        usStockLogs: [],
         lastUpdated: new Date().toISOString()
     },
     
     tempCounters: { splg: 0, vxus: 0 },
 
+    // 2. 修改 init，加入 GitHub 載入
     init() {
         this.loadData();
         this.renderAll();
+        this.loadFromGitHub(); // 嘗試從 GitHub 載入
         setInterval(() => this.renderCountdown(), 60000); 
+    },
+
+    // 2. GitHub 同步方法（加入 app 物件內）
+    async syncToGitHub() {
+        if (typeof GitHubSync === 'undefined' || !GitHubSync.isConfigured()) {
+            alert('GitHub 同步未設定');
+            return;
+        }
+        try {
+            this.data.lastUpdated = new Date().toISOString();
+            await GitHubSync.saveToGitHub(DATA_FILENAME, this.data);
+            GitHubSync.showSyncStatus('✅ 已同步到 GitHub');
+        } catch (e) {
+            console.error('GitHub sync error:', e);
+            GitHubSync.showSyncStatus('❌ 同步失敗');
+        }
+    },
+
+    async loadFromGitHub() {
+        if (typeof GitHubSync === 'undefined' || !GitHubSync.isConfigured()) {
+            console.log('GitHub 同步未設定');
+            return;
+        }
+        try {
+            const data = await GitHubSync.loadFromGitHub(DATA_FILENAME);
+            if (data) {
+                this.data = data;
+                this.renderAll();
+                GitHubSync.showSyncStatus('✅ 已從 GitHub 載入');
+            }
+        } catch (e) {
+            console.error('GitHub load error:', e);
+        }
     },
 
     // --- Tab Logic ---
@@ -454,22 +473,19 @@ const app = {
         document.getElementById('hkd-total').innerText = total.toFixed(2);
     },
 
-    // --- USD Logic (Modified) ---
+    // --- USD Logic ---
     addUSDLog(action, inputType) {
         let note, amount, finalCategory;
 
         if (action === 'deposit') {
             if (inputType === 'dividend_split') {
-                // 70/30 Split Logic
                 note = document.getElementById('usd-div-note').value || '股息存入';
                 amount = parseFloat(document.getElementById('usd-div-amount').value);
                 if (!amount) return alert("請輸入金額");
 
-                // Calculate Split
                 const equityAmt = parseFloat((amount * 0.7).toFixed(2));
-                const bondAmt = parseFloat((amount - equityAmt).toFixed(2)); // Subtract to ensure no rounding loss
+                const bondAmt = parseFloat((amount - equityAmt).toFixed(2));
 
-                // Add Equity Log (70%)
                 this.data.usdLogs.unshift({
                     id: Date.now(),
                     date: new Date().toISOString(),
@@ -479,9 +495,8 @@ const app = {
                     category: 'equity'
                 });
 
-                // Add Bond Log (30%)
                 this.data.usdLogs.unshift({
-                    id: Date.now() + 1, // Ensure unique ID
+                    id: Date.now() + 1,
                     date: new Date().toISOString(),
                     note: note + " (30% 債券池)",
                     amount: bondAmt,
@@ -489,12 +504,10 @@ const app = {
                     category: 'bond'
                 });
 
-                // Clear Inputs
                 document.getElementById('usd-div-note').value = '';
                 document.getElementById('usd-div-amount').value = '';
 
             } else if (inputType === 'bond_only') {
-                // 100% Bond Logic
                 note = document.getElementById('usd-bond-note').value || '債券利息';
                 amount = parseFloat(document.getElementById('usd-bond-amount').value);
                 if (!amount) return alert("請輸入金額");
@@ -508,12 +521,10 @@ const app = {
                     category: 'bond'
                 });
 
-                // Clear Inputs
                 document.getElementById('usd-bond-note').value = '';
                 document.getElementById('usd-bond-amount').value = '';
             }
         } else {
-            // Withdraw Logic (unchanged)
             note = document.getElementById('usd-withdraw-note').value || '提取購買';
             amount = parseFloat(document.getElementById('usd-withdraw-amount').value);
             finalCategory = document.getElementById('usd-withdraw-source').value;
@@ -621,7 +632,6 @@ const app = {
         const now = new Date();
         const monthStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2, '0')}`;
         
-        // Check if exists
         const exists = this.data.usStockLogs.find(l => l.monthStr === monthStr);
         if (exists) {
             if(!confirm("本月已有記錄，要覆蓋嗎？")) return;
@@ -636,7 +646,6 @@ const app = {
             });
         }
         
-        // Reset UI
         this.tempCounters = { splg: 0, vxus: 0 };
         document.getElementById('count-splg').innerText = '0';
         document.getElementById('count-vxus').innerText = '0';
@@ -678,7 +687,7 @@ const app = {
     // --- Countdown Logic ---
     renderCountdown() {
         const now = new Date();
-        const targetDate = new Date('2029-12-31'); // Dec 2025 + 48 months
+        const targetDate = new Date('2029-12-31');
         let months = (targetDate.getFullYear() - now.getFullYear()) * 12;
         months -= now.getMonth();
         months += targetDate.getMonth();
@@ -751,8 +760,16 @@ const app = {
     }
 };
 
-app.init();
-window.onclick = function(e) { if(e.target == document.getElementById('editModal')) document.getElementById('editModal').style.display="none"; }
+// 3. 正確的 window.onload
+window.onload = function() {
+    app.init();
+};
+
+window.onclick = function(e) {
+    if (e.target == document.getElementById('editModal')) {
+        document.getElementById('editModal').style.display = "none";
+    }
+};
 </script>
 </body>
 </html>
