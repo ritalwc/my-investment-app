@@ -1040,41 +1040,20 @@
         return [maturityMonth, sixMonthsAgo].sort((a, b) => a - b);
     }
 
-    function calculateYTM(faceValue, purchasePrice, couponRate, yearsToMaturity) {
-    const coupon = faceValue * couponRate / 100;
-    const n = Math.round(yearsToMaturity); // 年數（以整年計算，避免天天變動）
-
-    if (n <= 0) return 0;
-
-    // 二分法求 IRR
-    let low = 0;
-    let high = 0.20;   // 假設最高 20% 的殖利率（夠用了）
-    let mid;
-
-    function priceAtRate(rate) {
-        let pv = 0;
-        for (let t = 1; t <= n; t++) {
-            pv += coupon / Math.pow(1 + rate, t);
-        }
-        pv += faceValue / Math.pow(1 + rate, n);
-        return pv;
-    }
-
-    // 二分搜索
-    for (let i = 0; i < 100; i++) {
-        mid = (low + high) / 2;
-        const pv = priceAtRate(mid);
-
-        if (pv > purchasePrice) {
-            // 殖利率太低，價格太高 → 要增加殖利率
-            low = mid;
-        } else {
-            // 殖利率太高，價格太低 → 要降低殖利率
-            high = mid;
-        }
-    }
-
-    return mid * 100; // 轉成百分比
+    function calculateYTM(faceValue, purchasePrice, couponRate, purchaseDate, maturityDate) {
+    // 用購買日到到期日計算，而非今天到到期日
+    const purchase = new Date(purchaseDate);
+    const maturity = new Date(maturityDate);
+    const yearsToMaturity = (maturity - purchase) / (1000 * 60 * 60 * 24 * 365);
+    
+    if (yearsToMaturity <= 0) return 0;
+    
+    const annualCoupon = faceValue * (couponRate / 100);
+    const capitalGain = (faceValue - purchasePrice) / yearsToMaturity;
+    const averageValue = (faceValue + purchasePrice) / 2;
+    
+    const ytm = ((annualCoupon + capitalGain) / averageValue) * 100;
+    return ytm;
 }
 
     function calculateCurrentYield(faceValue, purchasePrice, couponRate) {
