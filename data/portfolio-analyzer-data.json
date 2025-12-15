@@ -2,37 +2,37 @@
   {
     "name": "2800盈富",
     "type": "hk_stock",
-    "originalValue": 241668.8,
+    "originalValue": 238348.16,
     "currency": "HKD"
   },
   {
     "name": "2388 中銀香港",
     "type": "hk_stock",
-    "originalValue": 56070,
+    "originalValue": 57420,
     "currency": "HKD"
   },
   {
     "name": "3466恒生高息股30指數ETF",
     "type": "hk_stock",
-    "originalValue": 23724,
+    "originalValue": 23856,
     "currency": "HKD"
   },
   {
     "name": "3476 恒生摩根美國股票高入息主動型ETF",
     "type": "hk_stock",
-    "originalValue": 22500,
+    "originalValue": 22440,
     "currency": "HKD"
   },
   {
     "name": "3437 博時央企紅利ETF",
     "type": "hk_stock",
-    "originalValue": 21588,
+    "originalValue": 20811,
     "currency": "HKD"
   },
   {
     "name": "3417 Global X 恆科備兌認購期權主動型ETF",
     "type": "hk_stock",
-    "originalValue": 13815,
+    "originalValue": 13807.5,
     "currency": "HKD"
   },
   {
@@ -44,55 +44,55 @@
   {
     "name": "3195 恆生標普 500",
     "type": "hk_stock",
-    "originalValue": 10680,
+    "originalValue": 10740,
     "currency": "HKD"
   },
   {
     "name": "3416 Global X 國指備兌認購期權主動型ETF",
     "type": "hk_stock",
-    "originalValue": 10620,
+    "originalValue": 10520,
     "currency": "HKD"
   },
   {
     "name": "3451 GLOBAL X 納斯達克100",
     "type": "hk_stock",
-    "originalValue": 8066,
+    "originalValue": 8146,
     "currency": "HKD"
   },
   {
     "name": "3070",
     "type": "hk_stock",
-    "originalValue": 3926,
+    "originalValue": 3788,
     "currency": "HKD"
   },
   {
     "name": "SPYM",
     "type": "us_stock",
-    "originalValue": 402.02,
+    "originalValue": 402.98,
     "currency": "USD"
   },
   {
     "name": "VXUS",
     "type": "us_stock",
-    "originalValue": 304.74,
+    "originalValue": 308.66,
     "currency": "USD"
   },
   {
     "name": "PTY",
     "type": "us_stock",
-    "originalValue": 192.55,
+    "originalValue": 187.19,
     "currency": "USD"
   },
   {
     "name": "VT",
     "type": "us_stock",
-    "originalValue": 108.29,
+    "originalValue": 109.06,
     "currency": "USD"
   },
   {
     "name": "QDTY",
     "type": "us_stock",
-    "originalValue": 53.62,
+    "originalValue": 52.47,
     "currency": "USD"
   },
   {
