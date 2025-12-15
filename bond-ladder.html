@@ -1285,7 +1285,7 @@
 
         const weightedYTM = bonds.reduce((sum, b) => {
             const yearsToMaturity = getYearsFromToday(b.maturityDate);
-            const ytm = calculateYTM(b.faceValue, b.purchasePrice, b.couponRate, yearsToMaturity);
+            const ytm = calculateYTM(b.faceValue, b.purchasePrice, b.couponRate, b.purchaseDate, b.maturityDate);
             return sum + (ytm * b.purchasePrice);
         }, 0) / totalCost;
 
@@ -1470,7 +1470,7 @@
             const holdingDays = Math.ceil((new Date(bond.maturityDate) - new Date(bond.purchaseDate)) / (1000 * 60 * 60 * 24));
             const daysToMaturity = getDaysFromToday(bond.maturityDate);
             const yearsToMaturity = getYearsFromToday(bond.maturityDate);
-            const ytm = calculateYTM(bond.faceValue, bond.purchasePrice, bond.couponRate, yearsToMaturity);
+            const ytm = calculateYTM(bond.faceValue, bond.purchasePrice, bond.couponRate, bond.purchaseDate, bond.maturityDate);
             const currentYield = calculateCurrentYield(bond.faceValue, bond.purchasePrice, bond.couponRate);
 
             html += `
@@ -1561,8 +1561,8 @@
                     bVal = b.couponRate;
                     break;
                 case 'ytm':
-                    aVal = calculateYTM(a.faceValue, a.purchasePrice, a.couponRate, getYearsFromToday(a.maturityDate));
-                    bVal = calculateYTM(b.faceValue, b.purchasePrice, b.couponRate, getYearsFromToday(b.maturityDate));
+                    aVal = calculateYTM(a.faceValue, a.purchasePrice, a.couponRate, a.purchaseDate, a.maturityDate);
+                    bVal = calculateYTM(b.faceValue, b.purchasePrice, b.couponRate, b.purchaseDate, b.maturityDate);
                     break;
                 case 'purchaseDate':
                     aVal = new Date(a.purchaseDate);
@@ -1603,7 +1603,7 @@
             const interestMonths = getInterestMonths(bond.maturityDate);
             const daysToMaturity = getDaysFromToday(bond.maturityDate);
             const yearsToMaturity = getYearsFromToday(bond.maturityDate);
-            const ytm = calculateYTM(bond.faceValue, bond.purchasePrice, bond.couponRate, yearsToMaturity);
+            const ytm = calculateYTM(bond.faceValue, bond.purchasePrice, bond.couponRate, bond.purchaseDate, bond.maturityDate);
             const badgeClass = bond.type === '國債' ? 'badge-treasury' : 'badge-corporate';
             
             return `
