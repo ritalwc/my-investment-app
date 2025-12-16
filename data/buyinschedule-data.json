@@ -1,0 +1,135 @@
+{
+  "schedules": [
+    {
+      "id": 1759204559409,
+      "stockName": "VXUS",
+      "buyDate": "2025-10-01",
+      "amount": "80",
+      "unit": "元",
+      "continuous": true,
+      "limitType": "unlimited",
+      "cycleType": "firstWorkday"
+    },
+    {
+      "id": 1759204576002,
+      "stockName": "SPLG",
+      "buyDate": "2025-10-01",
+      "amount": "80",
+      "unit": "元",
+      "continuous": true,
+      "limitType": "unlimited",
+      "cycleType": "firstWorkday"
+    },
+    {
+      "id": 1759326736910,
+      "stockName": "PTY",
+      "buyDate": "2025-10-14",
+      "amount": "64",
+      "unit": "元",
+      "continuous": true,
+      "limitType": "limited",
+      "periods": 6,
+      "cycleType": "monthlyDate",
+      "monthlyDay": 14
+    },
+    {
+      "id": 1759332272860,
+      "stockName": "QDTY",
+      "buyDate": "2025-10-02",
+      "amount": "27",
+      "unit": "元",
+      "continuous": true,
+      "limitType": "limited",
+      "periods": 6,
+      "cycleType": "everyXMonths",
+      "everyXMonthsInterval": 2,
+      "everyXMonthsDay": 2
+    }
+  ],
+  "announcements": [
+    {
+      "id": 1759368005712,
+      "stockName": "2800 盈富",
+      "announcementDate": "2025-10-25",
+      "exDate": "2025-10-30",
+      "announcementCycle": "everyXMonths",
+      "exCycle": "everyXMonths",
+      "announcementEveryXMonthsInterval": 6,
+      "announcementEveryXMonthsDay": 25,
+      "exEveryXMonthsInterval": 6,
+      "exEveryXMonthsDay": 30
+    },
+    {
+      "id": 1759368357350,
+      "stockName": "3466 恆生高息股",
+      "announcementDate": "2025-10-15",
+      "exDate": "2025-11-01",
+      "announcementCycle": "monthlyDate",
+      "exCycle": "monthlyDate",
+      "announcementMonthlyDay": 16,
+      "exMonthlyDay": 1
+    },
+    {
+      "id": 1759368449969,
+      "stockName": "3476 恆生摩根",
+      "announcementDate": "2025-10-16",
+      "exDate": "2025-11-01",
+      "announcementCycle": "monthlyDate",
+      "exCycle": "monthlyDate",
+      "announcementMonthlyDay": 16,
+      "exMonthlyDay": 1
+    },
+    {
+      "id": 1759368654614,
+      "stockName": "3437 博時",
+      "announcementDate": "2026-03-25",
+      "exDate": "2026-03-29",
+      "announcementCycle": "everyXMonths",
+      "exCycle": "everyXMonths",
+      "announcementEveryXMonthsInterval": 6,
+      "announcementEveryXMonthsDay": 25,
+      "exEveryXMonthsInterval": 6,
+      "exEveryXMonthsDay": 29
+    },
+    {
+      "id": 1759368757911,
+      "stockName": "3416 3417 3419",
+      "announcementDate": "2025-10-15",
+      "exDate": "2025-10-30",
+      "announcementCycle": "monthlyDate",
+      "exCycle": "monthlyDate",
+      "announcementMonthlyDay": 15,
+      "exMonthlyDay": 30
+    },
+    {
+      "id": 1760576250435,
+      "stockName": "QDTY",
+      "announcementDate": "2025-10-14",
+      "exDate": "2025-10-15",
+      "announcementCycle": "weekly",
+      "exCycle": "weekly",
+      "announcementWeekday": 2,
+      "exWeekday": 3
+    },
+    {
+      "id": 1761743918569,
+      "stockName": "PTY",
+      "announcementDate": "2025-11-01",
+      "exDate": "2025-11-11",
+      "announcementCycle": "monthlyDate",
+      "exCycle": "monthlyDate",
+      "announcementMonthlyDay": 1,
+      "exMonthlyDay": 11
+    },
+    {
+      "id": 1763190327140,
+      "stockName": "3451",
+      "announcementDate": "2025-12-06",
+      "exDate": "2025-12-21",
+      "announcementCycle": "monthlyDate",
+      "exCycle": "monthlyDate",
+      "announcementMonthlyDay": 6,
+      "exMonthlyDay": 21
+    }
+  ]
+}
