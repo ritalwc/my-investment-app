@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>買入時間表</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'PingFang TC', 'Heiti TC', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .amount-group {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+        }
+
+        .amount-group select {
+            width: 100px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .radio-label:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .radio-label input[type="radio"] {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .radio-label input[type="radio"]:checked + span {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 150px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+        }
+
+        .schedule-list {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #eee;
+        }
+
+        .schedule-list h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .schedule-item {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .schedule-info {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .schedule-info strong {
+            color: #667eea;
+            font-size: 1.1em;
+        }
+
+        .schedule-info div {
+            margin-top: 5px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+            transform: scale(1.05);
+        }
+
+        .edit-btn {
+            background: #ffc107;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 5px;
+            transition: all 0.3s;
+        }
+
+        .edit-btn:hover {
+            background: #e0a800;
+            transform: scale(1.05);
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            min-width: 100px;
+        }
+
+        .action-btn span {
+            font-size: 2em;
+        }
+
+        .action-btn div {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .action-btn.export {
+            border-left: 4px solid #17a2b8;
+        }
+
+        .action-btn.import {
+            border-left: 4px solid #28a745;
+        }
+
+        .action-btn.reset {
+            border-left: 4px solid #dc3545;
+        }
+
+        .action-btn.add {
+            border-left: 4px solid #667eea;
+        }
+
+        .action-btn.back {
+            border-left: 4px solid #6c757d;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .month-selector {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            flex-wrap: wrap;
+        }
+
+        .month-selector label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .month-selector select {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            background: white;
+            color: #667eea;
+            transition: all 0.3s;
+        }
+
+        .month-selector select:hover {
+            background: #f8f9ff;
+        }
+
+        .calendar-container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .calendar-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+
+        .weekday-header {
+            background: #f0f0f0;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #ddd;
+        }
+
+        .weekday-header.sunday {
+            color: #e74c3c;
+        }
+
+        .weekday-header.saturday {
+            color: #3498db;
+        }
+
+        .calendar-day {
+            min-height: 100px;
+            border: 1px solid #ddd;
+            padding: 8px;
+            background: white;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .calendar-day:hover {
+            background: #f8f9ff;
+            transform: scale(1.02);
+            z-index: 10;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .calendar-day.empty {
+            background: #f9f9f9;
+        }
+
+        .day-number {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .calendar-day.sunday .day-number {
+            color: #e74c3c;
+        }
+
+        .calendar-day.saturday .day-number {
+            color: #3498db;
+        }
+
+        .calendar-day.today {
+            background: #fff9e6;
+            border: 2px solid #ffc107;
+        }
+
+        .event {
+            font-size: 0.75em;
+            padding: 4px 6px;
+            margin: 3px 0;
+            border-radius: 4px;
+            line-height: 1.3;
+            font-weight: 500;
+        }
+
+        .event.monthly {
+            background: #cfe2ff;
+            color: #084298;
+            border-left: 3px solid #0d6efd;
+        }
+
+        .event.weekly {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 3px solid #ffc107;
+        }
+
+        .event.once {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 3px solid #17a2b8;
+        }
+
+        .event.announcement {
+            background: #e0cffc;
+            color: #59359a;
+            border-left: 3px solid #9333ea;
+        }
+
+        .event.exdate {
+            background: #d1f4e0;
+            color: #0f5132;
+            border-left: 3px solid #198754;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .form-card {
+                padding: 20px;
+            }
+
+            .calendar-day {
+                min-height: 80px;
+                padding: 5px;
+                font-size: 0.85em;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .action-buttons {
+                gap: 10px;
+            }
+            
+            .action-btn {
+                min-width: 80px;
+                padding: 12px 15px;
+            }
+            
+            .action-btn span {
+                font-size: 1.5em;
+            }
+            
+            .action-btn div {
+                font-size: 0.85em;
+            }
+
+            .month-selector {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .month-selector select {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .calendar-day {
+                min-height: 60px;
+                font-size: 0.75em;
+            }
+
+            .event {
+                font-size: 0.65em;
+                padding: 2px 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="guide.html" style="position:fixed;top:10px;left:10px;padding:8px 16px;background:rgba(0,0,0,0.7);color:#fff;text-decoration:none;border-radius:6px;font-size:14px;z-index:9999;">← 返回指南</a>
+    <div class="container">
+        <!-- 月曆頁面 -->
+        <div id="calendarPage" class="page active">
+            <h1>📊 買入時間表</h1>
+            <div class="action-buttons">
+                <button class="action-btn add" id="goToInputBtn">
+                    <span>➕</span>
+                    <div>新增排程</div>
+                </button>
+                <button class="action-btn add" id="goToAnnouncementBtn">
+                    <span>📢</span>
+                    <div>公佈排程</div>
+                </button>
+                <button class="action-btn export" id="exportBtn">
+                    <span>📤</span>
+                    <div>導出數據</div>
+                </button>
+                <button class="action-btn import" id="importBtn">
+                    <span>📥</span>
+                    <div>匯入數據</div>
+                </button>
+                <button class="action-btn reset" id="resetBtn">
+                    <span>🔄</span>
+                    <div>重設數據</div>
+                </button>
+                <button class="action-btn" id="syncToGitHubBtn" style="border-left: 4px solid #6f42c1;">
+                    <span>☁️</span>
+                    <div>同步到GitHub</div>
+                </button>
+                <button class="action-btn" id="loadFromGitHubBtn" style="border-left: 4px solid #20c997;">
+                    <span>📥</span>
+                    <div>從GitHub載入</div>
+                </button>
+            </div>
+            <div class="month-selector">
+                <label>年份：</label>
+                <select id="yearSelect"></select>
+                <label>月份：</label>
+                <select id="monthSelect">
+                    <option value="1">1月</option>
+                    <option value="2">2月</option>
+                    <option value="3">3月</option>
+                    <option value="4">4月</option>
+                    <option value="5">5月</option>
+                    <option value="6">6月</option>
+                    <option value="7">7月</option>
+                    <option value="8">8月</option>
+                    <option value="9">9月</option>
+                    <option value="10">10月</option>
+                    <option value="11">11月</option>
+                    <option value="12">12月</option>
+                </select>
+            </div>
+            <div class="calendar-container">
+                <div class="calendar-header" id="calendarHeader"></div>
+                <div class="calendar" id="calendar"></div>
+            </div>
+        </div>
+
+        <!-- 輸入頁面 -->
+        <div id="inputPage" class="page">
+            <h1>📊 買入時間表 - 新增排程</h1>
+            <div class="action-buttons">
+                <button class="action-btn back" id="backToCalendar">
+                    <span>🔙</span>
+                    <div>返回月曆</div>
+                </button>
+                <button class="action-btn export" id="exportBtnInput">
+                    <span>📤</span>
+                    <div>導出數據</div>
+                </button>
+                <button class="action-btn import" id="importBtnInput">
+                    <span>📥</span>
+                    <div>匯入數據</div>
+                </button>
+                <button class="action-btn reset" id="resetBtnInput">
+                    <span>🔄</span>
+                    <div>重設數據</div>
+                </button>
+                <button class="action-btn" id="syncToGitHubBtnInput" style="border-left: 4px solid #6f42c1;">
+                    <span>☁️</span>
+                    <div>同步到GitHub</div>
+                </button>
+                <button class="action-btn" id="loadFromGitHubBtnInput" style="border-left: 4px solid #20c997;">
+                    <span>📥</span>
+                    <div>從GitHub載入</div>
+                </button>
+            </div>
+            <div class="form-card">
+                <form id="scheduleForm">
+                    <div class="form-group">
+                        <label>股票名稱 *</label>
+                        <input type="text" id="stockName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>買入日 *</label>
+                        <input type="date" id="buyDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>數量 *</label>
+                        <div class="amount-group">
+                            <input type="number" id="amount" required min="0" step="any">
+                            <select id="unit">
+                                <option value="元">元</option>
+                                <option value="手">手</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>是否持續？ *</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="continuous" value="no" checked>
+                                <span>否</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="continuous" value="yes">
+                                <span>是</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div id="continuousOptions" class="hidden">
+                        <div class="form-group">
+                            <label>期限 *</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="limitType" value="limited">
+                                    <span>有限期</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="limitType" value="unlimited">
+                                    <span>無限期</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div id="limitedOptions" class="hidden">
+                            <div class="form-group">
+                                <label>多少期？ *</label>
+                                <input type="number" id="periods" min="1">
+                            </div>
+                        </div>
+                        <div id="cycleOptions" class="hidden">
+                            <div class="form-group">
+                                <label>周期 *</label>
+                                <div class="radio-group">
+                                    <label class="radio-label">
+                                        <input type="radio" name="cycleType" value="weekly">
+                                        <span>每週</span>
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="cycleType" value="firstWorkday">
+                                        <span>每月第一個工作天</span>
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="cycleType" value="monthlyDate">
+                                        <span>每月 XX 號</span>
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="cycleType" value="everyXMonths">
+                                        <span>每隔 X 個月的 X 號</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div id="weeklyOptions" class="hidden">
+                                <div class="form-group">
+                                    <label>星期幾？ *</label>
+                                    <select id="weekday">
+                                        <option value="1">星期一</option>
+                                        <option value="2">星期二</option>
+                                        <option value="3">星期三</option>
+                                        <option value="4">星期四</option>
+                                        <option value="5">星期五</option>
+                                        <option value="6">星期六</option>
+                                        <option value="0">星期日</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="monthlyDateOptions" class="hidden">
+                                <div class="form-group">
+                                    <label>日期 *</label>
+                                    <input type="number" id="monthlyDay" min="1" max="31">
+                                </div>
+                            </div>
+                            <div id="everyXMonthsOptions" class="hidden">
+                                <div class="form-group">
+                                    <label>每隔幾個月？ *</label>
+                                    <input type="number" id="everyXMonthsInterval" min="1">
+                                </div>
+                                <div class="form-group">
+                                    <label>日期 *</label>
+                                    <input type="number" id="everyXMonthsDay" min="1" max="31">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">儲存排程</button>
+                        <button type="button" class="btn btn-secondary" id="viewCalendarFromForm">查看月曆</button>
+                    </div>
+                </form>
+                <div id="scheduleList" class="schedule-list hidden">
+                    <h3>已新增的排程：</h3>
+                    <div id="schedules"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 公佈排程頁面 -->
+        <div id="announcementPage" class="page">
+            <h1>📢 買入時間表 - 公佈排程</h1>
+            <div class="action-buttons">
+                <button class="action-btn back" id="backToCalendarFromAnnouncement">
+                    <span>🔙</span>
+                    <div>返回月曆</div>
+                </button>
+                <button class="action-btn export" id="exportBtnAnnouncement">
+                    <span>📤</span>
+                    <div>導出數據</div>
+                </button>
+                <button class="action-btn import" id="importBtnAnnouncement">
+                    <span>📥</span>
+                    <div>匯入數據</div>
+                </button>
+                <button class="action-btn reset" id="resetBtnAnnouncement">
+                    <span>🔄</span>
+                    <div>重設數據</div>
+                </button>
+                <button class="action-btn" id="syncToGitHubBtnAnnouncement" style="border-left: 4px solid #6f42c1;">
+                    <span>☁️</span>
+                    <div>同步到GitHub</div>
+                </button>
+                <button class="action-btn" id="loadFromGitHubBtnAnnouncement" style="border-left: 4px solid #20c997;">
+                    <span>📥</span>
+                    <div>從GitHub載入</div>
+                </button>
+            </div>
+            <div class="form-card">
+                <form id="announcementForm">
+                    <div class="form-group">
+                        <label>股票名稱 *</label>
+                        <input type="text" id="announcementStockName" required>
+                    </div>
+                    <h3 style="margin: 20px 0 15px; color: #667eea;">公佈日設定 *</h3>
+                    <div class="form-group">
+                        <label>起始公佈日 *</label>
+                        <input type="date" id="announcementDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>公佈日周期 *</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="announcementCycle" value="weekly">
+                                <span>每週</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="announcementCycle" value="monthlyDate" checked>
+                                <span>每月 XX 號</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="announcementCycle" value="everyXMonths">
+                                <span>每隔 X 個月的 X 號</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="announcementCycle" value="yearly">
+                                <span>每年 X 月 X 號</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div id="announcementWeeklyOptions" class="hidden">
+                        <div class="form-group">
+                            <label>星期幾？ *</label>
+                            <select id="announcementWeekday">
+                                <option value="1">星期一</option>
+                                <option value="2">星期二</option>
+                                <option value="3">星期三</option>
+                                <option value="4">星期四</option>
+                                <option value="5">星期五</option>
+                                <option value="6">星期六</option>
+                                <option value="0">星期日</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="announcementMonthlyDateOptions">
+                        <div class="form-group">
+                            <label>日期 *</label>
+                            <input type="number" id="announcementMonthlyDay" min="1" max="31">
+                        </div>
+                    </div>
+                    <div id="announcementEveryXMonthsOptions" class="hidden">
+                        <div class="form-group">
+                            <label>每隔幾個月？ *</label>
+                            <input type="number" id="announcementEveryXMonthsInterval" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>日期 *</label>
+                            <input type="number" id="announcementEveryXMonthsDay" min="1" max="31">
+                        </div>
+                    </div>
+                    <div id="announcementYearlyOptions" class="hidden">
+                        <div class="form-group">
+                            <label>月份 *</label>
+                            <select id="announcementYearlyMonth">
+                                <option value="1">1月</option>
+                                <option value="2">2月</option>
+                                <option value="3">3月</option>
+                                <option value="4">4月</option>
+                                <option value="5">5月</option>
+                                <option value="6">6月</option>
+                                <option value="7">7月</option>
+                                <option value="8">8月</option>
+                                <option value="9">9月</option>
+                                <option value="10">10月</option>
+                                <option value="11">11月</option>
+                                <option value="12">12月</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>日期 *</label>
+                            <input type="number" id="announcementYearlyDay" min="1" max="31">
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 20px 0 15px; color: #198754;">除淨日設定 *</h3>
+                    <div class="form-group">
+                        <label>起始除淨日 *</label>
+                        <input type="date" id="exDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>除淨日周期 *</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="exCycle" value="weekly">
+                                <span>每週</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="exCycle" value="monthlyDate" checked>
+                                <span>每月 XX 號</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="exCycle" value="everyXMonths">
+                                <span>每隔 X 個月的 X 號</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="exCycle" value="yearly">
+                                <span>每年 X 月 X 號</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div id="exWeeklyOptions" class="hidden">
+                        <div class="form-group">
+                            <label>星期幾？ *</label>
+                            <select id="exWeekday">
+                                <option value="1">星期一</option>
+                                <option value="2">星期二</option>
+                                <option value="3">星期三</option>
+                                <option value="4">星期四</option>
+                                <option value="5">星期五</option>
+                                <option value="6">星期六</option>
+                                <option value="0">星期日</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="exMonthlyDateOptions">
+                        <div class="form-group">
+                            <label>日期 *</label>
+                            <input type="number" id="exMonthlyDay" min="1" max="31">
+                        </div>
+                    </div>
+                    <div id="exEveryXMonthsOptions" class="hidden">
+                        <div class="form-group">
+                            <label>每隔幾個月？ *</label>
+                            <input type="number" id="exEveryXMonthsInterval" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>日期 *</label>
+                            <input type="number" id="exEveryXMonthsDay" min="1" max="31">
+                        </div>
+                    </div>
+                    <div id="exYearlyOptions" class="hidden">
+                        <div class="form-group">
+                            <label>月份 *</label>
+                            <select id="exYearlyMonth">
+                                <option value="1">1月</option>
+                                <option value="2">2月</option>
+                                <option value="3">3月</option>
+                                <option value="4">4月</option>
+                                <option value="5">5月</option>
+                                <option value="6">6月</option>
+                                <option value="7">7月</option>
+                                <option value="8">8月</option>
+                                <option value="9">9月</option>
+                                <option value="10">10月</option>
+                                <option value="11">11月</option>
+                                <option value="12">12月</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>日期 *</label>
+                            <input type="number" id="exYearlyDay" min="1" max="31">
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">儲存排程</button>
+                        <button type="button" class="btn btn-secondary" id="viewCalendarFromAnnouncement">查看月曆</button>
+                    </div>
+                </form>
+                <div id="announcementScheduleList" class="schedule-list hidden">
+                    <h3>已新增的公佈排程：</h3>
+                    <div id="announcementSchedules"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="importFile" accept=".json" style="display: none;">
+
+    <script>
+        // 全局變量
+        let schedules = [];
+        let announcements = [];
+        let currentYear = new Date().getFullYear();
+        let currentMonth = new Date().getMonth() + 1;
+        let editingId = null;
+        let editingAnnouncementId = null;
+
+        // ======================================
+        // IndexedDB
+        // ======================================
+        function openDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('BuyScheduleDB', 2);
+
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains('schedules')) {
+                        db.createObjectStore('schedules', { keyPath: 'id' });
+                    }
+                    if (!db.objectStoreNames.contains('announcements')) {
+                        db.createObjectStore('announcements', { keyPath: 'id' });
+                    }
+                };
+
+                request.onsuccess = (event) => resolve(event.target.result);
+                request.onerror = (event) => reject('❌ IndexedDB 開啟失敗:' + event.target.errorCode);
+            });
+        }
+
+        async function saveSchedules() {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction('schedules', 'readwrite');
+                const store = tx.objectStore('schedules');
+                const clearReq = store.clear();
+                clearReq.onsuccess = () => {
+                    schedules.forEach(schedule => store.put(schedule));
+                };
+                tx.oncomplete = () => resolve(true);
+                tx.onerror = () => reject('❌ 存檔失敗');
+            });
+        }
+
+        async function loadSchedules() {
+            const db = await openDB();
+            return new Promise((resolve) => {
+                const tx = db.transaction('schedules', 'readonly');
+                const store = tx.objectStore('schedules');
+                const request = store.getAll();
+
+                request.onsuccess = (event) => {
+                    schedules = event.target.result || [];
+                    updateScheduleList();
+                    renderCalendar();
+                    resolve(schedules);
+                };
+                request.onerror = () => {
+                    console.error('❌ 讀取失敗');
+                    schedules = [];
+                    resolve([]);
+                };
+            });
+        }
+
+        async function deleteSchedule(id) {
+            if (confirm('確定要刪除此排程嗎？')) {
+                const db = await openDB();
+                const tx = db.transaction('schedules', 'readwrite');
+                tx.objectStore('schedules').delete(id);
+                schedules = schedules.filter(s => s.id !== id);
+                updateScheduleList();
+                renderCalendar();
+            }
+        }
+
+        async function saveAnnouncements() {
+            const db = await openDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction('announcements', 'readwrite');
+                const store = tx.objectStore('announcements');
+                const clearReq = store.clear();
+                clearReq.onsuccess = () => {
+                    announcements.forEach(announcement => store.put(announcement));
+                };
+                tx.oncomplete = () => resolve(true);
+                tx.onerror = () => reject('❌ 存檔失敗');
+            });
+        }
+
+        async function loadAnnouncements() {
+            const db = await openDB();
+            return new Promise((resolve) => {
+                const tx = db.transaction('announcements', 'readonly');
+                const store = tx.objectStore('announcements');
+                const request = store.getAll();
+
+                request.onsuccess = (event) => {
+                    announcements = event.target.result || [];
+                    updateAnnouncementList();
+                    renderCalendar();
+                    resolve(announcements);
+                };
+                request.onerror = () => {
+                    console.error('❌ 讀取失敗');
+                    announcements = [];
+                    resolve([]);
+                };
+            });
+        }
+
+        async function deleteAnnouncement(id) {
+            if (confirm('確定要刪除此公佈排程嗎？')) {
+                const db = await openDB();
+                const tx = db.transaction('announcements', 'readwrite');
+                tx.objectStore('announcements').delete(id);
+                announcements = announcements.filter(a => a.id !== id);
+                updateAnnouncementList();
+                renderCalendar();
+            }
+        }
+
+        // ======================================
+        // 頁面切換
+        // ======================================
+        const inputPage = document.getElementById('inputPage');
+        const calendarPage = document.getElementById('calendarPage');
+        const announcementPage = document.getElementById('announcementPage');
+        const goToInputBtn = document.getElementById('goToInputBtn');
+        const goToAnnouncementBtn = document.getElementById('goToAnnouncementBtn');
+        const backToCalendar = document.getElementById('backToCalendar');
+        const backToCalendarFromAnnouncement = document.getElementById('backToCalendarFromAnnouncement');
+        const viewCalendarFromForm = document.getElementById('viewCalendarFromForm');
+        const viewCalendarFromAnnouncement = document.getElementById('viewCalendarFromAnnouncement');
+
+        goToInputBtn.addEventListener('click', () => {
+            calendarPage.classList.remove('active');
+            inputPage.classList.add('active');
+        });
+
+        goToAnnouncementBtn.addEventListener('click', () => {
+            calendarPage.classList.remove('active');
+            announcementPage.classList.add('active');
+        });
+
+        backToCalendar.addEventListener('click', () => {
+            inputPage.classList.remove('active');
+            calendarPage.classList.add('active');
+            renderCalendar();
+        });
+
+        backToCalendarFromAnnouncement.addEventListener('click', () => {
+            announcementPage.classList.remove('active');
+            calendarPage.classList.add('active');
+            renderCalendar();
+        });
+
+        viewCalendarFromForm.addEventListener('click', () => {
+            inputPage.classList.remove('active');
+            calendarPage.classList.add('active');
+            renderCalendar();
+        });
+
+        viewCalendarFromAnnouncement.addEventListener('click', () => {
+            announcementPage.classList.remove('active');
+            calendarPage.classList.add('active');
+            renderCalendar();
+        });
+
+        // ======================================
+        // 表單邏輯 - 買入排程
+        // ======================================
+        const form = document.getElementById('scheduleForm');
+        const continuousRadios = document.querySelectorAll('input[name="continuous"]');
+        const limitTypeRadios = document.querySelectorAll('input[name="limitType"]');
+        const cycleTypeRadios = document.querySelectorAll('input[name="cycleType"]');
+
+        const continuousOptions = document.getElementById('continuousOptions');
+        const limitedOptions = document.getElementById('limitedOptions');
+        const cycleOptions = document.getElementById('cycleOptions');
+        const weeklyOptions = document.getElementById('weeklyOptions');
+        const monthlyDateOptions = document.getElementById('monthlyDateOptions');
+        const everyXMonthsOptions = document.getElementById('everyXMonthsOptions');
+
+        continuousRadios.forEach(radio => {
+            radio.addEventListener('change', e => {
+                if (e.target.value === 'yes') {
+                    continuousOptions.classList.remove('hidden');
+                } else {
+                    continuousOptions.classList.add('hidden');
+                    limitedOptions.classList.add('hidden');
+                    cycleOptions.classList.add('hidden');
+                }
+            });
+        });
+
+        limitTypeRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                if (e.target.value === 'limited') limitedOptions.classList.remove('hidden');
+                else limitedOptions.classList.add('hidden');
+                cycleOptions.classList.remove('hidden');
+            });
+        });
+
+        cycleTypeRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                weeklyOptions.classList.add('hidden');
+                monthlyDateOptions.classList.add('hidden');
+                everyXMonthsOptions.classList.add('hidden');
+                if (e.target.value === 'weekly') weeklyOptions.classList.remove('hidden');
+                else if (e.target.value === 'monthlyDate') monthlyDateOptions.classList.remove('hidden');
+                else if (e.target.value === 'everyXMonths') everyXMonthsOptions.classList.remove('hidden');
+            });
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const stockName = document.getElementById('stockName').value;
+            const buyDate = document.getElementById('buyDate').value;
+            const amount = document.getElementById('amount').value;
+            const unit = document.getElementById('unit').value;
+            const continuous = document.querySelector('input[name="continuous"]:checked').value;
+
+            const schedule = {
+                id: editingId || Date.now(),
+                stockName, buyDate, amount, unit,
+                continuous: continuous === 'yes'
+            };
+
+            if (schedule.continuous) {
+                const limitType = document.querySelector('input[name="limitType"]:checked')?.value;
+                schedule.limitType = limitType;
+                if (limitType === 'limited') schedule.periods = parseInt(document.getElementById('periods').value);
+
+                const cycleType = document.querySelector('input[name="cycleType"]:checked')?.value;
+                schedule.cycleType = cycleType;
+                if (cycleType === 'weekly') {
+                    schedule.weekday = parseInt(document.getElementById('weekday').value);
+                } else if (cycleType === 'monthlyDate') {
+                    schedule.monthlyDay = parseInt(document.getElementById('monthlyDay').value);
+                } else if (cycleType === 'everyXMonths') {
+                    schedule.everyXMonthsInterval = parseInt(document.getElementById('everyXMonthsInterval').value);
+                    schedule.everyXMonthsDay = parseInt(document.getElementById('everyXMonthsDay').value);
+                }
+            }
+
+            if (editingId) {
+                const idx = schedules.findIndex(s => s.id === editingId);
+                if (idx !== -1) schedules[idx] = schedule;
+                alert('✏️ 排程已更新！');
+                editingId = null;
+            } else {
+                schedules.push(schedule);
+                alert('✅ 排程已新增！');
+            }
+            await saveSchedules();
+            updateScheduleList();
+            renderCalendar();
+            form.reset();
+            continuousOptions.classList.add('hidden');
+        });
+
+        // ======================================
+        // 表單邏輯 - 公佈排程
+        // ======================================
+        const announcementForm = document.getElementById('announcementForm');
+        const announcementCycleRadios = document.querySelectorAll('input[name="announcementCycle"]');
+        const announcementWeeklyOptions = document.getElementById('announcementWeeklyOptions');
+        const announcementMonthlyDateOptions = document.getElementById('announcementMonthlyDateOptions');
+        const announcementEveryXMonthsOptions = document.getElementById('announcementEveryXMonthsOptions');
+        const announcementYearlyOptions = document.getElementById('announcementYearlyOptions');
+
+        announcementCycleRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                announcementWeeklyOptions.classList.add('hidden');
+                announcementMonthlyDateOptions.classList.add('hidden');
+                announcementEveryXMonthsOptions.classList.add('hidden');
+                announcementYearlyOptions.classList.add('hidden');
+                
+                if (e.target.value === 'weekly') announcementWeeklyOptions.classList.remove('hidden');
+                else if (e.target.value === 'monthlyDate') announcementMonthlyDateOptions.classList.remove('hidden');
+                else if (e.target.value === 'everyXMonths') announcementEveryXMonthsOptions.classList.remove('hidden');
+                else if (e.target.value === 'yearly') announcementYearlyOptions.classList.remove('hidden');
+            });
+        });
+
+        const exCycleRadios = document.querySelectorAll('input[name="exCycle"]');
+        const exWeeklyOptions = document.getElementById('exWeeklyOptions');
+        const exMonthlyDateOptions = document.getElementById('exMonthlyDateOptions');
+        const exEveryXMonthsOptions = document.getElementById('exEveryXMonthsOptions');
+        const exYearlyOptions = document.getElementById('exYearlyOptions');
+
+        exCycleRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                exWeeklyOptions.classList.add('hidden');
+                exMonthlyDateOptions.classList.add('hidden');
+                exEveryXMonthsOptions.classList.add('hidden');
+                exYearlyOptions.classList.add('hidden');
+                
+                if (e.target.value === 'weekly') exWeeklyOptions.classList.remove('hidden');
+                else if (e.target.value === 'monthlyDate') exMonthlyDateOptions.classList.remove('hidden');
+                else if (e.target.value === 'everyXMonths') exEveryXMonthsOptions.classList.remove('hidden');
+                else if (e.target.value === 'yearly') exYearlyOptions.classList.remove('hidden');
+            });
+        });
+
+        announcementForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const stockName = document.getElementById('announcementStockName').value;
+            const announcementDate = document.getElementById('announcementDate').value;
+            const exDate = document.getElementById('exDate').value;
+            
+            const announcementCycle = document.querySelector('input[name="announcementCycle"]:checked').value;
+            const exCycle = document.querySelector('input[name="exCycle"]:checked').value;
+            
+            const announcement = {
+                id: editingAnnouncementId || Date.now(),
+                stockName,
+                announcementDate,
+                exDate,
+                announcementCycle,
+                exCycle
+            };
+            
+            // 公佈日周期详情
+            if (announcementCycle === 'weekly') {
+                announcement.announcementWeekday = parseInt(document.getElementById('announcementWeekday').value);
+            } else if (announcementCycle === 'monthlyDate') {
+                announcement.announcementMonthlyDay = parseInt(document.getElementById('announcementMonthlyDay').value);
+            } else if (announcementCycle === 'everyXMonths') {
+                announcement.announcementEveryXMonthsInterval = parseInt(document.getElementById('announcementEveryXMonthsInterval').value);
+                announcement.announcementEveryXMonthsDay = parseInt(document.getElementById('announcementEveryXMonthsDay').value);
+            } else if (announcementCycle === 'yearly') {
+                announcement.announcementYearlyMonth = parseInt(document.getElementById('announcementYearlyMonth').value);
+                announcement.announcementYearlyDay = parseInt(document.getElementById('announcementYearlyDay').value);
+            }
+            
+            // 除淨日周期详情
+            if (exCycle === 'weekly') {
+                announcement.exWeekday = parseInt(document.getElementById('exWeekday').value);
+            } else if (exCycle === 'monthlyDate') {
+                announcement.exMonthlyDay = parseInt(document.getElementById('exMonthlyDay').value);
+            } else if (exCycle === 'everyXMonths') {
+                announcement.exEveryXMonthsInterval = parseInt(document.getElementById('exEveryXMonthsInterval').value);
+                announcement.exEveryXMonthsDay = parseInt(document.getElementById('exEveryXMonthsDay').value);
+            } else if (exCycle === 'yearly') {
+                announcement.exYearlyMonth = parseInt(document.getElementById('exYearlyMonth').value);
+                announcement.exYearlyDay = parseInt(document.getElementById('exYearlyDay').value);
+            }
+            
+            if (editingAnnouncementId) {
+                const idx = announcements.findIndex(a => a.id === editingAnnouncementId);
+                if (idx !== -1) announcements[idx] = announcement;
+                alert('✏️ 公佈排程已更新！');
+                editingAnnouncementId = null;
+            } else {
+                announcements.push(announcement);
+                alert('✅ 公佈排程已新增！');
+            }
+            
+            await saveAnnouncements();
+            updateAnnouncementList();
+            renderCalendar();
+            announcementForm.reset();
+        });
+
+        // ======================================
+        // 編輯功能
+        // ======================================
+        window.editSchedule = function(id) {
+            const schedule = schedules.find(s => s.id === id);
+            if (!schedule) return;
+            document.getElementById('stockName').value = schedule.stockName;
+            document.getElementById('buyDate').value = schedule.buyDate;
+            document.getElementById('amount').value = schedule.amount;
+            document.getElementById('unit').value = schedule.unit;
+            if (schedule.continuous) {
+                document.querySelector('input[name="continuous"][value="yes"]').checked = true;
+                continuousOptions.classList.remove('hidden');
+                if (schedule.limitType) {
+                    document.querySelector(`input[name="limitType"][value="${schedule.limitType}"]`).checked = true;
+                    if (schedule.limitType === 'limited') {
+                        limitedOptions.classList.remove('hidden');
+                        document.getElementById('periods').value = schedule.periods || '';
+                    }
+                }
+                cycleOptions.classList.remove('hidden');
+                if (schedule.cycleType) {
+                    document.querySelector(`input[name="cycleType"][value="${schedule.cycleType}"]`).checked = true;
+                    weeklyOptions.classList.add('hidden');
+                    monthlyDateOptions.classList.add('hidden');
+                    everyXMonthsOptions.classList.add('hidden');
+                    if (schedule.cycleType === 'weekly') {
+                        weeklyOptions.classList.remove('hidden');
+                        document.getElementById('weekday').value = schedule.weekday;
+                    } else if (schedule.cycleType === 'monthlyDate') {
+                        monthlyDateOptions.classList.remove('hidden');
+                        document.getElementById('monthlyDay').value = schedule.monthlyDay;
+                    } else if (schedule.cycleType === 'everyXMonths') {
+                        everyXMonthsOptions.classList.remove('hidden');
+                        document.getElementById('everyXMonthsInterval').value = schedule.everyXMonthsInterval;
+                        document.getElementById('everyXMonthsDay').value = schedule.everyXMonthsDay;
+                    }
+                }
+            } else {
+                document.querySelector('input[name="continuous"][value="no"]').checked = true;
+                continuousOptions.classList.add('hidden');
+            }
+            editingId = id;
+            calendarPage.classList.remove('active');
+            inputPage.classList.add('active');
+        };
+
+        window.editAnnouncement = function(id) {
+            const announcement = announcements.find(a => a.id === id);
+            if (!announcement) return;
+            
+            document.getElementById('announcementStockName').value = announcement.stockName;
+            document.getElementById('announcementDate').value = announcement.announcementDate;
+            document.getElementById('exDate').value = announcement.exDate;
+            
+            // 设置公佈日周期
+            document.querySelector(`input[name="announcementCycle"][value="${announcement.announcementCycle}"]`).checked = true;
+            announcementWeeklyOptions.classList.add('hidden');
+            announcementMonthlyDateOptions.classList.add('hidden');
+            announcementEveryXMonthsOptions.classList.add('hidden');
+            announcementYearlyOptions.classList.add('hidden');
+            
+            if (announcement.announcementCycle === 'weekly') {
+                announcementWeeklyOptions.classList.remove('hidden');
+                document.getElementById('announcementWeekday').value = announcement.announcementWeekday;
+            } else if (announcement.announcementCycle === 'monthlyDate') {
+                announcementMonthlyDateOptions.classList.remove('hidden');
+                document.getElementById('announcementMonthlyDay').value = announcement.announcementMonthlyDay;
+            } else if (announcement.announcementCycle === 'everyXMonths') {
+                announcementEveryXMonthsOptions.classList.remove('hidden');
+                document.getElementById('announcementEveryXMonthsInterval').value = announcement.announcementEveryXMonthsInterval;
+                document.getElementById('announcementEveryXMonthsDay').value = announcement.announcementEveryXMonthsDay;
+            } else if (announcement.announcementCycle === 'yearly') {
+                announcementYearlyOptions.classList.remove('hidden');
+                document.getElementById('announcementYearlyMonth').value = announcement.announcementYearlyMonth;
+                document.getElementById('announcementYearlyDay').value = announcement.announcementYearlyDay;
+            }
+            
+            // 设置除淨日周期
+            document.querySelector(`input[name="exCycle"][value="${announcement.exCycle}"]`).checked = true;
+            exWeeklyOptions.classList.add('hidden');
+            exMonthlyDateOptions.classList.add('hidden');
+            exEveryXMonthsOptions.classList.add('hidden');
+            exYearlyOptions.classList.add('hidden');
+            
+            if (announcement.exCycle === 'weekly') {
+                exWeeklyOptions.classList.remove('hidden');
+                document.getElementById('exWeekday').value = announcement.exWeekday;
+            } else if (announcement.exCycle === 'monthlyDate') {
+                exMonthlyDateOptions.classList.remove('hidden');
+                document.getElementById('exMonthlyDay').value = announcement.exMonthlyDay;
+            } else if (announcement.exCycle === 'everyXMonths') {
+                exEveryXMonthsOptions.classList.remove('hidden');
+                document.getElementById('exEveryXMonthsInterval').value = announcement.exEveryXMonthsInterval;
+                document.getElementById('exEveryXMonthsDay').value = announcement.exEveryXMonthsDay;
+            } else if (announcement.exCycle === 'yearly') {
+                exYearlyOptions.classList.remove('hidden');
+                document.getElementById('exYearlyMonth').value = announcement.exYearlyMonth;
+                document.getElementById('exYearlyDay').value = announcement.exYearlyDay;
+            }
+            
+            editingAnnouncementId = id;
+            calendarPage.classList.remove('active');
+            announcementPage.classList.add('active');
+        };
+
+        window.deleteSchedule = deleteSchedule;
+        window.deleteAnnouncement = deleteAnnouncement;
+
+        // ======================================
+        // 畫面更新
+        // ======================================
+        function updateScheduleList() {
+            const list = document.getElementById('scheduleList');
+            const divs = document.getElementById('schedules');
+            if (schedules.length === 0) { list.classList.add('hidden'); return; }
+            list.classList.remove('hidden');
+            divs.innerHTML = '';
+            schedules.forEach(schedule => {
+                let cycleText = '';
+                if (schedule.continuous) {
+                    if (schedule.cycleType === 'weekly') {
+                        const days = ['日','一','二','三','四','五','六'];
+                        cycleText = `每週${days[schedule.weekday]}`;
+                    } else if (schedule.cycleType === 'firstWorkday') cycleText = '每月第一個工作天';
+                    else if (schedule.cycleType === 'monthlyDate') cycleText = `每月${schedule.monthlyDay}號`;
+                    else if (schedule.cycleType === 'everyXMonths') cycleText = `每隔 ${schedule.everyXMonthsInterval} 個月的 ${schedule.everyXMonthsDay} 號`;
+                    if (schedule.limitType === 'limited') cycleText += ` (${schedule.periods}期)`; else cycleText += ' (無限期)';
+                } else cycleText = '單次';
+                const div = document.createElement('div');
+                div.className = 'schedule-item';
+                div.innerHTML = `
+                    <div class="schedule-info">
+                        <strong>${schedule.stockName}</strong>
+                        <div>數量：${schedule.amount} ${schedule.unit} | 開始日期：${schedule.buyDate}</div>
+                        <div>周期：${cycleText}</div>
+                    </div>
+                    <div>
+                        <button class="edit-btn" onclick="editSchedule(${schedule.id})">編輯</button>
+                        <button class="delete-btn" onclick="deleteSchedule(${schedule.id})">刪除</button>
+                    </div>
+                `;
+                divs.appendChild(div);
+            });
+        }
+
+        function updateAnnouncementList() {
+            const list = document.getElementById('announcementScheduleList');
+            const divs = document.getElementById('announcementSchedules');
+            if (announcements.length === 0) {
+                list.classList.add('hidden');
+                return;
+            }
+            list.classList.remove('hidden');
+            divs.innerHTML = '';
+            
+            announcements.forEach(announcement => {
+                let announcementCycleText = getCycleText(announcement, 'announcement');
+                let exCycleText = getCycleText(announcement, 'ex');
+                
+                const div = document.createElement('div');
+                div.className = 'schedule-item';
+                div.innerHTML = `
+                    <div class="schedule-info">
+                        <strong>${announcement.stockName}</strong>
+                        <div>📢 公佈日：${announcement.announcementDate} | ${announcementCycleText}</div>
+                        <div>📅 除淨日：${announcement.exDate} | ${exCycleText}</div>
+                    </div>
+                    <div>
+                        <button class="edit-btn" onclick="editAnnouncement(${announcement.id})">編輯</button>
+                        <button class="delete-btn" onclick="deleteAnnouncement(${announcement.id})">刪除</button>
+                    </div>
+                `;
+                divs.appendChild(div);
+            });
+        }
+
+        function getCycleText(announcement, type) {
+            const prefix = type === 'announcement' ? 'announcement' : 'ex';
+            const cycle = announcement[`${prefix}Cycle`];
+            
+            if (cycle === 'weekly') {
+                const days = ['日', '一', '二', '三', '四', '五', '六'];
+                return `每週${days[announcement[`${prefix}Weekday`]]}`;
+            } else if (cycle === 'monthlyDate') {
+                return `每月${announcement[`${prefix}MonthlyDay`]}號`;
+            } else if (cycle === 'everyXMonths') {
+                return `每隔 ${announcement[`${prefix}EveryXMonthsInterval`]} 個月的 ${announcement[`${prefix}EveryXMonthsDay`]} 號`;
+            } else if (cycle === 'yearly') {
+                return `每年 ${announcement[`${prefix}YearlyMonth`]} 月 ${announcement[`${prefix}YearlyDay`]} 號`;
+            }
+            return '';
+        }
+
+        function renderCalendar() {
+            const calendar = document.getElementById('calendar');
+            document.getElementById('calendarHeader').textContent = `${currentYear}年${currentMonth}月`;
+            calendar.innerHTML = '';
+            const weekdays = ['日','一','二','三','四','五','六'];
+            const dayClasses = ['sunday','','','','','','saturday'];
+            weekdays.forEach((d,i)=> {
+                const div=document.createElement('div');
+                div.className=`weekday-header ${dayClasses[i]}`;
+                div.textContent=d; calendar.appendChild(div);
+            });
+            const firstDay=new Date(currentYear,currentMonth-1,1).getDay();
+            const daysInMonth=new Date(currentYear,currentMonth,0).getDate();
+            for(let i=0;i<firstDay;i++){const div=document.createElement('div');div.className='calendar-day empty';calendar.appendChild(div);}
+            const today=new Date();
+            const isCurrent=today.getFullYear()===currentYear && today.getMonth()+1===currentMonth;
+            for(let day=1;day<=daysInMonth;day++){
+                const div=document.createElement('div');
+                const dayOfWeek=new Date(currentYear,currentMonth-1,day).getDay();
+                div.className='calendar-day';
+                if(dayOfWeek===0)div.classList.add('sunday');
+                if(dayOfWeek===6)div.classList.add('saturday');
+                if(isCurrent && day===today.getDate())div.classList.add('today');
+                const dn=document.createElement('div');
+                dn.className='day-number'; dn.textContent=day;
+                div.appendChild(dn);
+                const events=getEventsForDate(currentYear,currentMonth,day);
+                events.forEach(event=>{
+                    const ed=document.createElement('div');
+                    ed.className=`event ${event.type}`;
+                    ed.textContent=`${event.stockName}${event.amount ? ' $'+event.amount : ''}`;
+                    div.appendChild(ed);
+                });
+                calendar.appendChild(div);
+            }
+        }
+
+        function getEventsForDate(year,month,day){
+            const events=[]; const currentDate=new Date(year,month-1,day); currentDate.setHours(0,0,0,0);
+            const dayOfWeek=currentDate.getDay();
+            schedules.forEach(schedule=>{
+                const startDate=new Date(schedule.buyDate); startDate.setHours(0,0,0,0);
+                if(currentDate<startDate)return;
+                if(!schedule.continuous){
+                    if(currentDate.getTime()===startDate.getTime())
+                        events.push({stockName:schedule.stockName,amount:schedule.amount,type:'once'});
+                } else {
+                    if(schedule.limitType==='limited'){
+                        if(schedule.cycleType==='weekly'){
+                            const weeksDiff=Math.floor((currentDate-startDate)/(7*24*60*60*1000));
+                            if(weeksDiff>=schedule.periods)return;
+                        } else {
+                            const monthsDiff=(year-startDate.getFullYear())*12+(month-1-startDate.getMonth());
+                            if(monthsDiff>=schedule.periods)return;
+                        }
+                    }
+                    if(schedule.cycleType==='weekly' && dayOfWeek===schedule.weekday)
+                        events.push({stockName:schedule.stockName,amount:schedule.amount,type:'weekly'});
+                    else if(schedule.cycleType==='monthlyDate' && day===schedule.monthlyDay)
+                        events.push({stockName:schedule.stockName,amount:schedule.amount,type:'monthly'});
+                    else if(schedule.cycleType==='firstWorkday' && isFirstWorkday(year,month,day))
+                        events.push({stockName:schedule.stockName,amount:schedule.amount,type:'monthly'});
+                    else if(schedule.cycleType==='everyXMonths'){
+                        const monthsDiff=(year-startDate.getFullYear())*12+(month-1-startDate.getMonth());
+                        if(monthsDiff>=0 && monthsDiff % schedule.everyXMonthsInterval===0 && day===schedule.everyXMonthsDay)
+                            events.push({stockName:schedule.stockName,amount:schedule.amount,type:'monthly'});
+                    }
+                }
+            });
+            
+            // 處理公佈排程
+            announcements.forEach(announcement => {
+                // 處理公佈日
+                if (matchesCycle(announcement, 'announcement', year, month, day, dayOfWeek, currentDate)) {
+                    events.push({
+                        stockName: announcement.stockName + ' (公佈)',
+                        amount: '',
+                        type: 'announcement'
+                    });
+                }
+                
+                // 處理除淨日
+                if (matchesCycle(announcement, 'ex', year, month, day, dayOfWeek, currentDate)) {
+                    events.push({
+                        stockName: announcement.stockName + ' (除淨)',
+                        amount: '',
+                        type: 'exdate'
+                    });
+                }
+            });
+            
+            return events;
+        }
+
+        function matchesCycle(announcement, type, year, month, day, dayOfWeek, currentDate) {
+            const prefix = type === 'announcement' ? 'announcement' : 'ex';
+            const startDate = new Date(announcement[`${type === 'announcement' ? 'announcementDate' : 'exDate'}`]);
+            startDate.setHours(0, 0, 0, 0);
+            
+            if (currentDate < startDate) return false;
+            
+            const cycle = announcement[`${prefix}Cycle`];
+            
+            if (cycle === 'weekly') {
+                return dayOfWeek === announcement[`${prefix}Weekday`];
+            } else if (cycle === 'monthlyDate') {
+                return day === announcement[`${prefix}MonthlyDay`];
+            } else if (cycle === 'everyXMonths') {
+                const monthsDiff = (year - startDate.getFullYear()) * 12 + (month - 1 - startDate.getMonth());
+                return monthsDiff >= 0 && 
+                       monthsDiff % announcement[`${prefix}EveryXMonthsInterval`] === 0 && 
+                       day === announcement[`${prefix}EveryXMonthsDay`];
+            } else if (cycle === 'yearly') {
+                return month === announcement[`${prefix}YearlyMonth`] && 
+                       day === announcement[`${prefix}YearlyDay`];
+            }
+            
+            return false;
+        }
+
+        function isFirstWorkday(year,month,day){
+            const date=new Date(year,month-1,day); const dow=date.getDay();
+            if(dow===0||dow===6)return false;
+            for(let d=1;d<day;d++){
+                const check=new Date(year,month-1,d);
+                const cd=check.getDay();
+                if(cd!==0 && cd!==6)return false;
+            }
+            return true;
+        }
+
+        // ======================================
+        // 年月選擇器
+        // ======================================
+        const yearSelect=document.getElementById('yearSelect');
+        for(let y=currentYear-2;y<=currentYear+5;y++){
+            const opt=document.createElement('option');
+            opt.value=y; opt.textContent=y;
+            if(y===currentYear)opt.selected=true;
+            yearSelect.appendChild(opt);
+        }
+        yearSelect.addEventListener('change',e=>{currentYear=parseInt(e.target.value);renderCalendar();});
+        const monthSelect=document.getElementById('monthSelect');
+        monthSelect.value=currentMonth;
+        monthSelect.addEventListener('change',e=>{currentMonth=parseInt(e.target.value);renderCalendar();});
+
+        // ======================================
+        // 資料匯出/匯入/重設
+        // ======================================
+        function exportData(){
+            if(schedules.length===0 && announcements.length===0){alert('⚠️ 沒有數據可以導出！');return;}
+            const dataStr=JSON.stringify({
+                schedules,
+                announcements
+            },null,2);
+            const blob=new Blob([dataStr],{type:"application/json"});
+            const url=URL.createObjectURL(blob);
+            const a=document.createElement('a');
+            a.href=url;
+            a.download=`買入時間表_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a); a.click();
+            document.body.removeChild(a); URL.revokeObjectURL(url);
+            alert('✅ 數據已導出！');
+        }
+
+        function importData(){document.getElementById('importFile').click();}
+
+        async function resetData(){
+            if(schedules.length===0 && announcements.length===0){alert('⚠️ 目前沒有任何數據！');return;}
+            if(confirm('⚠️ 確定要重設所有數據嗎？')){
+                if(confirm('⚠️ 再次確認：真的要刪除所有排程嗎？')){
+                    schedules=[]; 
+                    announcements=[];
+                    await saveSchedules();
+                    await saveAnnouncements();
+                    updateScheduleList();
+                    updateAnnouncementList();
+                    renderCalendar();
+                    alert('✅ 數據已重設！');
+                }
+            }
+        }
+
+        document.getElementById('exportBtnInput').addEventListener('click',e=>{e.preventDefault();exportData();});
+        document.getElementById('importBtnInput').addEventListener('click',e=>{e.preventDefault();importData();});
+        document.getElementById('resetBtnInput').addEventListener('click',e=>{e.preventDefault();resetData();});
+        document.getElementById('exportBtn').addEventListener('click',e=>{e.preventDefault();exportData();});
+        document.getElementById('importBtn').addEventListener('click',e=>{e.preventDefault();importData();});
+        document.getElementById('resetBtn').addEventListener('click',e=>{e.preventDefault();resetData();});
+        document.getElementById('exportBtnAnnouncement').addEventListener('click',e=>{e.preventDefault();exportData();});
+        document.getElementById('importBtnAnnouncement').addEventListener('click',e=>{e.preventDefault();importData();});
+        document.getElementById('resetBtnAnnouncement').addEventListener('click',e=>{e.preventDefault();resetData();});
+
+        document.getElementById('importFile').addEventListener('change',async e=>{
+            const file=e.target.files[0]; if(!file)return;
+            const reader=new FileReader();
+            reader.onload=async ev=>{
+                try{
+                    const imported=JSON.parse(ev.target.result);
+                    let schedulesData = [];
+                    let announcementsData = [];
+                    
+                    if (Array.isArray(imported)) {
+                        // 舊格式兼容 - 純陣列格式
+                        schedulesData = imported;
+                    } else {
+                        // 新格式 - 包含 schedules 和 announcements
+                        schedulesData = imported.schedules || [];
+                        announcementsData = imported.announcements || [];
+                    }
+                    
+                    if(schedulesData.length===0 && announcementsData.length===0){alert('⚠️ 檔案中沒有任何數據！');return;}
+                    if(confirm(`確定要匯入 ${schedulesData.length} 個買入排程和 ${announcementsData.length} 個公佈排程嗎？現有數據將被覆蓋。`)){
+                        schedules=schedulesData;
+                        announcements=announcementsData;
+                        await saveSchedules();
+                        await saveAnnouncements();
+                        updateScheduleList();
+                        updateAnnouncementList();
+                        renderCalendar();
+                        alert('✅ 數據已匯入！');
+                    }
+                }catch(err){alert('❌ 匯入失敗！');console.error(err);}
+            };
+            reader.readAsText(file);
+            e.target.value='';
+        });
+// ======================================
+// GitHub 同步功能
+// ======================================
+const DATA_FILENAME = 'buyinschedule-data.json';
+
+async function syncToGitHub() {
+    if (typeof GitHubSync === 'undefined') {
+        alert('❌ GitHub 同步模組未載入，請確認 github-sync.js 檔案存在');
+        return;
+    }
+    
+    if (!GitHubSync.isConfigured()) {
+        alert('❌ 請先在 guide.html 設定 GitHub Token');
+        return;
+    }
+    
+    const dataToSave = {
+        schedules: schedules,
+        announcements: announcements
+    };
+    
+    alert('⏳ 同步中...');
+    const success = await GitHubSync.saveToGitHub(DATA_FILENAME, dataToSave);
+    if (success) {
+        alert('✅ 已同步到 GitHub！');
+    } else {
+        alert('❌ 同步失敗，請檢查設定');
+    }
+}
+
+async function loadFromGitHub() {
+    if (typeof GitHubSync === 'undefined') {
+        alert('❌ GitHub 同步模組未載入');
+        return;
+    }
+    
+    if (!GitHubSync.isConfigured()) {
+        alert('❌ 請先在 guide.html 設定 GitHub Token');
+        return;
+    }
+    
+    alert('⏳ 載入中...');
+    const data = await GitHubSync.loadFromGitHub(DATA_FILENAME);
+    if (data) {
+        schedules = data.schedules || [];
+        announcements = data.announcements || [];
+        await saveSchedules();
+        await saveAnnouncements();
+        updateScheduleList();
+        updateAnnouncementList();
+        renderCalendar();
+        alert(`✅ 已從 GitHub 載入 ${schedules.length} 個買入排程和 ${announcements.length} 個公佈排程！`);
+    } else {
+        alert('❌ GitHub 上沒有找到資料，或載入失敗');
+    }
+}
+
+// GitHub 同步按鈕事件綁定
+document.getElementById('syncToGitHubBtn').addEventListener('click', syncToGitHub);
+document.getElementById('loadFromGitHubBtn').addEventListener('click', loadFromGitHub);
+document.getElementById('syncToGitHubBtnInput').addEventListener('click', syncToGitHub);
+document.getElementById('loadFromGitHubBtnInput').addEventListener('click', loadFromGitHub);
+document.getElementById('syncToGitHubBtnAnnouncement').addEventListener('click', syncToGitHub);
+document.getElementById('loadFromGitHubBtnAnnouncement').addEventListener('click', loadFromGitHub);
+        // ======================================
+        // 初始化
+        // ======================================
+        loadSchedules();
+        loadAnnouncements();
+    </script>
+    <script src="github-sync.js"></script>
+</body>
+</html>
