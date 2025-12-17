@@ -1,0 +1,3708 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投資收益追蹤儀表板</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+/* ========================
+   全局樣式與變數
+======================== */
+:root {
+    --primary-color: #1FB8CD;
+    --secondary-color: #FFC185;
+    --danger-color: #DB4545;
+    --text-color: #333;
+    --bg-color: #f8f9fa;
+    --border-color: #ddd;
+    --shadow: 0 4px 12px rgba(0,0,0,0.1);
+    --radius: 8px;
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ========================
+   年份選單
+======================== */
+.year-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+.year-selector label {
+    font-size: 1rem;
+    color: var(--text-color);
+}
+.year-selector select {
+    font-size: 1rem;
+    padding: 4px 8px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+}
+
+/* ========================
+   標題區
+======================== */
+.app-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.app-header h1 {
+    font-size: 2.2rem;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.app-header p {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+/* ========================
+   數據控制區
+======================== */
+.data-controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding: 12px;
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.btn--primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn--primary:hover {
+    background-color: #189ca3;
+}
+
+.btn--secondary {
+    background-color: #f0f0f0;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.btn--secondary:hover {
+    background-color: #e0e0e0;
+}
+
+.btn--danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn--danger:hover {
+    background-color: #b43636;
+}
+
+.btn--outline {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.btn--outline:hover {
+    background-color: #f0f0f0;
+}
+
+.btn--sm {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+}
+
+.btn--full-width {
+    width: 100%;
+}
+
+/* ========================
+   標籤導航
+======================== */
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.tab-btn {
+    padding: 12px 24px;
+    background: #f0f0f0;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.tab-btn--active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.tab-btn:hover {
+    background: #e0e0e0;
+}
+
+.tab-btn--active:hover {
+    background: var(--primary-color);
+}
+
+/* ========================
+   標籤內容區
+======================== */
+.tab-panes {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane--active {
+    display: block;
+}
+
+/* ========================
+   概覽卡片
+======================== */
+.overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+.card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    color: var(--primary-color);
+}
+
+.amount {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.prediction-label {
+    font-size: 0.8rem;
+    color: #666;
+    background: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 4px;
+}
+
+/* ========================
+   收益來源分佈
+======================== */
+.percentage {
+    margin-top: 12px;
+}
+
+.bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+}
+
+.bar .label {
+    color: #666;
+}
+
+.bar .value {
+    font-weight: 500;
+    color: var(--primary-color);
+}
+/* ========================
+   月度卡片（優化為每行顯示一月）
+======================== */
+.monthly-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 20px;
+}
+.monthly-card {
+    min-height: 120px;
+}
+.monthly-card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.monthly-card--empty {
+    opacity: 0.6;
+}
+
+.monthly-card__header {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 6px;
+    margin-bottom: 8px;
+}
+
+.monthly-card__total {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--text-color);
+    text-align: center;
+    padding: 10px 0;
+    background: #f8f9fa;
+    border-radius: var(--radius);
+}
+.monthly-card__items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 300px;
+    overflow: hidden;
+    padding: 4px 0;
+    transition: max-height 0.3s ease;
+}
+
+.monthly-card__items.expanded {
+    max-height: 1000px;
+    overflow: visible;
+}
+
+.monthly-item {
+    display: grid;
+    grid-template-columns: 1fr 120px;
+    gap: 12px;
+    align-items: center;
+    padding: 8px 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.monthly-item__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.monthly-item__name {
+    font-weight: 500;
+    color: var(--text-color);
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.monthly-item__details {
+    font-size: 0.75rem;
+    color: #666;
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.monthly-item__type {
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.monthly-item__type--confirmed {
+    background: #c2e0e6;
+    color: #1f6a79;
+}
+
+.monthly-item__type--predicted {
+    background: #f4e0c0;
+    color: #8a5c00;
+}
+
+.monthly-item__type--deposit {
+    background: #d9f0e1;
+    color: #2d7b3d;
+}
+
+.monthly-item__type--bond {
+    background: #e9d3d3;
+    color: #8a3333;
+}
+
+.monthly-item__amount {
+    font-weight: 600;
+    color: var(--primary-color);
+    white-space: nowrap;
+    text-align: right;
+    font-size: 0.95rem;
+    justify-self: end;
+}
+
+.monthly-card__expand-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 8px 0;
+    background: #f0f0f0;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.monthly-card__expand-btn:hover {
+    background: #e0e0e0;
+}
+
+.monthly-card__items.expanded .monthly-card__expand-btn {
+    display: none;
+}
+
+/* ========================
+   投資分析摘要
+======================== */
+#analysis-summary {
+    background: #f8f9fa;
+    border-radius: var(--radius);
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    margin-top: 20px;
+    font-size: 0.95rem;
+}
+
+#analysis-summary .summary-item {
+    margin-bottom: 12px;
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+/* ========================
+   股票/存款/債券區塊
+======================== */
+.section {
+    margin-bottom: 30px;
+}
+
+.section h2 {
+    font-size: 1.4rem;
+    margin-bottom: 16px;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 8px;
+}
+
+.stock-entry,
+.bond-entry {
+    background: #fff;
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    padding: 16px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+.stock-header,
+.bond-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.stock-info h3,
+.bond-info h3 {
+    font-size: 1.3rem;
+    margin-bottom: 4px;
+    color: var(--text-color);
+}
+
+.stock-code,
+.bond-code {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.stock-actions,
+.bond-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.stock-actions label,
+.bond-actions label {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.form-control {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 1rem;
+    width: 100px;
+}
+
+.form-control[readonly] {
+    background-color: #f8f9fa !important;
+    color: #666 !important;
+    cursor: not-allowed;
+}
+
+/* ========================
+   派息記錄表格樣式（新增摺疊功能）
+======================== */
+.dividend-table,
+.bond-payment-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 0.9rem;
+}
+
+.dividend-table th,
+.dividend-table td,
+.bond-payment-table th,
+.bond-payment-table td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.dividend-table th,
+.bond-payment-table th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.dividend-table .form-control,
+.bond-payment-table .form-control {
+    width: 100%;
+    min-width: 80px;
+    padding: 4px 8px;
+    font-size: 0.85rem;
+}
+
+/* 表格摺疊功能樣式 */
+.table-wrapper {
+    position: relative;
+}
+
+.table-collapsed {
+    max-height: 280px;
+    overflow: hidden;
+    position: relative;
+}
+
+.table-collapsed::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: linear-gradient(transparent, rgba(248, 249, 250, 0.9));
+    pointer-events: none;
+}
+
+.table-expand-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 8px 0;
+    background: #f0f0f0;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+}
+
+.table-expand-btn:hover {
+    background: #e0e0e0;
+}
+
+.table-expand-btn .expand-text {
+    display: inline;
+}
+
+.table-expand-btn .collapse-text {
+    display: none;
+}
+
+.table-wrapper.expanded .table-collapsed {
+    max-height: none;
+    overflow: visible;
+}
+
+.table-wrapper.expanded .table-collapsed::after {
+    display: none;
+}
+
+.table-wrapper.expanded .table-expand-btn .expand-text {
+    display: none;
+}
+
+.table-wrapper.expanded .table-expand-btn .collapse-text {
+    display: inline;
+}
+
+.dividend-section,
+.bond-payment-section {
+    margin-top: 16px;
+}
+
+.add-dividend-btn,
+.add-bond-payment-btn {
+    margin-top: 12px;
+}
+
+.deposit-entry {
+    background: #fff;
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    padding: 16px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+.entry-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+    color: var(--text-color);
+}
+
+.entry-actions {
+    text-align: right;
+}
+
+/* ========================
+   空狀態
+======================== */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+    font-size: 1.1rem;
+}
+
+/* ========================
+   模態框
+======================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: var(--primary-color);
+    color: white;
+}
+
+.modal-close {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 20px;
+    background: #f8f9fa;
+    border-top: 1px solid var(--border-color);
+}
+
+/* ========================
+   堆疊條形圖樣式
+======================== */
+#monthlyChart {
+    height: 400px !important;
+}
+
+/* ========================
+   分析圖表
+======================== */
+.analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.chart-card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 強制各股票股息佔比圖表為正圓形 */
+#stockDividendChart {
+    aspect-ratio: 1 / 1;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+#sourceChart,
+#stockDividendChart,
+#trendChart {
+    height: 100% !important;
+    width: 100% !important;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* 保持分析摘要樣式不變 */
+#analysis-summary {
+    background: #f8f9fa;
+    border-radius: var(--radius);
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    margin-top: 20px;
+    font-size: 0.95rem;
+}
+
+#analysis-summary .summary-item {
+    margin-bottom: 12px;
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+/* ========================
+   响應式加強
+======================== */
+@media (max-width: 768px) {
+    .analysis-grid {
+        grid-template-columns: 1fr;
+    }
+    .chart-card {
+        height: 350px;
+    }
+    #sourceChart,
+    #stockDividendChart,
+    #trendChart {
+        height: 100% !important;
+        width: 100% !important;
+    }
+}
+
+/* ===== 各股票股息佔比：圖表+說明 ===== */
+.stock-dividend-wrapper {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    width: 100%;
+    height: 100%;
+}
+
+.stock-dividend-chart {
+    flex: 0 0 50%;
+    max-width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.stock-dividend-chart canvas {
+    max-width: 100% !important;
+    max-height: 350px !important;
+}
+
+.stock-dividend-legend {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.9rem;
+    overflow-y: auto;
+    max-height: 350px;
+}
+
+.stock-dividend-legend .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stock-dividend-legend .color-box {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.stock-dividend-legend .label {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.stock-dividend-legend .percentage {
+    font-weight: 600;
+    color: green;
+    flex-shrink: 0;
+}
+
+.stock-dividend-legend .legend-item {
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.stock-dividend-legend .legend-item:hover {
+    opacity: 0.7;
+}
+
+.summary-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0;
+    margin: 0;
+}
+
+/* 條狀摘要美化，低調灰藍色 */
+.summary-bar {
+    display: grid;
+    grid-template-columns: 130px auto 1fr;
+    gap: 8px;
+    align-items: center;
+    min-height: 38px;
+    padding: 0 18px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 500;
+    background: linear-gradient(90deg, #f3f6fa 70%, #e9eef3 100%);
+    color: #38506b;
+    box-shadow: 0 1px 5px rgba(56, 80, 107, 0.04);
+    letter-spacing: 0.01em;
+    transition: background 0.15s;
+    border: 1px solid #e5eaf1;
+}
+
+.summary-bar:hover {
+    background: linear-gradient(90deg, #e6ebf3 70%, #e0e6ee 100%);
+}
+
+.summary-bar .summary-label {
+    text-align: right;
+    color: #255179;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.summary-bar .summary-colon {
+    color: #b0bac9;
+    font-weight: 600;
+    justify-self: start;
+}
+
+.summary-bar .summary-value {
+    color: #38506b;
+    font-weight: 500;
+    font-family: inherit;
+    word-break: break-all;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 600px) {
+    .summary-bar {
+        font-size: 0.96rem;
+        padding: 0 12px;
+        grid-template-columns: 100px auto 1fr;
+        gap: 6px;
+    }
+}
+
+.bond-entry .bond-name {
+    min-width: 220px;
+    width: 100%;
+    max-width: 350px;
+}
+
+/* ========================
+   派息月曆樣式
+======================== */
+.calendar-controls {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.month-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.month-selector label {
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+.month-selector select {
+    font-size: 1rem;
+    padding: 4px 8px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+}
+
+.dividend-calendar {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.calendar-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: var(--primary-color);
+    color: white;
+    font-weight: 600;
+}
+
+.calendar-header-cell {
+    padding: 12px 8px;
+    text-align: center;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.calendar-header-cell:last-child {
+    border-right: none;
+}
+
+.calendar-body {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar-day {
+    min-height: 120px;
+    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 8px;
+    position: relative;
+    background: white;
+    transition: background-color 0.2s ease;
+}
+
+.calendar-day:nth-child(7n) {
+    border-right: none;
+}
+
+.calendar-day:hover {
+    background: #f8f9fa;
+}
+
+.calendar-day.other-month {
+    background: #f5f5f5;
+    color: #ccc;
+}
+
+.calendar-day.other-month .day-number {
+    color: #ccc;
+}
+
+.calendar-day.today {
+    background: rgba(31, 184, 205, 0.1);
+    border: 2px solid var(--primary-color);
+}
+
+.day-number {
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.day-events {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: 90px;
+    overflow: hidden;
+}
+
+.event-item {
+    background: var(--primary-color);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    word-break: break-all;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4px;
+    align-items: center;
+}
+
+.event-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.event-item.predicted {
+    background: var(--secondary-color);
+    color: var(--text-color);
+}
+
+.event-item.deposit {
+    background: #28a745;
+}
+
+.event-item.bond {
+    background: #6f42c1;
+}
+
+.event-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+.event-amount {
+    font-weight: 600;
+    font-size: 0.7rem;
+    white-space: nowrap;
+}
+
+.more-events {
+    background: #6c757d;
+    color: white;
+    padding: 1px 4px;
+    border-radius: 2px;
+    font-size: 0.7rem;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 2px;
+}
+
+.more-events:hover {
+    background: #5a6268;
+}
+
+/* 事件詳情彈窗 */
+.event-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+}
+
+.event-modal-content {
+    background: white;
+    border-radius: var(--radius);
+    padding: 20px;
+    max-width: 400px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow);
+}
+
+.event-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.event-modal-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.event-modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.event-modal-close:hover {
+    background: #f0f0f0;
+}
+
+.event-detail {
+    margin-bottom: 12px;
+    padding: 8px;
+    border-radius: 4px;
+    border-left: 3px solid var(--primary-color);
+    background: #f8f9fa;
+}
+
+.event-detail.predicted {
+    border-left-color: var(--secondary-color);
+}
+
+.event-detail.deposit {
+    border-left-color: #28a745;
+}
+
+.event-detail.bond {
+    border-left-color: #6f42c1;
+}
+
+.event-detail-name {
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text-color);
+}
+
+.event-detail-info {
+    font-size: 0.9rem;
+    color: #666;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.event-detail-amount {
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 1rem;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .calendar-day {
+        min-height: 100px;
+        padding: 4px;
+    }
+    
+    .day-events {
+        max-height: 75px;
+    }
+    
+    .event-item {
+        font-size: 0.7rem;
+        padding: 1px 4px;
+    }
+    
+    .calendar-controls {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar-day {
+        min-height: 80px;
+        padding: 2px;
+    }
+    
+    .day-number {
+        font-size: 0.8rem;
+    }
+    
+    .event-item {
+        font-size: 0.65rem;
+        padding: 1px 3px;
+    }
+    
+    .event-amount {
+        display: none; /* 手機版隱藏金額 */
+    }
+}
+
+.hidden-file-input {
+    display: none;
+}
+
+.rate-input-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rate-input-group label {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.rate-input-group input {
+    width: 80px;
+}
+    </style>
+</head>
+<body>
+    <a href="guide.html" style="position: fixed; top: 20px; left: 20px; padding: 10px 20px; border-radius: 8px; background: #1FB8CD; color: white; text-decoration: none; font-size: 14px; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">← 返回指南</a>
+    <div class="container">
+        <header class="app-header">
+            <h1>投資收益追蹤儀表板</h1>
+            <p>即時追蹤股票、存款、債券收益</p>
+        </header>
+
+        <div class="data-controls">
+            <button class="btn btn--primary" id="export-data-btn">導出數據</button>
+            <label class="btn btn--secondary">
+                匯入數據
+                <input type="file" id="import-data-file" accept=".json" class="hidden-file-input">
+            </label>
+            <button class="btn btn--danger" id="reset-data-btn">重設數據</button>
+            <div class="rate-input-group">
+                <label for="usd-hkd-rate">美元兌港元匯率：</label>
+                <input type="number" id="usd-hkd-rate" class="form-control" step="0.01" min="0" value="7.81">
+            </div>
+            <button class="btn btn--primary" id="sync-github-btn">☁️ 同步到 GitHub</button>
+            <button class="btn btn--secondary" id="load-github-btn">📥 從 GitHub 載入</button>
+        </div>
+
+        <nav class="tabs">
+            <button class="tab-btn tab-btn--active" data-tab="overview">概覽</button>
+            <button class="tab-btn" data-tab="monthly">月度細節</button>
+            <button class="tab-btn" data-tab="calendar">派息月曆</button>
+            <button class="tab-btn" data-tab="analysis">分析</button>
+        </nav>
+
+        <div class="tab-panes">
+            <!-- 概覽分頁 -->
+            <div id="overview-tab" class="tab-pane tab-pane--active">
+                <div class="overview-grid">
+                    <div class="card">
+                        <h3>年度總收益</h3>
+                        <div id="total-annual-list"></div>
+                    </div>
+                    <div class="card">
+                        <h3>確定收益</h3>
+                        <div id="confirmed-income-list"></div>
+                    </div>
+                    <div class="card">
+                        <h3>預測收益</h3>
+                        <div id="predicted-income-list"></div>
+                    </div>
+                    <div class="card">
+                        <h3>收益來源分佈</h3>
+                        <div id="source-percentage-list"></div>
+                    </div>
+                </div>
+
+                <section class="section">
+                    <h2>股票持有</h2>
+                    <div id="stocks-container"></div>
+                </section>
+
+                <section class="section">
+                    <h2>定期存款</h2>
+                    <button class="btn btn--primary" id="add-deposit-btn">新增定期存款</button>
+                    <div id="deposits-container"></div>
+                </section>
+
+                <section class="section">
+                    <h2>債券持有</h2>
+                    <button class="btn btn--primary" id="add-bond-btn">新增債券</button>
+                    <div id="bonds-container"></div>
+                </section>
+            </div>
+
+            <!-- 月度細節分頁 -->
+            <div id="monthly-tab" class="tab-pane">
+                <div class="year-selector">
+                    <label for="year-select">年份：</label>
+                    <select id="year-select"></select>
+                </div>
+                <div style="height: 400px;">
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+                <div class="monthly-cards" id="monthly-cards-grid"></div>
+            </div>
+
+            <!-- 派息月曆分頁 -->
+            <div id="calendar-tab" class="tab-pane">
+                <div class="calendar-controls">
+                    <div class="year-selector">
+                        <label for="calendar-year-select">年份：</label>
+                        <select id="calendar-year-select"></select>
+                    </div>
+                    <div class="month-selector">
+                        <label for="calendar-month-select">月份：</label>
+                        <select id="calendar-month-select">
+                            <option value="0">1月</option>
+                            <option value="1">2月</option>
+                            <option value="2">3月</option>
+                            <option value="3">4月</option>
+                            <option value="4">5月</option>
+                            <option value="5">6月</option>
+                            <option value="6">7月</option>
+                            <option value="7">8月</option>
+                            <option value="8">9月</option>
+                            <option value="9">10月</option>
+                            <option value="10">11月</option>
+                            <option value="11">12月</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="dividend-calendar" id="dividend-calendar"></div>
+            </div>
+
+            <!-- 分析分頁 -->
+            <div id="analysis-tab" class="tab-pane">
+                <div class="year-selector">
+                    <label for="analysis-year-select">年份：</label>
+                    <select id="analysis-year-select"></select>
+                </div>
+                <div class="analysis-grid">
+                    <div class="chart-card">
+                        <canvas id="sourceChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <div class="stock-dividend-wrapper">
+                            <div class="stock-dividend-chart">
+                                <canvas id="stockDividendChart"></canvas>
+                            </div>
+                            <div class="stock-dividend-legend" id="stockDividendLegend"></div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+                <div id="analysis-summary"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+// Application Data
+const defaultStocks = [
+    {"name": "2800盈富", "code": "2800"},
+    {"name": "3466恒生高息股30指數ETF", "code": "3466"},
+    {"name": "2388 中銀香港", "code": "2388"},
+    {"name": "3116 Global X亞太高股息率ETF", "code": "3116"},
+    {"name": "3070平安香港高息股 ETF", "code": "3070"},
+    {"name": "3416 Global X 國指備兌認購期權主動型ETF", "code": "3416"},
+    {"name": "3419 Global X 恆指備兌認購期權主動型ETF", "code": "3419"},
+    {"name": "3417 Global X 恆科備兌認購期權主動型ETF", "code": "3417"},
+    {"name": "3437 博時央企紅利ETF", "code": "3437"}
+];
+
+const usdHkdRate = 7.81;
+const chartColors = ["#1FB8CD", "#FFC185", "#B4413C", "#ECEBD5", "#5D878F", "#DB4545", "#D2BA4C", "#964325", "#944454", "#13343B"];
+const monthNames = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+
+// Application State
+let appData = {
+    stocks: {},
+    deposits: [],
+    bonds: [],
+    usdHkdRate: 7.81
+};
+
+let charts = {};
+
+// ===== 年度選擇 =====
+let selectedYear = new Date().getFullYear();
+let selectedAnalysisYear = new Date().getFullYear();
+let selectedCalendarYear = new Date().getFullYear();
+let selectedCalendarMonth = new Date().getMonth();
+
+function getAvailableYears() {
+    const years = new Set();
+    // 股票
+    Object.values(appData.stocks).forEach(stock => {
+        (stock.dividends || []).forEach(d => {
+            if (d.date) years.add(new Date(d.date).getFullYear());
+        });
+    });
+    // 存款
+    appData.deposits.forEach(d => {
+        if (d.maturityDate) years.add(new Date(d.maturityDate).getFullYear());
+    });
+    // 債券 - 包含派息記錄的日期
+    appData.bonds.forEach(b => {
+        if (b.maturityDate) years.add(new Date(b.maturityDate).getFullYear());
+        // 新增：債券派息記錄
+        (b.payments || []).forEach(p => {
+            if (p.date) years.add(new Date(p.date).getFullYear());
+        });
+    });
+    // 當前年也加進去
+    years.add(new Date().getFullYear());
+    return Array.from(years).sort((a, b) => a - b);
+}
+
+function renderYearSelector() {
+    const years = getAvailableYears();
+    const selector = document.getElementById('year-select');
+    if (!selector) return;
+    selector.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
+    if (!years.includes(selectedYear)) selectedYear = years[years.length-1];
+    selector.value = selectedYear;
+    selector.onchange = function() {
+        selectedYear = parseInt(selector.value, 10);
+        updateCalculations();
+    }
+}
+
+function renderAnalysisYearSelector() {
+    const years = getAvailableYears();
+    const selector = document.getElementById('analysis-year-select');
+    if (!selector) return;
+    selector.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
+    if (!years.includes(selectedAnalysisYear)) selectedAnalysisYear = years[years.length-1];
+    selector.value = selectedAnalysisYear;
+    selector.onchange = function() {
+        selectedAnalysisYear = parseInt(selector.value, 10);
+        updateCalculations();
+    }
+}
+
+function renderCalendarYearSelector() {
+    const years = getAvailableYears();
+    const selector = document.getElementById('calendar-year-select');
+    if (!selector) return;
+    selector.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
+    if (!years.includes(selectedCalendarYear)) selectedCalendarYear = years[years.length-1];
+    selector.value = selectedCalendarYear;
+    selector.onchange = function() {
+        selectedCalendarYear = parseInt(selector.value, 10);
+        updateCalendar();
+    }
+}
+
+function renderCalendarMonthSelector() {
+    const selector = document.getElementById('calendar-month-select');
+    if (!selector) return;
+    selector.value = selectedCalendarMonth;
+    selector.onchange = function() {
+        selectedCalendarMonth = parseInt(selector.value, 10);
+        updateCalendar();
+    }
+}
+
+// Utility Functions
+function formatCurrency(amount, currency = 'HKD') {
+    const prefix = currency === 'USD' ? 'US$' : 'HK$';
+    return prefix + (amount || 0).toLocaleString('zh-HK', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+function formatCurrencyShort(amount) {
+    if (amount >= 10000) {
+        return 'HK$' + (amount / 10000).toFixed(1) + '萬';
+    } else if (amount >= 1000) {
+        return 'HK$' + (amount / 1000).toFixed(1) + 'K';
+    } else {
+        return 'HK$' + amount.toFixed(0);
+    }
+}
+
+function convertUsdToHkd(usdAmount) {
+    return usdAmount * appData.usdHkdRate;
+}
+
+function saveData() {
+    try {
+        localStorage.setItem('investmentTrackerData', JSON.stringify(appData));
+    } catch (e) {
+        console.warn('無法保存數據到本地存儲');
+    }
+}
+
+function loadData() {
+    try {
+        const savedData = localStorage.getItem('investmentTrackerData');
+        if (savedData) {
+            const parsed = JSON.parse(savedData);
+            // 向後兼容：將舊的dividend補 shares 欄
+            Object.values(parsed.stocks || {}).forEach(stock => {
+                (stock.dividends || []).forEach(dividend => {
+                    if (dividend.shares === undefined) dividend.shares = stock.shares || 0;
+                });
+                // 向後兼容：補充 currency 欄位
+                if (!stock.currency) stock.currency = 'HKD';
+            });
+            // 向後兼容：確保債券有 payments 陣列
+            (parsed.bonds || []).forEach(bond => {
+                if (!bond.payments) bond.payments = [];
+            });
+            appData = {
+                stocks: parsed.stocks || {},
+                deposits: parsed.deposits || [],
+                bonds: parsed.bonds || [],
+                usdHkdRate: parsed.usdHkdRate || 7.81
+            };
+        }
+    } catch (e) {
+        console.warn('無法從本地存儲載入數據');
+    }
+    if (Object.keys(appData.stocks).length === 0) {
+        defaultStocks.forEach(stock => {
+            appData.stocks[stock.code] = {
+                name: stock.name,
+                code: stock.code,
+                shares: 0,
+                dividends: [],
+                currency: 'HKD' // 預設為港元
+            };
+        });
+    }
+}
+
+function exportData() {
+    const dataStr = JSON.stringify(appData, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `investment-tracker-data-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+}
+
+function importData(event) {
+    const fileReader = new FileReader();
+    fileReader.onload = function(e) {
+        try {
+            const importedData = JSON.parse(e.target.result);
+            // 向後兼容：補 shares
+            Object.values(importedData.stocks || {}).forEach(stock => {
+                (stock.dividends || []).forEach(dividend => {
+                    if (dividend.shares === undefined) dividend.shares = stock.shares || 0;
+                });
+                // 向後兼容：補充 currency 欄位
+                if (!stock.currency) stock.currency = 'HKD';
+            });
+            // 向後兼容：確保債券有 payments 陣列
+            (importedData.bonds || []).forEach(bond => {
+                if (!bond.payments) bond.payments = [];
+            });
+            if (confirm('確定要匯入數據嗎？這將覆蓋當前所有數據。')) {
+                appData = importedData;
+                renderStocks();
+                renderDeposits();
+                renderBonds();
+                updateCalculations();
+                saveData();
+                alert('數據匯入成功！');
+            }
+        } catch (err) {
+            alert('數據格式錯誤或無效：' + err.message);
+        }
+    };
+    fileReader.readAsText(event.target.files[0]);
+}
+
+function resetData() {
+    if (confirm('確定要重設所有數據嗎？此操作不可逆。')) {
+        appData = {
+            stocks: {},
+            deposits: [],
+            bonds: [],
+            usdHkdRate: 7.81
+        };
+        defaultStocks.forEach(stock => {
+            appData.stocks[stock.code] = {
+                name: stock.name,
+                code: stock.code,
+                shares: 0,
+                dividends: [],
+                currency: 'HKD'
+            };
+        });
+        renderStocks();
+        renderDeposits();
+        renderBonds();
+        updateCalculations();
+        saveData();
+        alert('數據已重設為預設狀態');
+    }
+}
+
+// Tab Management
+function initTabs() {
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    tabButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetTab = button.dataset.tab;
+            tabButtons.forEach(btn => btn.classList.remove('tab-btn--active'));
+            button.classList.add('tab-btn--active');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+            tabPanes.forEach(pane => pane.classList.remove('tab-pane--active'));
+            const targetPane = document.getElementById(`${targetTab}-tab`);
+            if (targetPane) {
+                targetPane.classList.add('tab-pane--active');
+                setTimeout(() => {
+                    if (targetTab === 'overview') {
+                        updateOverview();
+                    } else if (targetTab === 'monthly') {
+                        updateMonthlyDetails();
+                    } else if (targetTab === 'calendar') {
+                        updateCalendar();
+                    } else if (targetTab === 'analysis') {
+                        updateAnalysis();
+                    }
+                }, 50);
+            }
+        });
+    });
+}
+
+// Calendar Functions
+function updateCalendar() {
+    renderCalendarYearSelector();
+    renderCalendarMonthSelector();
+    renderDividendCalendar();
+}
+
+function getCalendarEvents(year, month) {
+    const events = [];
+    
+    // 股票派息
+    Object.values(appData.stocks).forEach(stock => {
+        if (stock.dividends) {
+            stock.dividends.forEach(dividend => {
+                if (dividend.amount > 0 && dividend.date) {
+                    const date = new Date(dividend.date);
+                    if (date.getFullYear() === year && date.getMonth() === month) {
+                        const shares = dividend.shares !== undefined ? dividend.shares : stock.shares || 0;
+                        let totalAmount = shares * dividend.amount;
+                        
+                        if (stock.currency === 'USD') {
+                            totalAmount = convertUsdToHkd(totalAmount);
+                        }
+                        
+                        events.push({
+                            date: date.getDate(),
+                            name: stock.name,
+                            type: dividend.type,
+                            amount: totalAmount,
+                            currency: 'HKD',
+                            period: dividend.period,
+                            category: 'stock'
+                        });
+                    }
+                }
+            });
+        }
+    });
+    
+    // 定期存款
+    appData.deposits.forEach(deposit => {
+        if (deposit.interest > 0 && deposit.maturityDate) {
+            const date = new Date(deposit.maturityDate);
+            if (date.getFullYear() === year && date.getMonth() === month) {
+                const amount = deposit.currency === 'USD' ? convertUsdToHkd(deposit.interest) : deposit.interest;
+                events.push({
+                    date: date.getDate(),
+                    name: '定期存款',
+                    type: 'deposit',
+                    amount: amount,
+                    currency: 'HKD',
+                    period: '到期',
+                    category: 'deposit'
+                });
+            }
+        }
+    });
+    
+    // 債券派息
+    appData.bonds.forEach(bond => {
+        if (bond.payments) {
+            bond.payments.forEach(payment => {
+                if (payment.amount > 0 && payment.date) {
+                    const date = new Date(payment.date);
+                    if (date.getFullYear() === year && date.getMonth() === month) {
+                        const amount = bond.currency === 'USD' ? convertUsdToHkd(payment.amount) : payment.amount;
+                        events.push({
+                            date: date.getDate(),
+                            name: bond.name || '債券',
+                            type: payment.type,
+                            amount: amount,
+                            currency: 'HKD',
+                            period: payment.period,
+                            category: 'bond'
+                        });
+                    }
+                }
+            });
+        }
+    });
+    
+    return events;
+}
+
+function renderDividendCalendar() {
+    const container = document.getElementById('dividend-calendar');
+    if (!container) return;
+    
+    const year = selectedCalendarYear;
+    const month = selectedCalendarMonth;
+    const events = getCalendarEvents(year, month);
+    
+    // 獲取月份信息
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startDayOfWeek = firstDay.getDay();
+    
+    // 獲取前一個月和後一個月的信息
+    const prevMonth = new Date(year, month - 1, 0);
+    const nextMonth = new Date(year, month + 1, 1);
+    
+    container.innerHTML = `
+        <div class="calendar-header">
+            <div class="calendar-header-cell">週日</div>
+            <div class="calendar-header-cell">週一</div>
+            <div class="calendar-header-cell">週二</div>
+            <div class="calendar-header-cell">週三</div>
+            <div class="calendar-header-cell">週四</div>
+            <div class="calendar-header-cell">週五</div>
+            <div class="calendar-header-cell">週六</div>
+        </div>
+        <div class="calendar-body" id="calendar-body"></div>
+    `;
+    
+    const calendarBody = document.getElementById('calendar-body');
+    let dayCount = 1;
+    const today = new Date();
+    
+    // 計算總共需要多少個格子
+    const totalCells = Math.ceil((daysInMonth + startDayOfWeek) / 7) * 7;
+    
+    for (let i = 0; i < totalCells; i++) {
+        const dayDiv = document.createElement('div');
+        dayDiv.className = 'calendar-day';
+        
+        let dayNumber, isCurrentMonth, currentDate;
+        
+        if (i < startDayOfWeek) {
+            // 前一個月的日期
+            dayNumber = prevMonth.getDate() - (startDayOfWeek - 1 - i);
+            isCurrentMonth = false;
+            dayDiv.classList.add('other-month');
+            currentDate = new Date(year, month - 1, dayNumber);
+        } else if (dayCount <= daysInMonth) {
+            // 當前月的日期
+            dayNumber = dayCount;
+            isCurrentMonth = true;
+            currentDate = new Date(year, month, dayNumber);
+            dayCount++;
+        } else {
+            // 下一個月的日期
+            dayNumber = dayCount - daysInMonth;
+            isCurrentMonth = false;
+            dayDiv.classList.add('other-month');
+            currentDate = new Date(year, month + 1, dayNumber);
+            dayCount++;
+        }
+        
+        // 檢查是否是今天
+        if (currentDate.toDateString() === today.toDateString()) {
+            dayDiv.classList.add('today');
+        }
+        
+        // 獲取這一天的事件
+        const dayEvents = isCurrentMonth ? events.filter(event => event.date === dayNumber) : [];
+        
+        dayDiv.innerHTML = `
+            <div class="day-number">${dayNumber}</div>
+            <div class="day-events" id="events-${i}"></div>
+        `;
+        
+        // 添加事件
+        const eventsContainer = dayDiv.querySelector('.day-events');
+        const maxVisibleEvents = 3;
+        
+        dayEvents.slice(0, maxVisibleEvents).forEach(event => {
+            const eventDiv = document.createElement('div');
+            eventDiv.className = `event-item ${event.type} ${event.category}`;
+            eventDiv.innerHTML = `
+                <span class="event-name">${event.name}</span>
+                <span class="event-amount">${formatCurrencyShort(event.amount)}</span>
+            `;
+            eventDiv.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showEventModal(dayEvents, dayNumber, monthNames[month]);
+            });
+            eventsContainer.appendChild(eventDiv);
+        });
+        
+        // 如果有更多事件，顯示"更多"
+        if (dayEvents.length > maxVisibleEvents) {
+            const moreDiv = document.createElement('div');
+            moreDiv.className = 'more-events';
+            moreDiv.textContent = `+${dayEvents.length - maxVisibleEvents} 更多`;
+            moreDiv.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showEventModal(dayEvents, dayNumber, monthNames[month]);
+            });
+            eventsContainer.appendChild(moreDiv);
+        }
+        
+        calendarBody.appendChild(dayDiv);
+    }
+}
+
+function showEventModal(events, day, monthName) {
+    const modal = document.createElement('div');
+    modal.className = 'event-modal';
+    modal.innerHTML = `
+        <div class="event-modal-content">
+            <div class="event-modal-header">
+                <div class="event-modal-title">${monthName} ${day}日 收入詳情</div>
+                <button class="event-modal-close">&times;</button>
+            </div>
+            <div class="event-modal-body">
+                ${events.map(event => `
+                    <div class="event-detail ${event.type} ${event.category}">
+                        <div class="event-detail-name">${event.name}</div>
+                        <div class="event-detail-info">
+                            <span>類型：${getTypeLabel(event.type)}</span>
+                            ${event.period ? `<span>期間：${event.period}</span>` : ''}
+                            <span class="event-detail-amount">${formatCurrency(event.amount, 'HKD')}</span>
+                        </div>
+                    </div>
+                `).join('')}
+                <div style="margin-top: 16px; padding: 8px; background: #f0f0f0; border-radius: 4px; text-align: center;">
+                    <strong>當日總收入：${formatCurrency(events.reduce((sum, e) => sum + e.amount, 0), 'HKD')}</strong>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    const closeBtn = modal.querySelector('.event-modal-close');
+    closeBtn.addEventListener('click', () => {
+        document.body.removeChild(modal);
+    });
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            document.body.removeChild(modal);
+        }
+    });
+}
+
+// 表格摺疊/展開功能
+function toggleTableExpansion(stockCode, isStock = true) {
+    const prefix = isStock ? 'stock' : 'bond';
+    const wrapper = document.getElementById(`table-wrapper-${stockCode}`);
+    const expandBtn = document.getElementById(`expand-btn-${stockCode}`);
+    
+    if (!wrapper || !expandBtn) return;
+    
+    if (wrapper.classList.contains('expanded')) {
+        wrapper.classList.remove('expanded');
+    } else {
+        wrapper.classList.add('expanded');
+    }
+}
+
+function checkTableCollapse(stockCode, isStock = true) {
+    const tbody = isStock ? 
+        document.getElementById(`dividends-${stockCode}`) : 
+        document.getElementById(`bond-payments-${stockCode}`);
+    const wrapper = document.getElementById(`table-wrapper-${stockCode}`);
+    const expandBtn = document.getElementById(`expand-btn-${stockCode}`);
+    const recordCount = wrapper ? wrapper.querySelector('.record-count') : null;
+    
+    if (!tbody || !wrapper || !expandBtn || !recordCount) return;
+    
+    const rowCount = tbody.children.length;
+    recordCount.textContent = rowCount;
+    
+    // 修正邏輯：如果記錄超過4項，顯示摺疊按鈕，並且預設為摺疊狀態
+    if (rowCount > 4) {
+        expandBtn.style.display = 'block';
+        // 確保新增記錄後保持展開狀態（如果之前已展開）
+        // 否則預設為摺疊狀態
+        if (!wrapper.classList.contains('expanded')) {
+            wrapper.classList.remove('expanded');
+        }
+    } else {
+        expandBtn.style.display = 'none';
+        wrapper.classList.remove('expanded');
+    }
+}
+
+// Stock Management
+function renderStocks() {
+    const container = document.getElementById('stocks-container');
+    if (!container) return;
+    container.innerHTML = '';
+    
+    const addStockBtn = document.createElement('button');
+    addStockBtn.className = 'btn btn--primary btn--full-width';
+    addStockBtn.textContent = '添加新股票';
+    addStockBtn.style.marginBottom = '16px';
+    addStockBtn.addEventListener('click', () => {
+        showAddStockModal();
+    });
+    container.appendChild(addStockBtn);
+
+    // 修改：顯示所有在 appData.stocks 中的股票
+    Object.values(appData.stocks).forEach(stockData => {
+        const stockElement = createStockElement(stockData);
+        container.appendChild(stockElement);
+    });
+}
+
+function showAddStockModal() {
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+        <div class="modal">
+            <div class="modal-header">
+                <h3>添加新股票</h3>
+                <button class="btn btn--outline btn--sm modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="new-stock-name">股票名稱</label>
+                    <input type="text" id="new-stock-name" class="form-control" placeholder="例如：騰訊控股" style="width: 100%;">
+                </div>
+                <div class="form-group">
+                    <label for="new-stock-code">股票代碼</label>
+                    <input type="text" id="new-stock-code" class="form-control" placeholder="例如：0700" style="width: 100%;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn--secondary" id="cancel-add-stock">取消</button>
+                <button class="btn btn--primary" id="confirm-add-stock">確定添加</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    const closeBtn = modal.querySelector('.modal-close');
+    const cancelBtn = modal.querySelector('#cancel-add-stock');
+    const confirmBtn = modal.querySelector('#confirm-add-stock');
+    const nameInput = modal.querySelector('#new-stock-name');
+    const codeInput = modal.querySelector('#new-stock-code');
+
+    closeBtn.addEventListener('click', () => {
+        document.body.removeChild(modal);
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        document.body.removeChild(modal);
+    });
+
+    confirmBtn.addEventListener('click', () => {
+        const name = nameInput.value.trim();
+        const code = codeInput.value.trim();
+        if (!name) {
+            alert('請輸入股票名稱');
+            return;
+        }
+        if (!code) {
+            alert('請輸入股票代碼');
+            return;
+        }
+        if (appData.stocks[code]) {
+            alert('該股票代碼已存在，請使用其他代碼');
+            return;
+        }
+        appData.stocks[code] = {
+            name: name,
+            code: code,
+            shares: 0,
+            dividends: [],
+            currency: 'HKD'
+        };
+        saveData();
+        renderStocks();
+        document.body.removeChild(modal);
+        alert('股票添加成功！');
+    });
+}
+
+function createStockElement(stockData) {
+    const div = document.createElement('div');
+    div.className = 'stock-entry';
+    div.innerHTML = `
+        <div class="stock-header">
+            <div class="stock-info">
+                <h3>${stockData.name}</h3>
+                <div class="stock-code">${stockData.code}</div>
+            </div>
+            <div class="stock-actions">
+                <label for="currency-${stockData.code}">貨幣：</label>
+                <select id="currency-${stockData.code}" class="form-control stock-currency" style="width: 80px;">
+                    <option value="HKD" ${(stockData.currency || 'HKD') === 'HKD' ? 'selected' : ''}>港元</option>
+                    <option value="USD" ${(stockData.currency || 'HKD') === 'USD' ? 'selected' : ''}>美元</option>
+                </select>
+                <label for="shares-${stockData.code}">股數：</label>
+                <input type="number" id="shares-${stockData.code}" class="form-control" 
+                       value="${stockData.shares || 0}" min="0" step="1" placeholder="0">
+                <button type="button" class="btn btn--danger btn--sm remove-stock-btn" 
+                        data-stock="${stockData.code}">
+                    刪除股票
+                </button>
+            </div>
+        </div>
+        <div class="dividend-section">
+            <div class="table-wrapper" id="table-wrapper-${stockData.code}">
+                <div class="table-collapsed" id="table-content-${stockData.code}">
+                    <table class="dividend-table">
+                        <thead>
+                            <tr>
+                                <th>期間名稱</th>
+                                <th>類型</th>
+                                <th>每股派息</th>
+                                <th>派送日期</th>
+                                <th>持股數</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dividends-${stockData.code}">
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" class="table-expand-btn" id="expand-btn-${stockData.code}" style="display: none;">
+                    <span class="expand-text">顯示更多記錄 (共 <span class="record-count">0</span> 項)</span>
+                    <span class="collapse-text">收起記錄</span>
+                </button>
+            </div>
+            <button type="button" class="btn btn--secondary btn--sm add-dividend-btn" 
+                    data-stock="${stockData.code}">
+                添加派息記錄
+            </button>
+        </div>
+    `;
+    
+    // 貨幣選擇事件監聽
+    const currencySelect = div.querySelector(`#currency-${stockData.code}`);
+    if (currencySelect) {
+        currencySelect.addEventListener('change', (e) => {
+            const currency = e.target.value;
+            appData.stocks[stockData.code].currency = currency;
+            saveData();
+            updateCalculations();
+        });
+    }
+    
+    const sharesInput = div.querySelector(`#shares-${stockData.code}`);
+    if (sharesInput) {
+        sharesInput.addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value) || 0;
+            appData.stocks[stockData.code].shares = value;
+            // 新增：同步所有未有 shares 的 dividend
+            (appData.stocks[stockData.code].dividends || []).forEach(div => {
+                if (!div.shares || div.shares === 0) div.shares = value;
+            });
+            saveData();
+            updateCalculations();
+        });
+        sharesInput.addEventListener('change', (e) => {
+            const value = parseFloat(e.target.value) || 0;
+            appData.stocks[stockData.code].shares = value;
+            (appData.stocks[stockData.code].dividends || []).forEach(div => {
+                if (!div.shares || div.shares === 0) div.shares = value;
+            });
+            saveData();
+            updateCalculations();
+        });
+    }
+    const addBtn = div.querySelector('.add-dividend-btn');
+    if (addBtn) {
+        addBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            addDividendRow(stockData.code);
+        });
+    }
+    const removeBtn = div.querySelector('.remove-stock-btn');
+    if (removeBtn) {
+        removeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            removeStock(stockData.code);
+        });
+    }
+    
+    // 添加摺疊按鈕事件監聽器
+    const expandBtn = div.querySelector(`#expand-btn-${stockData.code}`);
+    if (expandBtn) {
+        expandBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleTableExpansion(stockData.code, true);
+        });
+    }
+    
+    setTimeout(() => renderDividends(stockData.code), 10);
+    return div;
+}
+
+function renderDividends(stockCode) {
+    const tbody = document.getElementById(`dividends-${stockCode}`);
+    if (!tbody) return;
+    const stockData = appData.stocks[stockCode];
+    if (!stockData || !stockData.dividends) return;
+    tbody.innerHTML = '';
+    stockData.dividends.forEach((dividend, index) => {
+        const row = createDividendRow(stockCode, dividend, index);
+        tbody.appendChild(row);
+    });
+    // 檢查是否需要摺疊
+    checkTableCollapse(stockCode, true);
+}
+
+function createDividendRow(stockCode, dividend = {}, index = -1) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td>
+            <input type="text" class="form-control dividend-period" value="${dividend.period || ''}" 
+                   placeholder="例：2024Q1">
+        </td>
+        <td>
+            <select class="form-control dividend-type">
+                <option value="confirmed" ${dividend.type === 'confirmed' ? 'selected' : ''}>確定</option>
+                <option value="predicted" ${dividend.type === 'predicted' ? 'selected' : ''}>預測</option>
+            </select>
+        </td>
+        <td>
+            <input type="number" class="form-control dividend-amount" value="${dividend.amount || ''}" 
+                   step="0.01" min="0" placeholder="0.00">
+        </td>
+        <td>
+            <input type="date" class="form-control dividend-date" value="${dividend.date || ''}" style="width: 100%;">
+        </td>
+        <td>
+            <input type="number" class="form-control dividend-shares" value="${dividend.shares !== undefined ? dividend.shares : (appData.stocks[stockCode]?.shares || '')}" min="0" step="1" placeholder="0">
+        </td>
+        <td>
+            <button type="button" class="btn btn--outline btn--sm remove-dividend-btn">
+                刪除
+            </button>
+        </td>
+    `;
+    const periodInput = tr.querySelector('.dividend-period');
+    const typeSelect = tr.querySelector('.dividend-type');
+    const amountInput = tr.querySelector('.dividend-amount');
+    const dateInput = tr.querySelector('.dividend-date');
+    const sharesInput = tr.querySelector('.dividend-shares');
+    const removeBtn = tr.querySelector('.remove-dividend-btn');
+    [periodInput, typeSelect, amountInput, dateInput, sharesInput].forEach(input => {
+        if (input) {
+            input.addEventListener('change', () => {
+                updateDividend(stockCode, index, input);
+            });
+        }
+    });
+    if (removeBtn) {
+        removeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            removeDividend(stockCode, index);
+        });
+    }
+    return tr;
+}
+
+function addDividendRow(stockCode) {
+    if (!appData.stocks[stockCode]) return;
+    if (!appData.stocks[stockCode].dividends) {
+        appData.stocks[stockCode].dividends = [];
+    }
+    // 預設 shares 為主檔 shares
+    appData.stocks[stockCode].dividends.push({
+        period: '',
+        type: 'confirmed',
+        amount: 0,
+        date: '',
+        shares: appData.stocks[stockCode].shares || 0
+    });
+    
+    // 如果新增後記錄數量超過4項，自動展開表格
+    const newCount = appData.stocks[stockCode].dividends.length;
+    if (newCount > 4) {
+        setTimeout(() => {
+            const wrapper = document.getElementById(`table-wrapper-${stockCode}`);
+            if (wrapper) {
+                wrapper.classList.add('expanded');
+            }
+        }, 50);
+    }
+    
+    renderDividends(stockCode);
+    saveData();
+}
+
+function addBondPaymentRow(bondIndex) {
+    if (!appData.bonds[bondIndex]) return;
+    if (!appData.bonds[bondIndex].payments) {
+        appData.bonds[bondIndex].payments = [];
+    }
+    appData.bonds[bondIndex].payments.push({
+        period: '',
+        type: 'confirmed',
+        amount: 0,
+        date: ''
+    });
+    
+    // 如果新增後記錄數量超過4項，自動展開表格
+    const newCount = appData.bonds[bondIndex].payments.length;
+    if (newCount > 4) {
+        setTimeout(() => {
+            const wrapper = document.getElementById(`table-wrapper-${bondIndex}`);
+            if (wrapper) {
+                wrapper.classList.add('expanded');
+            }
+        }, 50);
+    }
+    
+    renderBondPayments(bondIndex);
+    updateBondYieldDisplay(bondIndex);
+    saveData();
+}
+
+function updateDividend(stockCode, index, inputElement) {
+    if (index === -1 || !appData.stocks[stockCode] || !appData.stocks[stockCode].dividends[index]) return;
+    const dividend = appData.stocks[stockCode].dividends[index];
+    if (inputElement.classList.contains('dividend-period')) {
+        dividend.period = inputElement.value;
+    } else if (inputElement.classList.contains('dividend-type')) {
+        dividend.type = inputElement.value;
+    } else if (inputElement.classList.contains('dividend-amount')) {
+        dividend.amount = parseFloat(inputElement.value) || 0;
+    } else if (inputElement.classList.contains('dividend-date')) {
+        dividend.date = inputElement.value;
+    } else if (inputElement.classList.contains('dividend-shares')) {
+        dividend.shares = parseInt(inputElement.value, 10) || 0;
+    }
+    saveData();
+    updateCalculations();
+}
+
+function removeDividend(stockCode, index) {
+    if (!appData.stocks[stockCode] || !appData.stocks[stockCode].dividends) return;
+    appData.stocks[stockCode].dividends.splice(index, 1);
+    renderDividends(stockCode);
+    saveData();
+    updateCalculations();
+}
+
+function removeStock(stockCode) {
+    if (confirm(`確定要刪除股票 ${appData.stocks[stockCode].name} 嗎？`)) {
+        delete appData.stocks[stockCode];
+        renderStocks();
+        saveData();
+        updateCalculations();
+    }
+}
+
+// Deposit Management
+function renderDeposits() {
+    const container = document.getElementById('deposits-container');
+    if (!container) return;
+    container.innerHTML = '';
+    if (appData.deposits.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>暫無定期存款記錄，點擊上方按鈕添加</p></div>';
+        return;
+    }
+    appData.deposits.forEach((deposit, index) => {
+        const depositElement = createDepositElement(deposit, index);
+        container.appendChild(depositElement);
+    });
+}
+
+function createDepositElement(deposit, index) {
+    const div = document.createElement('div');
+    div.className = 'deposit-entry';
+    div.innerHTML = `
+        <div class="entry-form">
+            <div class="form-group">
+                <label>貨幣</label>
+                <select class="form-control deposit-currency">
+                    <option value="HKD" ${deposit.currency === 'HKD' ? 'selected' : ''}>港元 (HKD)</option>
+                    <option value="USD" ${deposit.currency === 'USD' ? 'selected' : ''}>美元 (USD)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>本金金額</label>
+                <input type="number" class="form-control deposit-principal" value="${deposit.principal || ''}" 
+                       step="0.01" min="0" placeholder="0.00">
+            </div>
+            <div class="form-group">
+                <label>到期日</label>
+                <input type="date" class="form-control deposit-maturity" value="${deposit.maturityDate || ''}" style="width: 100%;">
+            </div>
+            <div class="form-group">
+                <label>利息金額</label>
+                <input type="number" class="form-control deposit-interest" value="${deposit.interest || ''}" 
+                       step="0.01" min="0" placeholder="0.00">
+            </div>
+        </div>
+        <div class="entry-actions">
+            <button type="button" class="btn btn--outline btn--sm remove-deposit-btn">刪除</button>
+        </div>
+    `;
+    const currencySelect = div.querySelector('.deposit-currency');
+    const principalInput = div.querySelector('.deposit-principal');
+    const maturityInput = div.querySelector('.deposit-maturity');
+    const interestInput = div.querySelector('.deposit-interest');
+    const removeBtn = div.querySelector('.remove-deposit-btn');
+    [currencySelect, principalInput, maturityInput, interestInput].forEach(input => {
+        if (input) {
+            input.addEventListener('change', () => {
+                updateDeposit(index, input);
+            });
+        }
+    });
+    if (removeBtn) {
+        removeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            removeDeposit(index);
+        });
+    }
+    return div;
+}
+
+function addDeposit() {
+    appData.deposits.push({
+        currency: 'HKD',
+        principal: 0,
+        maturityDate: '',
+        interest: 0
+    });
+    renderDeposits();
+    saveData();
+}
+
+function updateDeposit(index, inputElement) {
+    if (!appData.deposits[index]) return;
+    const deposit = appData.deposits[index];
+    if (inputElement.classList.contains('deposit-currency')) {
+        deposit.currency = inputElement.value;
+    } else if (inputElement.classList.contains('deposit-principal')) {
+        deposit.principal = parseFloat(inputElement.value) || 0;
+    } else if (inputElement.classList.contains('deposit-maturity')) {
+        deposit.maturityDate = inputElement.value;
+    } else if (inputElement.classList.contains('deposit-interest')) {
+        deposit.interest = parseFloat(inputElement.value) || 0;
+    }
+    saveData();
+    updateCalculations();
+}
+
+function removeDeposit(index) {
+    appData.deposits.splice(index, 1);
+    renderDeposits();
+    saveData();
+    updateCalculations();
+}
+
+// Bond Management - 重新改寫以支援派息記錄和自動計算總收益
+function renderBonds() {
+    const container = document.getElementById('bonds-container');
+    if (!container) return;
+    container.innerHTML = '';
+    if (appData.bonds.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>暫無債券記錄，點擊上方按鈕添加</p></div>';
+        return;
+    }
+    appData.bonds.forEach((bond, index) => {
+        const bondElement = createBondElement(bond, index);
+        container.appendChild(bondElement);
+    });
+}
+
+function createBondElement(bond, index) {
+    const div = document.createElement('div');
+    div.className = 'bond-entry';
+    
+    // 计算派息记录总和
+    const totalPayments = (bond.payments || []).reduce((sum, payment) => {
+        return sum + (parseFloat(payment.amount) || 0);
+    }, 0);
+    
+    div.innerHTML = `
+        <div class="bond-header">
+            <div class="bond-info">
+                <h3 class="bond-title">${bond.name || '債券'}</h3>
+                <div class="bond-code">編號: ${index + 1}</div>
+            </div>
+            <div class="bond-actions">
+                <button type="button" class="btn btn--danger btn--sm remove-bond-btn" 
+                        data-bond="${index}">
+                    刪除債券
+                </button>
+            </div>
+        </div>
+        <div class="entry-form">
+            <div class="form-group">
+                <label>貨幣</label>
+                <select class="form-control bond-currency">
+                    <option value="HKD" ${bond.currency === 'HKD' ? 'selected' : ''}>港元 (HKD)</option>
+                    <option value="USD" ${bond.currency === 'USD' ? 'selected' : ''}>美元 (USD)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>債券名稱</label>
+                <input type="text" class="form-control bond-name" value="${bond.name || ''}" 
+                       placeholder="債券名稱">
+            </div>
+            <div class="form-group">
+                <label>到期日</label>
+                <input type="date" class="form-control bond-maturity" value="${bond.maturityDate || ''}" style="width: 100%;">
+            </div>
+            <div class="form-group">
+                <label>派息總收益 (自動計算)</label>
+                <input type="number" class="form-control bond-yield-display" value="${totalPayments.toFixed(2)}" 
+                       step="0.01" readonly placeholder="0.00" 
+                       style="background-color: #f8f9fa; color: #666;">
+            </div>
+        </div>
+        <div class="bond-payment-section">
+            <div class="table-wrapper" id="table-wrapper-${index}">
+                <div class="table-collapsed" id="table-content-${index}">
+                    <table class="bond-payment-table">
+                        <thead>
+                            <tr>
+                                <th>期間名稱</th>
+                                <th>類型</th>
+                                <th>派息金額</th>
+                                <th>派息日期</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bond-payments-${index}">
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" class="table-expand-btn" id="expand-btn-${index}" style="display: none;">
+                    <span class="expand-text">顯示更多記錄 (共 <span class="record-count">0</span> 項)</span>
+                    <span class="collapse-text">收起記錄</span>
+                </button>
+            </div>
+            <button type="button" class="btn btn--secondary btn--sm add-bond-payment-btn" 
+                    data-bond="${index}">
+                添加派息記錄
+            </button>
+        </div>
+    `;
+    
+    const currencySelect = div.querySelector('.bond-currency');
+    const nameInput = div.querySelector('.bond-name');
+    const maturityInput = div.querySelector('.bond-maturity');
+    const removeBtn = div.querySelector('.remove-bond-btn');
+    const addPaymentBtn = div.querySelector('.add-bond-payment-btn');
+    
+    [currencySelect, nameInput, maturityInput].forEach(input => {
+        if (input) {
+            input.addEventListener('change', () => {
+                updateBond(index, input);
+            });
+            // 新增：為名稱輸入框添加即時更新
+            if (input === nameInput) {
+                input.addEventListener('input', () => {
+                    updateBond(index, input);
+                });
+            }
+        }
+    });
+    
+    if (removeBtn) {
+        removeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            removeBond(index);
+        });
+    }
+    
+    if (addPaymentBtn) {
+        addPaymentBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            addBondPaymentRow(index);
+        });
+    }
+    
+    // 添加摺疊按鈕事件監聽器
+    const expandBtn = div.querySelector(`#expand-btn-${index}`);
+    if (expandBtn) {
+        expandBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleTableExpansion(index, false);
+        });
+    }
+    
+    setTimeout(() => renderBondPayments(index), 10);
+    return div;
+}
+
+function renderBondPayments(bondIndex) {
+    const tbody = document.getElementById(`bond-payments-${bondIndex}`);
+    if (!tbody) return;
+    const bond = appData.bonds[bondIndex];
+    if (!bond || !bond.payments) return;
+    tbody.innerHTML = '';
+    bond.payments.forEach((payment, index) => {
+        const row = createBondPaymentRow(bondIndex, payment, index);
+        tbody.appendChild(row);
+    });
+    // 檢查是否需要摺疊
+    checkTableCollapse(bondIndex, false);
+}
+
+function createBondPaymentRow(bondIndex, payment = {}, index = -1) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td>
+            <input type="text" class="form-control payment-period" value="${payment.period || ''}" 
+                   placeholder="例：2024Q1">
+        </td>
+        <td>
+            <select class="form-control payment-type">
+                <option value="confirmed" ${payment.type === 'confirmed' ? 'selected' : ''}>確定</option>
+                <option value="predicted" ${payment.type === 'predicted' ? 'selected' : ''}>預測</option>
+            </select>
+        </td>
+        <td>
+            <input type="number" class="form-control payment-amount" value="${payment.amount || ''}" 
+                   step="0.01" min="0" placeholder="0.00">
+        </td>
+        <td>
+            <input type="date" class="form-control payment-date" value="${payment.date || ''}" style="width: 100%;">
+        </td>
+        <td>
+            <button type="button" class="btn btn--outline btn--sm remove-payment-btn">
+                刪除
+            </button>
+        </td>
+    `;
+    
+    const periodInput = tr.querySelector('.payment-period');
+    const typeSelect = tr.querySelector('.payment-type');
+    const amountInput = tr.querySelector('.payment-amount');
+    const dateInput = tr.querySelector('.payment-date');
+    const removeBtn = tr.querySelector('.remove-payment-btn');
+    
+    [periodInput, typeSelect, amountInput, dateInput].forEach(input => {
+        if (input) {
+            input.addEventListener('change', () => {
+                updateBondPayment(bondIndex, index, input);
+            });
+        }
+    });
+    
+    if (removeBtn) {
+        removeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            removeBondPayment(bondIndex, index);
+        });
+    }
+    
+    return tr;
+}
+
+// 新增：更新债券总收益显示的函数
+function updateBondYieldDisplay(bondIndex) {
+    const bond = appData.bonds[bondIndex];
+    if (!bond) return;
+    
+    // 计算派息记录总和
+    const totalPayments = (bond.payments || []).reduce((sum, payment) => {
+        return sum + (parseFloat(payment.amount) || 0);
+    }, 0);
+    
+    // 更新显示字段
+    const yieldDisplayInput = document.querySelector(`#bonds-container .bond-entry:nth-child(${bondIndex + 1}) .bond-yield-display`);
+    if (yieldDisplayInput) {
+        yieldDisplayInput.value = totalPayments.toFixed(2);
+    }
+}
+
+function updateBondPayment(bondIndex, paymentIndex, inputElement) {
+    if (paymentIndex === -1 || !appData.bonds[bondIndex] || !appData.bonds[bondIndex].payments[paymentIndex]) return;
+    const payment = appData.bonds[bondIndex].payments[paymentIndex];
+    if (inputElement.classList.contains('payment-period')) {
+        payment.period = inputElement.value;
+    } else if (inputElement.classList.contains('payment-type')) {
+        payment.type = inputElement.value;
+    } else if (inputElement.classList.contains('payment-amount')) {
+        payment.amount = parseFloat(inputElement.value) || 0;
+        // 更新总收益显示
+        updateBondYieldDisplay(bondIndex);
+    } else if (inputElement.classList.contains('payment-date')) {
+        payment.date = inputElement.value;
+    }
+    saveData();
+    updateCalculations();
+}
+
+function removeBondPayment(bondIndex, paymentIndex) {
+    if (!appData.bonds[bondIndex] || !appData.bonds[bondIndex].payments) return;
+    appData.bonds[bondIndex].payments.splice(paymentIndex, 1);
+    renderBondPayments(bondIndex);
+    updateBondYieldDisplay(bondIndex); // 更新总收益显示
+    saveData();
+    updateCalculations();
+}
+
+function addBond() {
+    appData.bonds.push({
+        currency: 'HKD',
+        name: '',
+        maturityDate: '',
+        payments: [] // 移除 yield 字段，改为自动计算
+    });
+    renderBonds();
+    saveData();
+}
+
+function updateBond(index, inputElement) {
+    if (!appData.bonds[index]) return;
+    const bond = appData.bonds[index];
+    if (inputElement.classList.contains('bond-currency')) {
+        bond.currency = inputElement.value;
+    } else if (inputElement.classList.contains('bond-name')) {
+        bond.name = inputElement.value;
+        // 新增：即時更新左上角的債券名稱顯示
+        const bondEntry = document.querySelector(`#bonds-container .bond-entry:nth-child(${index + 1})`);
+        if (bondEntry) {
+            const titleElement = bondEntry.querySelector('.bond-title');
+            if (titleElement) {
+                titleElement.textContent = bond.name || '債券';
+            }
+        }
+    } else if (inputElement.classList.contains('bond-maturity')) {
+        bond.maturityDate = inputElement.value;
+    }
+    // 移除 bond-yield 的处理逻辑
+    saveData();
+    updateCalculations();
+}
+
+function removeBond(index) {
+    if (confirm('確定要刪除這筆債券記錄嗎？')) {
+        appData.bonds.splice(index, 1);
+        renderBonds();
+        saveData();
+        updateCalculations();
+    }
+}
+
+// ======= Calculation Functions（更新以包含股票美元轉換和債券派息）=======
+function calculateTotals(year = selectedYear) {
+    let stockTotal = { confirmed: 0, predicted: 0, hkd: 0 };
+    let depositTotal = { hkd: 0 };
+    let bondTotal = { confirmed: 0, predicted: 0, hkd: 0 };
+    
+    // 股票 - 修改以支持美元轉換
+    Object.values(appData.stocks).forEach(stock => {
+        if (stock.dividends) {
+            stock.dividends.forEach(dividend => {
+                if (dividend.amount > 0 && dividend.date) {
+                    const date = new Date(dividend.date);
+                    if (date.getFullYear() !== year) return;
+                    const shares = dividend.shares !== undefined ? dividend.shares : stock.shares || 0;
+                    let totalAmount = shares * dividend.amount;
+                    
+                    // 如果股票是美元計價，轉換為港元
+                    if (stock.currency === 'USD') {
+                        totalAmount = convertUsdToHkd(totalAmount);
+                    }
+                    
+                    if (dividend.type === 'confirmed') {
+                        stockTotal.confirmed += totalAmount;
+                    } else {
+                        stockTotal.predicted += totalAmount;
+                    }
+                }
+            });
+        }
+    });
+    stockTotal.hkd = stockTotal.confirmed + stockTotal.predicted;
+    
+    // 存款
+    appData.deposits.forEach(deposit => {
+        if (deposit.interest > 0 && deposit.maturityDate) {
+            const date = new Date(deposit.maturityDate);
+            if (date.getFullYear() !== year) return;
+            if (deposit.currency === 'USD') {
+                depositTotal.hkd += convertUsdToHkd(deposit.interest);
+            } else {
+                depositTotal.hkd += deposit.interest;
+            }
+        }
+    });
+    
+    // 债券 - 修改：只使用派息记录，不再使用 yield 字段
+    appData.bonds.forEach(bond => {
+        // 只计算派息记录
+        if (bond.payments) {
+            bond.payments.forEach(payment => {
+                if (payment.amount > 0 && payment.date) {
+                    const date = new Date(payment.date);
+                    if (date.getFullYear() !== year) return;
+                    const amount = bond.currency === 'USD' ? convertUsdToHkd(payment.amount) : payment.amount;
+                    if (payment.type === 'confirmed') {
+                        bondTotal.confirmed += amount;
+                    } else {
+                        bondTotal.predicted += amount;
+                    }
+                }
+            });
+        }
+    });
+    bondTotal.hkd = bondTotal.confirmed + bondTotal.predicted;
+    
+    const totalHkd = stockTotal.hkd + depositTotal.hkd + bondTotal.hkd;
+    const totalUsd = totalHkd / appData.usdHkdRate;
+    
+    return {
+        stock: stockTotal,
+        deposit: depositTotal,
+        bond: bondTotal,
+        total: {
+            hkd: totalHkd,
+            usd: totalUsd,
+            confirmed: stockTotal.confirmed + depositTotal.hkd + bondTotal.confirmed,
+            predicted: stockTotal.predicted + bondTotal.predicted
+        }
+    };
+}
+
+function calculateMonthlyDistributionStacked(year = selectedYear) {
+    const monthlyData = Array(12).fill(0).map(() => ({
+        stock: 0, deposit: 0, bond: 0
+    }));
+    
+    // 股票 - 修改以支持美元轉換
+    Object.values(appData.stocks).forEach(stock => {
+        if (stock.dividends) {
+            stock.dividends.forEach(dividend => {
+                if (dividend.amount > 0 && dividend.date) {
+                    const date = new Date(dividend.date);
+                    if (date.getFullYear() !== year) return;
+                    const month = date.getMonth();
+                    const shares = dividend.shares !== undefined ? dividend.shares : stock.shares || 0;
+                    let totalAmount = shares * dividend.amount;
+                    
+                    // 如果股票是美元計價，轉換為港元
+                    if (stock.currency === 'USD') {
+                        totalAmount = convertUsdToHkd(totalAmount);
+                    }
+                    
+                    monthlyData[month].stock += totalAmount;
+                }
+            });
+        }
+    });
+    
+    // 存款
+    appData.deposits.forEach(deposit => {
+        if (deposit.interest > 0 && deposit.maturityDate) {
+            const date = new Date(deposit.maturityDate);
+            if (date.getFullYear() !== year) return;
+            const month = date.getMonth();
+            const amount = deposit.currency === 'USD' ? convertUsdToHkd(deposit.interest) : deposit.interest;
+            monthlyData[month].deposit += amount;
+        }
+    });
+    
+    // 债券 - 修改：只使用派息记录
+    appData.bonds.forEach(bond => {
+        if (bond.payments) {
+            bond.payments.forEach(payment => {
+                if (payment.amount > 0 && payment.date) {
+                    const date = new Date(payment.date);
+                    if (date.getFullYear() !== year) return;
+                    const month = date.getMonth();
+                    const amount = bond.currency === 'USD' ? convertUsdToHkd(payment.amount) : payment.amount;
+                    monthlyData[month].bond += amount;
+                }
+            });
+        }
+    });
+    
+    return monthlyData;
+}
+
+function calculateStockDividendBreakdown(year = selectedAnalysisYear) {
+    const result = {};
+    Object.values(appData.stocks).forEach(stock => {
+        if (stock.dividends) {
+            let total = 0;
+            stock.dividends.forEach(dividend => {
+                if (dividend.amount > 0 && dividend.date) {
+                    const date = new Date(dividend.date);
+                    if (date.getFullYear() !== year) return;
+                    const shares = dividend.shares !== undefined ? dividend.shares : stock.shares || 0;
+                    let totalAmount = shares * dividend.amount;
+                    
+                    // 如果股票是美元計價，轉換為港元
+                    if (stock.currency === 'USD') {
+                        totalAmount = convertUsdToHkd(totalAmount);
+                    }
+                    
+                    total += totalAmount;
+                }
+            });
+            if (total > 0) {
+                result[stock.code] = total;
+            }
+        }
+    });
+    return result;
+}
+
+function calculateMonthlySummary(year = selectedAnalysisYear) {
+    const monthlyData = calculateMonthlyDistributionStacked(year);
+    const totals = { stock: 0, deposit: 0, bond: 0 };
+    const monthlyAmounts = Array(12).fill(0);
+    monthlyData.forEach((data, i) => {
+        monthlyAmounts[i] = data.stock + data.deposit + data.bond;
+        totals.stock += data.stock;
+        totals.deposit += data.deposit;
+        totals.bond += data.bond;
+    });
+    const maxMonth = monthlyAmounts.indexOf(Math.max(...monthlyAmounts));
+    const avg = monthlyAmounts.reduce((a, b) => a + b, 0) / 12;
+    return {
+        maxMonth: monthNames[maxMonth],
+        avg: avg,
+        totals: totals
+    };
+}
+
+function updateCalculations() {
+    const activeTab = document.querySelector('.tab-btn--active');
+    if (activeTab) {
+        const tabName = activeTab.dataset.tab;
+        if (tabName === 'overview') {
+            updateOverview();
+        } else if (tabName === 'monthly') {
+            updateMonthlyDetails();
+        } else if (tabName === 'calendar') {
+            updateCalendar();
+        } else if (tabName === 'analysis') {
+            updateAnalysis();
+        }
+    }
+}
+
+// Monthly Details - 修改以包含債券派息和股票美元轉換
+function updateMonthlyDetails() {
+    renderYearSelector();
+    const monthlyData = calculateMonthlyDistributionStacked(selectedYear);
+    const detailedMonthlyData = calculateDetailedMonthlyData(selectedYear);
+    updateMonthlyChart(monthlyData);
+    renderMonthlyCards(detailedMonthlyData);
+}
+
+function calculateDetailedMonthlyData(year = selectedYear) {
+    const monthlyData = Array(12).fill(null).map(() => ({
+        total: 0,
+        items: []
+    }));
+    
+    // 股票 - 修改以支持美元轉換
+    Object.values(appData.stocks).forEach(stock => {
+        if (stock.dividends) {
+            stock.dividends.forEach(dividend => {
+                if (dividend.amount > 0 && dividend.date) {
+                    const date = new Date(dividend.date);
+                    if (date.getFullYear() !== year) return;
+                    const month = date.getMonth();
+                    const shares = dividend.shares !== undefined ? dividend.shares : stock.shares || 0;
+                    let totalAmount = shares * dividend.amount;
+                    
+                    // 如果股票是美元計價，轉換為港元
+                    if (stock.currency === 'USD') {
+                        totalAmount = convertUsdToHkd(totalAmount);
+                    }
+                    
+                    monthlyData[month].total += totalAmount;
+                    monthlyData[month].items.push({
+                        name: stock.name,
+                        type: dividend.type,
+                        period: dividend.period,
+                        amount: totalAmount,
+                        currency: 'HKD' // 統一顯示為港元
+                    });
+                }
+            });
+        }
+    });
+    
+    // 存款
+    appData.deposits.forEach(deposit => {
+        if (deposit.interest > 0 && deposit.maturityDate) {
+            const date = new Date(deposit.maturityDate);
+            if (date.getFullYear() !== year) return;
+            const month = date.getMonth();
+            const amount = deposit.currency === 'USD' ? convertUsdToHkd(deposit.interest) : deposit.interest;
+            monthlyData[month].total += amount;
+            monthlyData[month].items.push({
+                name: '定期存款',
+                type: 'deposit',
+                period: '到期',
+                amount: amount,
+                currency: 'HKD'
+            });
+        }
+    });
+    
+    // 债券 - 修改：只使用派息记录
+    appData.bonds.forEach(bond => {
+        if (bond.payments) {
+            bond.payments.forEach(payment => {
+                if (payment.amount > 0 && payment.date) {
+                    const date = new Date(payment.date);
+                    if (date.getFullYear() !== year) return;
+                    const month = date.getMonth();
+                    const amount = bond.currency === 'USD' ? convertUsdToHkd(payment.amount) : payment.amount;
+                    monthlyData[month].total += amount;
+                    monthlyData[month].items.push({
+                        name: bond.name || '債券',
+                        type: payment.type,
+                        period: payment.period,
+                        amount: amount,
+                        currency: 'HKD'
+                    });
+                }
+            });
+        }
+    });
+    
+    return monthlyData;
+}
+
+function renderMonthlyCards(monthlyData) {
+    const container = document.getElementById('monthly-cards-grid');
+    if (!container) return;
+    container.innerHTML = '';
+    monthlyData.forEach((monthData, index) => {
+        const card = createMonthlyCard(monthNames[index], monthData);
+        container.appendChild(card);
+    });
+}
+
+function createMonthlyCard(monthName, monthData) {
+    const div = document.createElement('div');
+    if (monthData.total === 0) {
+        div.className = 'monthly-card monthly-card--empty';
+        div.innerHTML = `
+            <div class="monthly-card__header">${monthName}</div>
+            <div class="monthly-card--empty">
+                <p>本月無收入</p>
+            </div>
+        `;
+        return div;
+    }
+    div.className = 'monthly-card';
+    div.innerHTML = `
+        <div class="monthly-card__header">${monthName}</div>
+        <div class="monthly-card__total">
+            <div class="monthly-total-amount">${formatCurrency(monthData.total, 'HKD')}</div>
+        </div>
+        <div class="monthly-card__items" id="items-${monthName}">
+            ${monthData.items.map(item => createMonthlyItemHTML(item)).join('')}
+        </div>
+        ${monthData.items.length > 4 ? `
+            <button class="monthly-card__expand-btn" onclick="toggleExpand('${monthName}')">
+                點擊查看更多
+            </button>
+        ` : ''}
+    `;
+    return div;
+}
+
+function createMonthlyItemHTML(item) {
+    const typeClass = getTypeClass(item.type);
+    const typeLabel = getTypeLabel(item.type);
+
+    return `
+        <div class="monthly-item">
+            <div class="monthly-item__info">
+                <div class="monthly-item__name">${item.name}</div>
+                <div class="monthly-item__details">
+                    <span class="monthly-item__type monthly-item__type--${typeClass}">${typeLabel}</span>
+                    ${item.period ? `<span>${item.period}</span>` : ''}
+                </div>
+            </div>
+            <div class="monthly-item__amount">
+                <div class="monthly-item__amount-primary">${formatCurrency(item.amount, 'HKD')}</div>
+            </div>
+        </div>
+    `;
+}
+
+function getTypeClass(type) {
+    switch (type) {
+        case 'confirmed': return 'confirmed';
+        case 'predicted': return 'predicted';
+        case 'deposit': return 'deposit';
+        case 'bond': return 'bond';
+        default: return 'confirmed';
+    }
+}
+
+function getTypeLabel(type) {
+    switch (type) {
+        case 'confirmed': return '確定';
+        case 'predicted': return '預測';
+        case 'deposit': return '存款';
+        case 'bond': return '債券';
+        default: return '確定';
+    }
+}
+
+// Chart Functions
+function updateMonthlyChart(monthlyData) {
+    const ctx = document.getElementById('monthlyChart');
+    if (!ctx) return;
+    const context = ctx.getContext('2d');
+    if (charts.monthly) {
+        charts.monthly.destroy();
+    }
+    const labels = monthNames;
+    const stockData = monthlyData.map(d => d.stock);
+    const depositData = monthlyData.map(d => d.deposit);
+    const bondData = monthlyData.map(d => d.bond);
+
+    charts.monthly = new Chart(context, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: '股息',
+                    data: stockData,
+                    backgroundColor: chartColors[0],
+                    borderColor: chartColors[0],
+                    borderWidth: 1
+                },
+                {
+                    label: '定期存款',
+                    data: depositData,
+                    backgroundColor: chartColors[1],
+                    borderColor: chartColors[1],
+                    borderWidth: 1
+                },
+                {
+                    label: '債券',
+                    data: bondData,
+                    backgroundColor: chartColors[2],
+                    borderColor: chartColors[2],
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: '月度收入分佈（堆疊）'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.dataset.label || '';
+                            const value = context.parsed.y;
+                            return `${label}: ${formatCurrency(value, 'HKD')}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    stacked: true
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return 'HK$' + value.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Analysis Charts
+function updateAnalysis() {
+    renderAnalysisYearSelector();
+    setTimeout(() => {
+        updateSourceChart();
+        updateStockDividendChart();
+        updateTrendChart();
+        updateSummary();
+    }, 100);
+}
+
+function updateSourceChart() {
+    const ctx = document.getElementById('sourceChart');
+    if (!ctx) return;
+    const context = ctx.getContext('2d');
+    const totals = calculateTotals(selectedAnalysisYear);
+    if (charts.source) {
+        charts.source.destroy();
+    }
+    const data = [totals.stock.hkd, totals.deposit.hkd, totals.bond.hkd];
+    const labels = ['股票', '定期存款', '債券'];
+
+    charts.source = new Chart(context, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: [chartColors[0], chartColors[1], chartColors[2]],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: '收益來源分佈'
+                },
+                legend: {
+                    position: 'bottom'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.parsed;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0';
+                            return `${label}: ${formatCurrency(value, 'HKD')} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function updateStockDividendChart() {
+    const ctx = document.getElementById('stockDividendChart');
+    const legendContainer = document.getElementById('stockDividendLegend');
+    if (!ctx || !legendContainer) return;
+    const context = ctx.getContext('2d');
+    const stockBreakdown = calculateStockDividendBreakdown(selectedAnalysisYear);
+    if (charts.stockDividend) {
+        charts.stockDividend.destroy();
+    }
+    
+    // 將數據轉換為數組並按金額排序（由高到低）
+    const sortedData = Object.entries(stockBreakdown)
+        .map(([code, amount]) => ({
+            code: code,
+            amount: amount,
+            label: (() => {
+                const stock = appData.stocks[code];
+                return stock ? `${stock.code} ${stock.name}` : code;
+            })()
+        }))
+        .sort((a, b) => b.amount - a.amount); // 由高到低排序
+
+    const labels = sortedData.map(item => item.label);
+    const data = sortedData.map(item => item.amount);
+
+    // 生成足夠的不重複顏色
+    function generateColors(count) {
+        const colors = [];
+        const baseColors = ["#1FB8CD", "#FFC185", "#B4413C", "#ECEBD5", "#5D878F", "#DB4545", "#D2BA4C", "#964325", "#944454", "#13343B"];
+        
+        // 先使用預定義的顏色
+        for (let i = 0; i < Math.min(count, baseColors.length); i++) {
+            colors.push(baseColors[i]);
+        }
+        
+        // 如果需要更多顏色，動態生成
+        for (let i = baseColors.length; i < count; i++) {
+            const hue = (i * 137.508) % 360; // 使用黃金角度分割
+            const saturation = 60 + (i % 4) * 10; // 60-90%
+            const lightness = 40 + (i % 3) * 15; // 40-70%
+            colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
+        }
+        
+        return colors;
+    }
+
+    const colors = generateColors(labels.length);
+
+    charts.stockDividend = new Chart(context, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: colors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: '各股票股息佔比'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const rawValue = context.raw;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = total > 0 ? ((rawValue / total) * 100).toFixed(1) : '0.0';
+                            return `${label}: ${formatCurrency(rawValue, 'HKD')} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // 自訂 legend - 按照排序後的順序顯示
+    legendContainer.innerHTML = '';
+    const total = data.reduce((a, b) => a + b, 0);
+    labels.forEach((label, i) => {
+        const percentage = total > 0 ? ((data[i] / total) * 100).toFixed(1) : 0;
+        const item = document.createElement('div');
+        item.className = 'legend-item';
+        item.innerHTML = `
+            <span class="color-box" style="background-color:${colors[i]}"></span>
+            <span class="label">${label}</span>
+            <span class="percentage">${percentage}%</span>
+        `;
+        item.addEventListener('click', () => {
+            const meta = charts.stockDividend.getDatasetMeta(0);
+            const slice = meta.data[i];
+            if (slice.hidden === true) {
+                slice.hidden = false;
+                item.style.opacity = 1;
+            } else {
+                slice.hidden = true;
+                item.style.opacity = 0.5;
+            }
+            charts.stockDividend.update();
+        });
+        legendContainer.appendChild(item);
+    });
+}
+
+function updateTrendChart() {
+    const ctx = document.getElementById('trendChart');
+    if (!ctx) return;
+    const context = ctx.getContext('2d');
+    const monthlyData = calculateMonthlyDistributionStacked(selectedAnalysisYear);
+    if (charts.trend) {
+        charts.trend.destroy();
+    }
+    const cumulativeData = [];
+    let cumulative = 0;
+    monthlyData.forEach(data => {
+        cumulative += data.stock + data.deposit + data.bond;
+        cumulativeData.push(cumulative);
+    });
+
+    charts.trend = new Chart(context, {
+        type: 'line',
+        data: {
+            labels: monthNames,
+            datasets: [{
+                label: '累積收益 (HK$)',
+                data: cumulativeData,
+                borderColor: chartColors[0],
+                backgroundColor: chartColors[0] + '20',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: '累積收益趨勢'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return 'HK$' + value.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function updateSummary() {
+    const summary = calculateMonthlySummary(selectedAnalysisYear);
+    const container = document.getElementById('analysis-summary');
+    if (!container) return;
+
+    container.innerHTML = `
+    <div class="summary-list">
+        <div class="summary-bar">
+            <span class="summary-label">收益最高月份</span><span class="summary-colon">：</span>
+            <span class="summary-value">${summary.maxMonth}</span>
+        </div>
+        <div class="summary-bar">
+            <span class="summary-label">平均月度收益</span><span class="summary-colon">：</span>
+            <span class="summary-value">${formatCurrency(summary.avg, 'HKD')}</span>
+        </div>
+        <div class="summary-bar">
+            <span class="summary-label">定期存款總收益</span><span class="summary-colon">：</span>
+            <span class="summary-value">${formatCurrency(summary.totals.deposit, 'HKD')}</span>
+        </div>
+        <div class="summary-bar">
+            <span class="summary-label">股息總收益</span><span class="summary-colon">：</span>
+            <span class="summary-value">${formatCurrency(summary.totals.stock, 'HKD')}</span>
+        </div>
+        <div class="summary-bar">
+            <span class="summary-label">債息總收益</span><span class="summary-colon">：</span>
+            <span class="summary-value">${formatCurrency(summary.totals.bond, 'HKD')}</span>
+        </div>
+        <div class="summary-bar">
+            <span class="summary-label">總被動收入收益</span><span class="summary-colon">：</span>
+            <span class="summary-value">${formatCurrency(summary.totals.stock + summary.totals.deposit + summary.totals.bond, 'HKD')}</span>
+        </div>
+    </div>
+`;
+}
+
+window.toggleExpand = function(monthName) {
+    const container = document.getElementById(`items-${monthName}`);
+    const btn = container.nextElementSibling;
+    if (container.classList.contains('expanded')) {
+        container.classList.remove('expanded');
+        btn.textContent = '點擊查看更多';
+    } else {
+        container.classList.add('expanded');
+        btn.textContent = '收起內容';
+    }
+};
+
+// ========== 新的 updateOverview() 實現 ==========
+function updateOverview() {
+    if (typeof getAvailableYears !== "function" || typeof calculateTotals !== "function" || typeof formatCurrency !== "function") return;
+
+    const years = getAvailableYears();
+
+    // 年度總收益
+    const totalAnnualList = document.getElementById('total-annual-list');
+    if (totalAnnualList) {
+        totalAnnualList.innerHTML = years.map(year => {
+            const totals = calculateTotals(year);
+            return `<div>${year}年：${formatCurrency(totals.total.hkd, 'HKD')}</div>`;
+        }).join('');
+    }
+
+    // 確定收益
+    const confirmedIncomeList = document.getElementById('confirmed-income-list');
+    if (confirmedIncomeList) {
+        confirmedIncomeList.innerHTML = years.map(year => {
+            const totals = calculateTotals(year);
+            return `<div>${year}年：${formatCurrency(totals.total.confirmed, 'HKD')}</div>`;
+        }).join('');
+    }
+
+    // 預測收益
+    const predictedIncomeList = document.getElementById('predicted-income-list');
+    if (predictedIncomeList) {
+        predictedIncomeList.innerHTML = years.map(year => {
+            const totals = calculateTotals(year);
+            return `<div>${year}年：${formatCurrency(totals.total.predicted, 'HKD')} <span class="prediction-label">(預測)</span></div>`;
+        }).join('');
+    }
+
+    // 收益來源分佈
+    const sourcePercentageList = document.getElementById('source-percentage-list');
+    if (sourcePercentageList) {
+        sourcePercentageList.innerHTML = years.map(year => {
+            const totals = calculateTotals(year);
+            const total = totals.total.hkd;
+            const stockP = total > 0 ? (totals.stock.hkd / total * 100).toFixed(1) : '0.0';
+            const depositP = total > 0 ? (totals.deposit.hkd / total * 100).toFixed(1) : '0.0';
+            const bondP = total > 0 ? (totals.bond.hkd / total * 100).toFixed(1) : '0.0';
+            return `<div style="margin-bottom: 8px;">
+                <div><b>${year}年：</b></div>
+                <div style="padding-left: 12px;">
+                    <div>股票 <span style="float:right;">${stockP}%</span></div>
+                    <div>定期存款 <span style="float:right;">${depositP}%</span></div>
+                    <div>債券 <span style="float:right;">${bondP}%</span></div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+}
+
+// Event Listeners
+document.addEventListener('DOMContentLoaded', function() {
+    loadData();
+    initTabs();
+    renderStocks();
+    renderDeposits();
+    renderBonds();
+
+    setTimeout(() => {
+        updateOverview();
+    }, 100);
+
+    const addDepositBtn = document.getElementById('add-deposit-btn');
+    const addBondBtn = document.getElementById('add-bond-btn');
+    const exportBtn = document.getElementById('export-data-btn');
+    const importInput = document.getElementById('import-data-file');
+    const resetBtn = document.getElementById('reset-data-btn');
+
+    if (addDepositBtn) {
+        addDepositBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            addDeposit();
+        });
+    }
+
+    if (addBondBtn) {
+        addBondBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            addBond();
+        });
+    }
+
+    if (exportBtn) {
+        exportBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            exportData();
+        });
+    }
+
+    if (importInput) {
+        importInput.addEventListener('change', (e) => {
+            importData(e);
+        });
+    }
+
+    if (resetBtn) {
+        resetBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            resetData();
+        });
+    }
+    // GitHub 同步按鈕事件
+const syncGithubBtn = document.getElementById('sync-github-btn');
+const loadGithubBtn = document.getElementById('load-github-btn');
+
+if (syncGithubBtn) {
+    syncGithubBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        syncToGitHub();
+    });
+}
+
+if (loadGithubBtn) {
+    loadGithubBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        loadFromGitHub();
+    });
+}
+
+    const rateInput = document.getElementById('usd-hkd-rate');
+    if (rateInput) {
+        rateInput.value = appData.usdHkdRate;
+        rateInput.addEventListener('change', (e) => {
+            const value = parseFloat(e.target.value);
+            if (!isNaN(value) && value > 0) {
+                appData.usdHkdRate = value;
+                saveData();
+                updateCalculations();
+            } else {
+                alert('請輸入有效的匯率');
+            }
+        });
+    }
+});
+
+window.addEventListener('beforeunload', function() {
+    Object.values(charts).forEach(chart => {
+        if (chart && typeof chart.destroy === 'function') {
+            chart.destroy();
+        }
+    });
+});
+
+document.addEventListener('change', function(e) {
+    if (e.target.classList.contains('form-control') ||
+        e.target.classList.contains('btn')) {
+        saveData();
+    }
+});
+
+document.addEventListener('input', function(e) {
+    if (e.target.classList.contains('form-control')) {
+        saveData();
+    }
+});
+
+// ========== GitHub 同步功能 ==========
+async function syncToGitHub() {
+    const config = JSON.parse(localStorage.getItem('githubConfig') || '{}');
+    if (!config.username || !config.repo || !config.token) {
+        alert('請先在指南頁設定 GitHub 連接');
+        return;
+    }
+    
+    try {
+        const path = 'data/dividendtrack-data.json';
+        const dataToSync = {
+            investmentTrackerData: appData,
+            lastSync: new Date().toISOString()
+        };
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(dataToSync, null, 2))));
+        
+        // 先嘗試獲取現有文件的 SHA
+        let sha = '';
+        try {
+            const getResponse = await fetch(`https://api.github.com/repos/${config.username}/${config.repo}/contents/${path}`, {
+                headers: {
+                    'Authorization': `token ${config.token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+            if (getResponse.ok) {
+                const fileData = await getResponse.json();
+                sha = fileData.sha;
+            }
+        } catch (e) {}
+        
+        const body = {
+            message: `Update dividendtrack-data.json - ${new Date().toISOString()}`,
+            content: content
+        };
+        if (sha) body.sha = sha;
+        
+        const response = await fetch(`https://api.github.com/repos/${config.username}/${config.repo}/contents/${path}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${config.token}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+        
+        if (response.ok) {
+            alert('✅ 同步成功！');
+        } else {
+            const errorData = await response.json();
+            alert('❌ 同步失敗：' + (errorData.message || response.status));
+        }
+    } catch (error) {
+        alert('❌ 同步錯誤：' + error.message);
+    }
+}
+
+async function loadFromGitHub() {
+    const config = JSON.parse(localStorage.getItem('githubConfig') || '{}');
+    if (!config.username || !config.repo || !config.token) {
+        alert('請先在指南頁設定 GitHub 連接');
+        return;
+    }
+    
+    try {
+        const path = 'data/dividendtrack-data.json';
+        const response = await fetch(`https://api.github.com/repos/${config.username}/${config.repo}/contents/${path}`, {
+            headers: {
+                'Authorization': `token ${config.token}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+        
+        if (response.ok) {
+            const fileData = await response.json();
+            const content = decodeURIComponent(escape(atob(fileData.content)));
+            const data = JSON.parse(content);
+            
+            if (data.investmentTrackerData) {
+                appData = data.investmentTrackerData;
+                localStorage.setItem('investmentTrackerData', JSON.stringify(appData));
+                alert('✅ 載入成功！頁面將重新整理');
+                location.reload();
+            } else {
+                alert('GitHub 上的數據格式不正確');
+            }
+        } else if (response.status === 404) {
+            alert('GitHub 上尚無備份數據');
+        } else {
+            alert('❌ 載入失敗：' + response.status);
+        }
+    } catch (error) {
+        alert('❌ 載入錯誤：' + error.message);
+    }
+}
+    </script>
+</body>
+</html>
