@@ -1,0 +1,629 @@
+{
+  "investmentTrackerData": {
+    "stocks": {
+      "2388": {
+        "name": "2388 中銀香港",
+        "code": "2388",
+        "shares": 1500,
+        "dividends": [
+          {
+            "period": "第二次中期息",
+            "type": "confirmed",
+            "amount": 0.29,
+            "date": "2025-09-26",
+            "shares": 1500
+          },
+          {
+            "period": "Q3",
+            "type": "confirmed",
+            "amount": 0.29,
+            "date": "2025-11-26",
+            "shares": 1500
+          },
+          {
+            "period": "Q4",
+            "type": "predicted",
+            "amount": 1.129,
+            "date": "2026-02-28",
+            "shares": 1500
+          }
+        ],
+        "currency": "HKD"
+      },
+      "2800": {
+        "name": "2800盈富",
+        "code": "2800",
+        "shares": 9224,
+        "dividends": [
+          {
+            "period": "中期息",
+            "type": "confirmed",
+            "amount": 0.22,
+            "date": "2025-05-30",
+            "shares": 9224
+          },
+          {
+            "period": "末期息",
+            "type": "confirmed",
+            "amount": 0.55,
+            "date": "2025-11-28",
+            "shares": 9224
+          },
+          {
+            "period": "中期息",
+            "type": "predicted",
+            "amount": 0.22,
+            "date": "2026-05-30",
+            "shares": 9224
+          },
+          {
+            "period": "末期息",
+            "type": "predicted",
+            "amount": 0.55,
+            "date": "2026-11-30",
+            "shares": 9224
+          }
+        ],
+        "currency": "HKD"
+      },
+      "3070": {
+        "name": "3070平安香港高息股 ETF",
+        "code": "3070",
+        "shares": 100,
+        "dividends": [
+          {
+            "period": "第三季度股息",
+            "type": "confirmed",
+            "amount": 0.6,
+            "date": "2025-10-10",
+            "shares": 100
+          }
+        ],
+        "currency": "HKD"
+      },
+      "3416": {
+        "name": "3416 Global X 國指備兌認購期權主動型ETF",
+        "code": "3416",
+        "shares": 1000,
+        "dividends": [
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.14,
+            "date": "2025-09-04",
+            "shares": 500
+          },
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.14,
+            "date": "2025-10-08",
+            "shares": 500
+          },
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.14,
+            "date": "2025-11-06",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.14,
+            "date": "2025-12-04",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.14,
+            "date": "2026-01-07",
+            "shares": 1000
+          }
+        ],
+        "currency": "HKD"
+      },
+      "3417": {
+        "name": "3417 Global X 恆科備兌認購期權主動型ETF",
+        "code": "3417",
+        "shares": 1500,
+        "dividends": [
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.13,
+            "date": "2025-09-04",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.13,
+            "date": "2025-10-08",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.13,
+            "date": "2025-11-06",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.13,
+            "date": "2025-12-04",
+            "shares": 1500
+          },
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.13,
+            "date": "2026-01-07",
+            "shares": 1500
+          }
+        ],
+        "currency": "HKD"
+      },
+      "3419": {
+        "name": "3419 Global X 恆指備兌認購期權主動型ETF",
+        "code": "3419",
+        "shares": 1000,
+        "dividends": [
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.12,
+            "date": "2025-09-04",
+            "shares": 500
+          },
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.12,
+            "date": "2025-10-08",
+            "shares": 500
+          },
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.12,
+            "date": "2025-11-06",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.12,
+            "date": "2025-12-04",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.12,
+            "date": "2026-01-07",
+            "shares": 1000
+          }
+        ],
+        "currency": "HKD"
+      },
+      "3437": {
+        "name": "3437 博時央企紅利ETF",
+        "code": "3437",
+        "shares": 2100,
+        "dividends": [
+          {
+            "period": "股息",
+            "type": "confirmed",
+            "amount": 0.35,
+            "date": "2025-10-08",
+            "shares": 2100
+          }
+        ],
+        "currency": "HKD"
+      },
+      "3451": {
+        "name": "3451 GLOBAL X 納斯達克100",
+        "code": "3451",
+        "shares": 100,
+        "dividends": [
+          {
+            "period": "2025 11",
+            "type": "confirmed",
+            "amount": 0.69,
+            "date": "2025-11-28",
+            "shares": 100
+          },
+          {
+            "period": "2025 12",
+            "type": "confirmed",
+            "amount": 0.79,
+            "date": "2025-12-30",
+            "shares": 100
+          }
+        ],
+        "currency": "HKD"
+      },
+      "3466": {
+        "name": "3466恒生高息股30指數ETF",
+        "code": "3466",
+        "shares": 1200,
+        "dividends": [
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.11,
+            "date": "2025-08-11",
+            "shares": 400
+          },
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.12,
+            "date": "2025-09-09",
+            "shares": 1200
+          },
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.12,
+            "date": "2025-10-13",
+            "shares": 1200
+          },
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.12,
+            "date": "2025-11-11",
+            "shares": 1200
+          },
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.13,
+            "date": "2025-12-09",
+            "shares": 1200
+          },
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.13,
+            "date": "2026-01-12",
+            "shares": 1200
+          }
+        ],
+        "currency": "HKD"
+      },
+      "3476": {
+        "name": "恒生摩根美國股票高入息主動型ETF",
+        "code": "3476",
+        "shares": 1500,
+        "dividends": [
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.0136,
+            "date": "2025-10-14",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.0134,
+            "date": "2025-11-12",
+            "shares": 1500
+          },
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.0136,
+            "date": "2025-12-09",
+            "shares": 1500
+          },
+          {
+            "period": "每月股息",
+            "type": "confirmed",
+            "amount": 0.0122,
+            "date": "2026-01-12",
+            "shares": 1500
+          }
+        ],
+        "currency": "USD"
+      },
+      "SPLG": {
+        "name": "SPLG",
+        "code": "SPLG",
+        "shares": 5.0234,
+        "dividends": [
+          {
+            "period": "9月",
+            "type": "confirmed",
+            "amount": 0.16674,
+            "date": "2025-09-30",
+            "shares": 2
+          },
+          {
+            "period": "12月",
+            "type": "predicted",
+            "amount": 0.14,
+            "date": "2025-12-31",
+            "shares": 5
+          }
+        ],
+        "currency": "USD"
+      },
+      "VXUS": {
+        "name": "VXUS",
+        "code": "VXUS",
+        "shares": 4.0823,
+        "dividends": [
+          {
+            "period": "9月",
+            "type": "confirmed",
+            "amount": 0.25,
+            "date": "2025-09-23",
+            "shares": 1
+          },
+          {
+            "period": "12月",
+            "type": "predicted",
+            "amount": 0.189,
+            "date": "2025-12-23",
+            "shares": 4
+          }
+        ],
+        "currency": "USD"
+      },
+      "VT": {
+        "name": "VT",
+        "code": "VT",
+        "shares": 0.7723,
+        "dividends": [
+          {
+            "period": "9月",
+            "type": "confirmed",
+            "amount": 0.26,
+            "date": "2025-09-23",
+            "shares": 0.7723
+          }
+        ],
+        "currency": "USD"
+      },
+      "QDTY": {
+        "name": "QDTY",
+        "code": "QDTY",
+        "shares": 1.2046,
+        "dividends": [
+          {
+            "period": "10月總",
+            "type": "confirmed",
+            "amount": 0.773759,
+            "date": "2025-10-30",
+            "shares": 0.5945
+          },
+          {
+            "period": "11月總",
+            "type": "confirmed",
+            "amount": 1.3793,
+            "date": "2025-11-27",
+            "shares": 0.5945
+          },
+          {
+            "period": "12月4",
+            "type": "confirmed",
+            "amount": 0.19565,
+            "date": "2025-12-04",
+            "shares": 1.2046
+          },
+          {
+            "period": "12月11",
+            "type": "confirmed",
+            "amount": 0.24311,
+            "date": "2025-12-11",
+            "shares": 1.2046
+          },
+          {
+            "period": "12月18",
+            "type": "predicted",
+            "amount": 0.24311,
+            "date": "2025-12-18",
+            "shares": 1.2046
+          },
+          {
+            "period": "12月25",
+            "type": "predicted",
+            "amount": 0.24311,
+            "date": "2025-12-25",
+            "shares": 1.2046
+          }
+        ],
+        "currency": "USD"
+      },
+      "PTY": {
+        "name": "PTY",
+        "code": "PTY",
+        "shares": 14.4884,
+        "dividends": [
+          {
+            "period": "11月",
+            "type": "confirmed",
+            "amount": 0.08316,
+            "date": "2025-12-01",
+            "shares": 4.4884
+          },
+          {
+            "period": "12月",
+            "type": "confirmed",
+            "amount": 0.08316,
+            "date": "2026-01-01",
+            "shares": 14
+          }
+        ],
+        "currency": "USD"
+      }
+    },
+    "deposits": [
+      {
+        "currency": "USD",
+        "principal": 66740,
+        "maturityDate": "2025-06-11",
+        "interest": 682.33
+      },
+      {
+        "currency": "USD",
+        "principal": 67422.33,
+        "maturityDate": "2025-09-11",
+        "interest": 671.98
+      },
+      {
+        "currency": "HKD",
+        "principal": 200000,
+        "maturityDate": "2025-08-31",
+        "interest": 2027.41
+      },
+      {
+        "currency": "USD",
+        "principal": 68094.31,
+        "maturityDate": "2025-12-11",
+        "interest": 654.08
+      },
+      {
+        "currency": "USD",
+        "principal": 60648.39,
+        "maturityDate": "2026-03-11",
+        "interest": 523.09
+      }
+    ],
+    "bonds": [
+      {
+        "currency": "USD",
+        "name": "2.625Dec31'25",
+        "maturityDate": "2025-12-31",
+        "yield": 0,
+        "shares": 0,
+        "dividends": [
+          {
+            "period": "到期息",
+            "amount": 57.75,
+            "date": "2025-12-31",
+            "shares": 0
+          }
+        ],
+        "payments": [
+          {
+            "period": "到期派息贖回(票息+資本)",
+            "type": "confirmed",
+            "amount": 57.75,
+            "date": "2025-12-31"
+          }
+        ]
+      },
+      {
+        "currency": "USD",
+        "name": "1.875Jun30'26",
+        "maturityDate": "2026-06-30",
+        "payments": [
+          {
+            "period": " 2025年12月31日",
+            "type": "confirmed",
+            "amount": 24.86,
+            "date": "2025-12-31"
+          },
+          {
+            "period": "到期派息贖回(票息+資本)",
+            "type": "confirmed",
+            "amount": 102.96,
+            "date": "2026-06-30"
+          }
+        ]
+      },
+      {
+        "currency": "USD",
+        "name": "4.5Mar31'26",
+        "maturityDate": "2026-03-31",
+        "payments": [
+          {
+            "period": "2025年9月30日",
+            "type": "confirmed",
+            "amount": 13.28,
+            "date": "2025-09-30"
+          },
+          {
+            "period": "2026年3月31日",
+            "type": "confirmed",
+            "amount": 89.75,
+            "date": "2026-03-31"
+          }
+        ]
+      },
+      {
+        "currency": "USD",
+        "name": "3.5Sep30'26",
+        "maturityDate": "2026-09-30",
+        "payments": [
+          {
+            "period": "2025年9月30日",
+            "type": "confirmed",
+            "amount": 10.33,
+            "date": "2025-09-30"
+          },
+          {
+            "period": "2026年3月31日",
+            "type": "confirmed",
+            "amount": 69.81,
+            "date": "2026-03-31"
+          },
+          {
+            "period": "到期派息贖回(票息+資本)",
+            "type": "confirmed",
+            "amount": 84.4,
+            "date": "2026-09-30"
+          }
+        ]
+      },
+      {
+        "currency": "USD",
+        "name": "4.75Feb15'41",
+        "maturityDate": "2041-02-15",
+        "payments": [
+          {
+            "period": "2026年2月15",
+            "type": "predicted",
+            "amount": 95,
+            "date": "2026-02-15"
+          },
+          {
+            "period": "2026年8月15",
+            "type": "predicted",
+            "amount": 95,
+            "date": "2026-08-15"
+          }
+        ]
+      },
+      {
+        "currency": "HKD",
+        "name": "HNDA 2.3 Sep09'26",
+        "maturityDate": "2026-09-09",
+        "payments": [
+          {
+            "period": "2026年3月09日",
+            "type": "predicted",
+            "amount": 0,
+            "date": "2026-03-09"
+          },
+          {
+            "period": "到期派息贖回(票息+資本)",
+            "type": "predicted",
+            "amount": 0,
+            "date": "2026-09-09"
+          }
+        ]
+      }
+    ],
+    "usdHkdRate": 7.77
+  },
+  "lastSync": "2025-12-17T03:40:27.638Z"
+}
