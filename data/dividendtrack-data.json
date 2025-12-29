@@ -134,7 +134,7 @@
       "3417": {
         "name": "3417 Global X 恆科備兌認購期權主動型ETF",
         "code": "3417",
-        "shares": 1500,
+        "shares": 1000,
         "dividends": [
           {
             "period": "每月股息",
@@ -169,7 +169,7 @@
             "type": "confirmed",
             "amount": 0.13,
             "date": "2026-01-07",
-            "shares": 1500
+            "shares": 1000
           }
         ],
         "currency": "HKD"
@@ -632,5 +632,5 @@
     ],
     "usdHkdRate": 7.77
   },
-  "lastSync": "2025-12-18T13:18:12.893Z"
+  "lastSync": "2025-12-29T01:43:47.179Z"
 }
