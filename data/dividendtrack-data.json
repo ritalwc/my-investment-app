@@ -1004,13 +1004,13 @@
           {
             "period": "2026年3月09日",
             "type": "predicted",
-            "amount": 0,
+            "amount": 1,
             "date": "2026-03-09"
           },
           {
             "period": "到期派息贖回(票息+資本)",
             "type": "predicted",
-            "amount": 0,
+            "amount": 1,
             "date": "2026-09-09"
           }
         ]
@@ -1018,5 +1018,5 @@
     ],
     "usdHkdRate": 7.77
   },
-  "lastSync": "2026-01-01T03:29:49.463Z"
+  "lastSync": "2026-01-01T03:31:03.038Z"
 }
