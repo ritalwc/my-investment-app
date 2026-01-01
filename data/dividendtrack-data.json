@@ -7,20 +7,6 @@
         "shares": 1500,
         "dividends": [
           {
-            "period": "第二次中期息",
-            "type": "confirmed",
-            "amount": 0.29,
-            "date": "2025-09-26",
-            "shares": 1500
-          },
-          {
-            "period": "Q3",
-            "type": "confirmed",
-            "amount": 0.29,
-            "date": "2025-11-26",
-            "shares": 1500
-          },
-          {
             "period": "Q4",
             "type": "predicted",
             "amount": 1.129,
@@ -35,20 +21,6 @@
         "code": "2800",
         "shares": 9224,
         "dividends": [
-          {
-            "period": "中期息",
-            "type": "confirmed",
-            "amount": 0.22,
-            "date": "2025-05-30",
-            "shares": 9224
-          },
-          {
-            "period": "末期息",
-            "type": "confirmed",
-            "amount": 0.55,
-            "date": "2025-11-28",
-            "shares": 9224
-          },
           {
             "period": "中期息",
             "type": "predicted",
@@ -70,22 +42,7 @@
         "name": "3070平安香港高息股 ETF",
         "code": "3070",
         "shares": 100,
-        "dividends": [
-          {
-            "period": "第三季度股息",
-            "type": "confirmed",
-            "amount": 0.6,
-            "date": "2025-10-10",
-            "shares": 100
-          },
-          {
-            "period": "第四季",
-            "type": "confirmed",
-            "amount": 0.47,
-            "date": "2025-12-31",
-            "shares": 100
-          }
-        ],
+        "dividends": [],
         "currency": "HKD"
       },
       "3416": {
@@ -97,35 +54,84 @@
             "period": "每月股息",
             "type": "confirmed",
             "amount": 0.14,
-            "date": "2025-09-04",
-            "shares": 500
-          },
-          {
-            "period": "每月股息",
-            "type": "confirmed",
-            "amount": 0.14,
-            "date": "2025-10-08",
-            "shares": 500
-          },
-          {
-            "period": "每月股息",
-            "type": "confirmed",
-            "amount": 0.14,
-            "date": "2025-11-06",
-            "shares": 1000
-          },
-          {
-            "period": "每月股息",
-            "type": "confirmed",
-            "amount": 0.14,
-            "date": "2025-12-04",
-            "shares": 1000
-          },
-          {
-            "period": "每月股息",
-            "type": "confirmed",
-            "amount": 0.14,
             "date": "2026-01-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.14,
+            "date": "2026-02-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.14,
+            "date": "2026-03-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.14,
+            "date": "2026-04-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.14,
+            "date": "2026-05-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.14,
+            "date": "2026-06-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.14,
+            "date": "2026-07-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.14,
+            "date": "2026-08-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.14,
+            "date": "2026-09-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.14,
+            "date": "2026-10-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.14,
+            "date": "2026-11-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.14,
+            "date": "2026-12-07",
             "shares": 1000
           }
         ],
@@ -140,35 +146,84 @@
             "period": "每月股息",
             "type": "confirmed",
             "amount": 0.13,
-            "date": "2025-09-04",
-            "shares": 1000
-          },
-          {
-            "period": "每月股息",
-            "type": "confirmed",
-            "amount": 0.13,
-            "date": "2025-10-08",
-            "shares": 1000
-          },
-          {
-            "period": "每月股息",
-            "type": "confirmed",
-            "amount": 0.13,
-            "date": "2025-11-06",
-            "shares": 1000
-          },
-          {
-            "period": "每月股息",
-            "type": "confirmed",
-            "amount": 0.13,
-            "date": "2025-12-04",
-            "shares": 1500
-          },
-          {
-            "period": "每月股息",
-            "type": "confirmed",
-            "amount": 0.13,
             "date": "2026-01-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-02-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-03-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-04-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-05-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-06-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-07-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-08-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-09-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-10-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-11-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-12-07",
             "shares": 1000
           }
         ],
@@ -183,35 +238,84 @@
             "period": "每月股息",
             "type": "confirmed",
             "amount": 0.12,
-            "date": "2025-09-04",
-            "shares": 500
-          },
-          {
-            "period": "每月股息",
-            "type": "confirmed",
-            "amount": 0.12,
-            "date": "2025-10-08",
-            "shares": 500
-          },
-          {
-            "period": "每月股息",
-            "type": "confirmed",
-            "amount": 0.12,
-            "date": "2025-11-06",
-            "shares": 1000
-          },
-          {
-            "period": "每月股息",
-            "type": "confirmed",
-            "amount": 0.12,
-            "date": "2025-12-04",
-            "shares": 1000
-          },
-          {
-            "period": "每月股息",
-            "type": "confirmed",
-            "amount": 0.12,
             "date": "2026-01-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.12,
+            "date": "2026-02-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.12,
+            "date": "2026-03-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.12,
+            "date": "2026-04-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.12,
+            "date": "2026-05-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.12,
+            "date": "2026-06-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.12,
+            "date": "2026-07-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.12,
+            "date": "2026-08-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.12,
+            "date": "2026-09-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.12,
+            "date": "2026-10-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.12,
+            "date": "2026-11-07",
+            "shares": 1000
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.12,
+            "date": "2026-12-07",
             "shares": 1000
           }
         ],
@@ -224,9 +328,9 @@
         "dividends": [
           {
             "period": "股息",
-            "type": "confirmed",
+            "type": "predicted",
             "amount": 0.35,
-            "date": "2025-10-08",
+            "date": "2026-04-16",
             "shares": 2100
           }
         ],
@@ -238,17 +342,87 @@
         "shares": 100,
         "dividends": [
           {
-            "period": "2025 11",
+            "period": "每月股息",
             "type": "confirmed",
-            "amount": 0.69,
-            "date": "2025-11-28",
+            "amount": 0.81,
+            "date": "2026-01-23",
             "shares": 100
           },
           {
-            "period": "2025 12",
-            "type": "confirmed",
-            "amount": 0.79,
-            "date": "2025-12-30",
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.81,
+            "date": "2026-02-28",
+            "shares": 100
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.81,
+            "date": "2026-03-28",
+            "shares": 100
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.81,
+            "date": "2026-04-28",
+            "shares": 100
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.81,
+            "date": "2026-05-28",
+            "shares": 100
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.81,
+            "date": "2026-06-28",
+            "shares": 100
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.81,
+            "date": "2026-07-28",
+            "shares": 100
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.81,
+            "date": "2026-08-28",
+            "shares": 100
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.81,
+            "date": "2026-09-28",
+            "shares": 100
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.81,
+            "date": "2026-10-28",
+            "shares": 100
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.81,
+            "date": "2026-11-28",
+            "shares": 100
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.81,
+            "date": "2026-12-28",
             "shares": 100
           }
         ],
@@ -262,43 +436,85 @@
           {
             "period": "每月股息",
             "type": "confirmed",
-            "amount": 0.11,
-            "date": "2025-08-11",
-            "shares": 400
-          },
-          {
-            "period": "每月股息",
-            "type": "confirmed",
-            "amount": 0.12,
-            "date": "2025-09-09",
-            "shares": 1200
-          },
-          {
-            "period": "每月股息",
-            "type": "confirmed",
-            "amount": 0.12,
-            "date": "2025-10-13",
-            "shares": 1200
-          },
-          {
-            "period": "每月股息",
-            "type": "confirmed",
-            "amount": 0.12,
-            "date": "2025-11-11",
-            "shares": 1200
-          },
-          {
-            "period": "每月股息",
-            "type": "confirmed",
-            "amount": 0.13,
-            "date": "2025-12-09",
-            "shares": 1200
-          },
-          {
-            "period": "每月股息",
-            "type": "confirmed",
             "amount": 0.13,
             "date": "2026-01-12",
+            "shares": 1600
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-02-12",
+            "shares": 1600
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-03-12",
+            "shares": 1600
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-04-12",
+            "shares": 1600
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-05-12",
+            "shares": 1600
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-06-12",
+            "shares": 1600
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-07-12",
+            "shares": 1600
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-08-12",
+            "shares": 1600
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-09-12",
+            "shares": 1600
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-10-12",
+            "shares": 1600
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-11-12",
+            "shares": 1600
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.13,
+            "date": "2026-12-12",
             "shares": 1600
           }
         ],
@@ -312,29 +528,85 @@
           {
             "period": "每月股息",
             "type": "confirmed",
-            "amount": 0.0136,
-            "date": "2025-10-14",
-            "shares": 1000
-          },
-          {
-            "period": "每月股息",
-            "type": "confirmed",
-            "amount": 0.0134,
-            "date": "2025-11-12",
-            "shares": 1500
-          },
-          {
-            "period": "每月股息",
-            "type": "confirmed",
-            "amount": 0.0136,
-            "date": "2025-12-09",
-            "shares": 1500
-          },
-          {
-            "period": "每月股息",
-            "type": "confirmed",
             "amount": 0.0122,
             "date": "2026-01-12",
+            "shares": 1500
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.0122,
+            "date": "2026-02-12",
+            "shares": 1500
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.0122,
+            "date": "2026-03-12",
+            "shares": 1500
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.0122,
+            "date": "2026-04-12",
+            "shares": 1500
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.0122,
+            "date": "2026-05-12",
+            "shares": 1500
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.0122,
+            "date": "2026-06-12",
+            "shares": 1500
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.0122,
+            "date": "2026-07-12",
+            "shares": 1500
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.0122,
+            "date": "2026-08-12",
+            "shares": 1500
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.0122,
+            "date": "2026-09-12",
+            "shares": 1500
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.0122,
+            "date": "2026-10-12",
+            "shares": 1500
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.0122,
+            "date": "2026-11-12",
+            "shares": 1500
+          },
+          {
+            "period": "每月股息",
+            "type": "predicted",
+            "amount": 0.0122,
+            "date": "2026-12-12",
             "shares": 1500
           }
         ],
@@ -346,18 +618,32 @@
         "shares": 5.0234,
         "dividends": [
           {
-            "period": "9月",
-            "type": "confirmed",
+            "period": "3月",
+            "type": "predicted",
             "amount": 0.16674,
-            "date": "2025-09-30",
-            "shares": 2
+            "date": "2026-03-31",
+            "shares": 5
+          },
+          {
+            "period": "6月",
+            "type": "predicted",
+            "amount": 0.166726,
+            "date": "2026-06-30",
+            "shares": 5
+          },
+          {
+            "period": "9月",
+            "type": "predicted",
+            "amount": 0.166726,
+            "date": "2026-09-30",
+            "shares": 5.0234
           },
           {
             "period": "12月",
-            "type": "confirmed",
+            "type": "predicted",
             "amount": 0.166726,
-            "date": "2025-12-30",
-            "shares": 5
+            "date": "2026-12-30",
+            "shares": 5.0234
           }
         ],
         "currency": "USD"
@@ -368,18 +654,32 @@
         "shares": 4.0823,
         "dividends": [
           {
-            "period": "9月",
-            "type": "confirmed",
+            "period": "3月",
+            "type": "predicted",
             "amount": 0.25,
-            "date": "2025-09-23",
-            "shares": 1
+            "date": "2026-03-25",
+            "shares": 4
+          },
+          {
+            "period": "6月",
+            "type": "predicted",
+            "amount": 0.95417,
+            "date": "2026-06-25",
+            "shares": 4
+          },
+          {
+            "period": "9月",
+            "type": "predicted",
+            "amount": 0.25,
+            "date": "2026-09-25",
+            "shares": 4.0823
           },
           {
             "period": "12月",
-            "type": "confirmed",
-            "amount": 0.95417,
-            "date": "2025-12-23",
-            "shares": 4
+            "type": "predicted",
+            "amount": 0.25,
+            "date": "2026-12-25",
+            "shares": 4.0823
           }
         ],
         "currency": "USD"
@@ -390,17 +690,31 @@
         "shares": 0.7723,
         "dividends": [
           {
+            "period": "3月",
+            "type": "predicted",
+            "amount": 0.78064,
+            "date": "2026-03-25",
+            "shares": 0.7723
+          },
+          {
+            "period": "6月",
+            "type": "predicted",
+            "amount": 0.78064,
+            "date": "2026-06-25",
+            "shares": 0.7723
+          },
+          {
             "period": "9月",
-            "type": "confirmed",
-            "amount": 0.26,
-            "date": "2025-09-23",
+            "type": "predicted",
+            "amount": 0.78064,
+            "date": "2026-09-25",
             "shares": 0.7723
           },
           {
             "period": "12月",
-            "type": "confirmed",
+            "type": "predicted",
             "amount": 0.78064,
-            "date": "2025-12-23",
+            "date": "2026-12-25",
             "shares": 0.7723
           }
         ],
@@ -412,31 +726,87 @@
         "shares": 1.2046,
         "dividends": [
           {
-            "period": "10月總",
-            "type": "confirmed",
-            "amount": 0.773759,
-            "date": "2025-10-30",
-            "shares": 0.5945
-          },
-          {
-            "period": "11月總",
-            "type": "confirmed",
-            "amount": 1.3793,
-            "date": "2025-11-27",
-            "shares": 0.5945
-          },
-          {
-            "period": "12月總",
-            "type": "confirmed",
+            "period": "1月總",
+            "type": "predicted",
             "amount": 0.89656,
-            "date": "2025-12-25",
+            "date": "2026-01-30",
             "shares": 1.2046
           },
           {
-            "period": "1月2",
-            "type": "confirmed",
-            "amount": 0.10458,
-            "date": "2026-01-02",
+            "period": "2月總",
+            "type": "predicted",
+            "amount": 0.89656,
+            "date": "",
+            "shares": 1.2046
+          },
+          {
+            "period": "3月總",
+            "type": "predicted",
+            "amount": 0.89656,
+            "date": "2026-03-30",
+            "shares": 1.2046
+          },
+          {
+            "period": "4月總",
+            "type": "predicted",
+            "amount": 0.89656,
+            "date": "2026-04-30",
+            "shares": 1.2046
+          },
+          {
+            "period": "5月總",
+            "type": "predicted",
+            "amount": 0.89656,
+            "date": "2026-05-30",
+            "shares": 1.2046
+          },
+          {
+            "period": "6月總",
+            "type": "predicted",
+            "amount": 0.89656,
+            "date": "2026-06-30",
+            "shares": 1.2046
+          },
+          {
+            "period": "7月總",
+            "type": "predicted",
+            "amount": 0.89656,
+            "date": "2026-07-30",
+            "shares": 1.2046
+          },
+          {
+            "period": "8月總",
+            "type": "predicted",
+            "amount": 0.89656,
+            "date": "2026-08-30",
+            "shares": 1.2046
+          },
+          {
+            "period": "9月總",
+            "type": "predicted",
+            "amount": 0.89656,
+            "date": "2026-09-30",
+            "shares": 1.2046
+          },
+          {
+            "period": "10月總",
+            "type": "predicted",
+            "amount": 0.89656,
+            "date": "2026-10-30",
+            "shares": 1.2046
+          },
+          {
+            "period": "11月總",
+            "type": "predicted",
+            "amount": 0.89656,
+            "date": "2026-11-30",
+            "shares": 1.2046
+          },
+          {
+            "period": "12月總",
+            "type": "predicted",
+            "amount": 0.89656,
+            "date": "2026-12-30",
             "shares": 1.2046
           }
         ],
@@ -448,18 +818,88 @@
         "shares": 14.4884,
         "dividends": [
           {
-            "period": "11月",
-            "type": "confirmed",
-            "amount": 0.08316,
-            "date": "2025-12-01",
-            "shares": 4.4884
-          },
-          {
-            "period": "12月",
+            "period": "1月",
             "type": "confirmed",
             "amount": 0.08316,
             "date": "2026-01-02",
             "shares": 14
+          },
+          {
+            "period": "2月",
+            "type": "predicted",
+            "amount": 0.08316,
+            "date": "2026-02-02",
+            "shares": 14
+          },
+          {
+            "period": "3月",
+            "type": "predicted",
+            "amount": 0.08316,
+            "date": "2026-03-02",
+            "shares": 14.4884
+          },
+          {
+            "period": "4月",
+            "type": "predicted",
+            "amount": 0.08316,
+            "date": "2026-04-02",
+            "shares": 14.4884
+          },
+          {
+            "period": "5月",
+            "type": "predicted",
+            "amount": 0.08316,
+            "date": "2026-05-02",
+            "shares": 14.4884
+          },
+          {
+            "period": "6月",
+            "type": "predicted",
+            "amount": 0.08316,
+            "date": "2026-06-02",
+            "shares": 14.4884
+          },
+          {
+            "period": "7月",
+            "type": "predicted",
+            "amount": 0.08316,
+            "date": "2026-07-02",
+            "shares": 14.4884
+          },
+          {
+            "period": "8月",
+            "type": "predicted",
+            "amount": 0.08316,
+            "date": "2026-08-02",
+            "shares": 14.4884
+          },
+          {
+            "period": "9月",
+            "type": "predicted",
+            "amount": 0.08316,
+            "date": "2026-09-02",
+            "shares": 14.4884
+          },
+          {
+            "period": "10月",
+            "type": "predicted",
+            "amount": 0.08316,
+            "date": "2026-10-02",
+            "shares": 14.4884
+          },
+          {
+            "period": "11月",
+            "type": "predicted",
+            "amount": 0.08316,
+            "date": "2026-11-02",
+            "shares": 14.4884
+          },
+          {
+            "period": "12月",
+            "type": "predicted",
+            "amount": 0.08316,
+            "date": "2026-12-02",
+            "shares": 14.4884
           }
         ],
         "currency": "USD"
@@ -468,59 +908,12 @@
     "deposits": [
       {
         "currency": "USD",
-        "principal": 66740,
-        "maturityDate": "2025-06-11",
-        "interest": 682.33
-      },
-      {
-        "currency": "USD",
-        "principal": 67422.33,
-        "maturityDate": "2025-09-11",
-        "interest": 671.98
-      },
-      {
-        "currency": "HKD",
-        "principal": 200000,
-        "maturityDate": "2025-08-31",
-        "interest": 2027.41
-      },
-      {
-        "currency": "USD",
-        "principal": 68094.31,
-        "maturityDate": "2025-12-11",
-        "interest": 654.08
-      },
-      {
-        "currency": "USD",
         "principal": 60648.39,
         "maturityDate": "2026-03-11",
         "interest": 523.09
       }
     ],
     "bonds": [
-      {
-        "currency": "USD",
-        "name": "2.625Dec31'25",
-        "maturityDate": "2025-12-31",
-        "yield": 0,
-        "shares": 0,
-        "dividends": [
-          {
-            "period": "到期息",
-            "amount": 57.75,
-            "date": "2025-12-31",
-            "shares": 0
-          }
-        ],
-        "payments": [
-          {
-            "period": "到期派息贖回(票息+資本)",
-            "type": "confirmed",
-            "amount": 57.1776,
-            "date": "2025-12-31"
-          }
-        ]
-      },
       {
         "currency": "USD",
         "name": "1.875Jun30'26",
@@ -625,5 +1018,5 @@
     ],
     "usdHkdRate": 7.77
   },
-  "lastSync": "2026-01-01T02:56:44.234Z"
+  "lastSync": "2026-01-01T03:29:49.463Z"
 }
