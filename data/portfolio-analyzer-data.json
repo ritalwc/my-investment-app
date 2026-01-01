@@ -96,12 +96,6 @@
     "currency": "USD"
   },
   {
-    "name": "2.625Dec31'25",
-    "type": "us_bond",
-    "originalValue": 4000,
-    "currency": "USD"
-  },
-  {
     "name": "1.875Jun30'26",
     "type": "us_bond",
     "originalValue": 4000,
