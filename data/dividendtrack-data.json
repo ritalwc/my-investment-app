@@ -426,30 +426,9 @@
             "shares": 0.5945
           },
           {
-            "period": "12月4",
+            "period": "12月總",
             "type": "confirmed",
-            "amount": 0.19565,
-            "date": "2025-12-04",
-            "shares": 1.2046
-          },
-          {
-            "period": "12月11",
-            "type": "confirmed",
-            "amount": 0.24311,
-            "date": "2025-12-11",
-            "shares": 1.2046
-          },
-          {
-            "period": "12月18",
-            "type": "confirmed",
-            "amount": 0.20601,
-            "date": "2025-12-18",
-            "shares": 1.2046
-          },
-          {
-            "period": "12月25",
-            "type": "confirmed",
-            "amount": 0.25067,
+            "amount": 0.89656,
             "date": "2025-12-25",
             "shares": 1.2046
           },
@@ -537,7 +516,7 @@
           {
             "period": "到期派息贖回(票息+資本)",
             "type": "confirmed",
-            "amount": 57.75,
+            "amount": 57.1776,
             "date": "2025-12-31"
           }
         ]
@@ -550,7 +529,7 @@
           {
             "period": " 2025年12月31日",
             "type": "confirmed",
-            "amount": 24.86,
+            "amount": 24.25,
             "date": "2025-12-31"
           },
           {
@@ -646,5 +625,5 @@
     ],
     "usdHkdRate": 7.77
   },
-  "lastSync": "2026-01-01T02:40:22.344Z"
+  "lastSync": "2026-01-01T02:56:44.234Z"
 }
