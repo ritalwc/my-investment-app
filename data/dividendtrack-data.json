@@ -354,9 +354,9 @@
           },
           {
             "period": "12月",
-            "type": "predicted",
-            "amount": 0.14,
-            "date": "2025-12-31",
+            "type": "confirmed",
+            "amount": 0.166726,
+            "date": "2025-12-30",
             "shares": 5
           }
         ],
@@ -376,8 +376,8 @@
           },
           {
             "period": "12月",
-            "type": "predicted",
-            "amount": 0.189,
+            "type": "confirmed",
+            "amount": 0.95417,
             "date": "2025-12-23",
             "shares": 4
           }
@@ -394,6 +394,13 @@
             "type": "confirmed",
             "amount": 0.26,
             "date": "2025-09-23",
+            "shares": 0.7723
+          },
+          {
+            "period": "12月",
+            "type": "confirmed",
+            "amount": 0.78064,
+            "date": "2025-12-23",
             "shares": 0.7723
           }
         ],
@@ -434,16 +441,23 @@
           },
           {
             "period": "12月18",
-            "type": "predicted",
-            "amount": 0.24311,
+            "type": "confirmed",
+            "amount": 0.20601,
             "date": "2025-12-18",
             "shares": 1.2046
           },
           {
             "period": "12月25",
-            "type": "predicted",
-            "amount": 0.24311,
+            "type": "confirmed",
+            "amount": 0.25067,
             "date": "2025-12-25",
+            "shares": 1.2046
+          },
+          {
+            "period": "1月2",
+            "type": "confirmed",
+            "amount": 0.10458,
+            "date": "2026-01-02",
             "shares": 1.2046
           }
         ],
@@ -465,7 +479,7 @@
             "period": "12月",
             "type": "confirmed",
             "amount": 0.08316,
-            "date": "2026-01-01",
+            "date": "2026-01-02",
             "shares": 14
           }
         ],
@@ -632,5 +646,5 @@
     ],
     "usdHkdRate": 7.77
   },
-  "lastSync": "2025-12-29T09:23:37.201Z"
+  "lastSync": "2026-01-01T02:40:22.344Z"
 }
