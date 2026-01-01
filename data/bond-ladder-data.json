@@ -1,15 +1,5 @@
 [
   {
-    "id": "mj3wqstgc0nd3uuj2z8",
-    "purchaseDate": "2025-09-01",
-    "name": "2.625Dec31'25",
-    "maturityDate": "2025-12-31",
-    "faceValue": 4000,
-    "purchasePrice": 3984.06,
-    "couponRate": 2.625,
-    "type": "國債"
-  },
-  {
     "id": "mj3wrofy2r4mhjr3x5g",
     "purchaseDate": "2025-09-01",
     "name": "4.5Mar31'26",
