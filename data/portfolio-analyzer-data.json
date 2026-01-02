@@ -130,5 +130,11 @@
     "type": "corp_bond",
     "originalValue": 4000,
     "currency": "USD"
+  },
+  {
+    "name": "GOOGL 4.7 NOV15'35",
+    "type": "corp_bond",
+    "originalValue": 4000,
+    "currency": "USD"
   }
 ]
