@@ -48,5 +48,15 @@
     "purchasePrice": 4077.8,
     "couponRate": 4.75,
     "type": "國債"
+  },
+  {
+    "id": "mjwxhe9iegvcmwytm56",
+    "purchaseDate": "2026-01-02",
+    "name": "GOOGL 4.7 NOV15'35",
+    "maturityDate": "2035-11-15",
+    "faceValue": 4000,
+    "purchasePrice": 4014.96,
+    "couponRate": 4.7,
+    "type": "公司債"
   }
 ]
