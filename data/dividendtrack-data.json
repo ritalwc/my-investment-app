@@ -1014,9 +1014,28 @@
             "date": "2026-09-09"
           }
         ]
+      },
+      {
+        "currency": "USD",
+        "name": "GOOGL 4.7 NOV15'35",
+        "maturityDate": "2035-11-15",
+        "payments": [
+          {
+            "period": "2026年5月15",
+            "type": "predicted",
+            "amount": 94,
+            "date": "2026-05-15"
+          },
+          {
+            "period": "2026年11月15",
+            "type": "predicted",
+            "amount": 94,
+            "date": "2026-11-15"
+          }
+        ]
       }
     ],
     "usdHkdRate": 7.77
   },
-  "lastSync": "2026-01-01T04:14:54.489Z"
+  "lastSync": "2026-01-03T00:26:27.835Z"
 }
