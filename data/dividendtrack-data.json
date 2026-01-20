@@ -59,9 +59,9 @@
           },
           {
             "period": "每月股息",
-            "type": "predicted",
+            "type": "confirmed",
             "amount": 0.14,
-            "date": "2026-02-07",
+            "date": "2026-02-05",
             "shares": 1000
           },
           {
@@ -151,9 +151,9 @@
           },
           {
             "period": "每月股息",
-            "type": "predicted",
+            "type": "confirmed",
             "amount": 0.13,
-            "date": "2026-02-07",
+            "date": "2026-02-05",
             "shares": 1000
           },
           {
@@ -243,9 +243,9 @@
           },
           {
             "period": "每月股息",
-            "type": "predicted",
+            "type": "confirmed",
             "amount": 0.12,
-            "date": "2026-02-07",
+            "date": "2026-02-05",
             "shares": 1000
           },
           {
@@ -442,9 +442,9 @@
           },
           {
             "period": "每月股息",
-            "type": "predicted",
+            "type": "confirmed",
             "amount": 0.13,
-            "date": "2026-02-12",
+            "date": "2026-02-10",
             "shares": 1600
           },
           {
@@ -534,9 +534,9 @@
           },
           {
             "period": "每月股息",
-            "type": "predicted",
-            "amount": 0.0122,
-            "date": "2026-02-12",
+            "type": "confirmed",
+            "amount": 0.0126,
+            "date": "2026-02-10",
             "shares": 1500
           },
           {
@@ -1037,5 +1037,5 @@
     ],
     "usdHkdRate": 7.77
   },
-  "lastSync": "2026-01-03T00:54:00.549Z"
+  "lastSync": "2026-01-20T08:52:51.551Z"
 }
