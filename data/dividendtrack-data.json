@@ -727,10 +727,10 @@
         "dividends": [
           {
             "period": "1月總",
-            "type": "predicted",
-            "amount": 0.89656,
+            "type": "confirmed",
+            "amount": 0.903,
             "date": "2026-01-30",
-            "shares": 1.2046
+            "shares": 1
           },
           {
             "period": "2月總",
@@ -1037,5 +1037,5 @@
     ],
     "usdHkdRate": 7.77
   },
-  "lastSync": "2026-01-20T08:52:51.551Z"
+  "lastSync": "2026-02-01T08:00:44.572Z"
 }
