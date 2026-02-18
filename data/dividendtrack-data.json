@@ -66,9 +66,9 @@
           },
           {
             "period": "每月股息",
-            "type": "predicted",
+            "type": "confirmed",
             "amount": 0.14,
-            "date": "2026-03-07",
+            "date": "2026-03-05",
             "shares": 1000
           },
           {
@@ -158,9 +158,9 @@
           },
           {
             "period": "每月股息",
-            "type": "predicted",
+            "type": "confirmed",
             "amount": 0.13,
-            "date": "2026-03-07",
+            "date": "2026-03-05",
             "shares": 1000
           },
           {
@@ -250,9 +250,9 @@
           },
           {
             "period": "每月股息",
-            "type": "predicted",
-            "amount": 0.12,
-            "date": "2026-03-07",
+            "type": "confirmed",
+            "amount": 0.14,
+            "date": "2026-03-05",
             "shares": 1000
           },
           {
@@ -449,9 +449,9 @@
           },
           {
             "period": "每月股息",
-            "type": "predicted",
+            "type": "confirmed",
             "amount": 0.13,
-            "date": "2026-03-12",
+            "date": "2026-03-10",
             "shares": 1600
           },
           {
@@ -541,9 +541,9 @@
           },
           {
             "period": "每月股息",
-            "type": "predicted",
-            "amount": 0.0122,
-            "date": "2026-03-12",
+            "type": "confirmed",
+            "amount": 0.0112,
+            "date": "2026-03-10",
             "shares": 1500
           },
           {
@@ -984,7 +984,7 @@
         "payments": [
           {
             "period": "2026年2月15",
-            "type": "predicted",
+            "type": "confirmed",
             "amount": 32.01,
             "date": "2026-02-15"
           },
@@ -1037,5 +1037,5 @@
     ],
     "usdHkdRate": 7.77
   },
-  "lastSync": "2026-02-06T01:38:07.080Z"
+  "lastSync": "2026-02-18T07:13:26.486Z"
 }
