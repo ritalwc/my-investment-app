@@ -615,35 +615,35 @@
       "SPLG": {
         "name": "SPLG",
         "code": "SPLG",
-        "shares": 5.0234,
+        "shares": 8.0234,
         "dividends": [
           {
             "period": "3月",
             "type": "predicted",
             "amount": 0.16674,
             "date": "2026-03-31",
-            "shares": 5
+            "shares": 8
           },
           {
             "period": "6月",
             "type": "predicted",
             "amount": 0.166726,
             "date": "2026-06-30",
-            "shares": 5
+            "shares": 8
           },
           {
             "period": "9月",
             "type": "predicted",
             "amount": 0.166726,
             "date": "2026-09-30",
-            "shares": 5.0234
+            "shares": 8
           },
           {
             "period": "12月",
             "type": "predicted",
             "amount": 0.166726,
             "date": "2026-12-30",
-            "shares": 5.0234
+            "shares": 8
           }
         ],
         "currency": "USD"
@@ -651,35 +651,35 @@
       "VXUS": {
         "name": "VXUS",
         "code": "VXUS",
-        "shares": 4.0823,
+        "shares": 7.0823,
         "dividends": [
           {
             "period": "3月",
             "type": "predicted",
             "amount": 0.25,
             "date": "2026-03-25",
-            "shares": 4
+            "shares": 7
           },
           {
             "period": "6月",
             "type": "predicted",
             "amount": 0.95417,
             "date": "2026-06-25",
-            "shares": 4
+            "shares": 7
           },
           {
             "period": "9月",
             "type": "predicted",
             "amount": 0.25,
             "date": "2026-09-25",
-            "shares": 4.0823
+            "shares": 7
           },
           {
             "period": "12月",
             "type": "predicted",
             "amount": 0.25,
             "date": "2026-12-25",
-            "shares": 4.0823
+            "shares": 7
           }
         ],
         "currency": "USD"
@@ -687,35 +687,35 @@
       "VT": {
         "name": "VT",
         "code": "VT",
-        "shares": 0.7723,
+        "shares": 1.0723,
         "dividends": [
           {
             "period": "3月",
             "type": "predicted",
             "amount": 0.78064,
             "date": "2026-03-25",
-            "shares": 0.7723
+            "shares": 1
           },
           {
             "period": "6月",
             "type": "predicted",
             "amount": 0.78064,
             "date": "2026-06-25",
-            "shares": 0.7723
+            "shares": 1
           },
           {
             "period": "9月",
             "type": "predicted",
             "amount": 0.78064,
             "date": "2026-09-25",
-            "shares": 0.7723
+            "shares": 1
           },
           {
             "period": "12月",
             "type": "predicted",
             "amount": 0.78064,
             "date": "2026-12-25",
-            "shares": 0.7723
+            "shares": 1
           }
         ],
         "currency": "USD"
@@ -1037,5 +1037,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-02-27T08:44:15.273Z"
+  "lastSync": "2026-03-03T01:16:39.277Z"
 }
