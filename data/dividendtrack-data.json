@@ -305,7 +305,7 @@
       "3466": {
         "name": "3466恒生高息股30指數ETF",
         "code": "3466",
-        "shares": 2000,
+        "shares": 2400,
         "dividends": [
           {
             "period": "每月股息",
@@ -333,63 +333,63 @@
             "type": "predicted",
             "amount": 0.13,
             "date": "2026-04-12",
-            "shares": 2000
+            "shares": 2400
           },
           {
             "period": "每月股息",
             "type": "predicted",
             "amount": 0.13,
             "date": "2026-05-12",
-            "shares": 2000
+            "shares": 2400
           },
           {
             "period": "每月股息",
             "type": "predicted",
             "amount": 0.13,
             "date": "2026-06-12",
-            "shares": 2000
+            "shares": 2400
           },
           {
             "period": "每月股息",
             "type": "predicted",
             "amount": 0.13,
             "date": "2026-07-12",
-            "shares": 2000
+            "shares": 2400
           },
           {
             "period": "每月股息",
             "type": "predicted",
             "amount": 0.13,
             "date": "2026-08-12",
-            "shares": 2000
+            "shares": 2400
           },
           {
             "period": "每月股息",
             "type": "predicted",
             "amount": 0.13,
             "date": "2026-09-12",
-            "shares": 2000
+            "shares": 2400
           },
           {
             "period": "每月股息",
             "type": "predicted",
             "amount": 0.13,
             "date": "2026-10-12",
-            "shares": 2000
+            "shares": 2400
           },
           {
             "period": "每月股息",
             "type": "predicted",
             "amount": 0.13,
             "date": "2026-11-12",
-            "shares": 2000
+            "shares": 2400
           },
           {
             "period": "每月股息",
             "type": "predicted",
             "amount": 0.13,
             "date": "2026-12-12",
-            "shares": 2000
+            "shares": 2400
           }
         ],
         "currency": "HKD"
@@ -911,5 +911,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-03-04T03:28:16.873Z"
+  "lastSync": "2026-03-09T01:44:40.335Z"
 }
