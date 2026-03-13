@@ -202,9 +202,9 @@
         "dividends": [
           {
             "period": "股息",
-            "type": "predicted",
+            "type": "confirmed",
             "amount": 0.35,
-            "date": "2026-04-16",
+            "date": "2026-04-09",
             "shares": 2100
           }
         ],
@@ -917,5 +917,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-03-12T00:18:55.313Z"
+  "lastSync": "2026-03-13T23:22:13.328Z"
 }
