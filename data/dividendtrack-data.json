@@ -75,7 +75,7 @@
             "period": "每月股息",
             "type": "confirmed",
             "amount": 0.14,
-            "date": "2026-04-07",
+            "date": "2026-04-09",
             "shares": 1000
           },
           {
@@ -330,9 +330,9 @@
           },
           {
             "period": "每月股息",
-            "type": "predicted",
+            "type": "confirmed",
             "amount": 0.13,
-            "date": "2026-04-12",
+            "date": "2026-04-14",
             "shares": 2400
           },
           {
@@ -422,9 +422,9 @@
           },
           {
             "period": "每月股息",
-            "type": "predicted",
-            "amount": 0.0122,
-            "date": "2026-04-12",
+            "type": "confirmed",
+            "amount": 0.0111,
+            "date": "2026-04-14",
             "shares": 1500
           },
           {
@@ -493,9 +493,9 @@
         "dividends": [
           {
             "period": "3月",
-            "type": "predicted",
-            "amount": 0.16674,
-            "date": "2026-03-31",
+            "type": "confirmed",
+            "amount": 0.135884,
+            "date": "2026-03-17",
             "shares": 9
           },
           {
@@ -529,9 +529,9 @@
         "dividends": [
           {
             "period": "3月",
-            "type": "predicted",
-            "amount": 0.25,
-            "date": "2026-03-25",
+            "type": "confirmed",
+            "amount": 0.05565,
+            "date": "2026-03-24",
             "shares": 8
           },
           {
@@ -565,9 +565,9 @@
         "dividends": [
           {
             "period": "3月",
-            "type": "predicted",
-            "amount": 0.78064,
-            "date": "2026-03-25",
+            "type": "confirmed",
+            "amount": 0.135884,
+            "date": "2026-03-17",
             "shares": 1
           },
           {
@@ -700,21 +700,21 @@
           },
           {
             "period": "2月",
-            "type": "predicted",
+            "type": "confirmed",
             "amount": 0.08316,
             "date": "2026-02-02",
             "shares": 14
           },
           {
             "period": "3月",
-            "type": "predicted",
+            "type": "confirmed",
             "amount": 0.08316,
             "date": "2026-03-02",
             "shares": 14.4884
           },
           {
             "period": "4月",
-            "type": "predicted",
+            "type": "confirmed",
             "amount": 0.08316,
             "date": "2026-04-02",
             "shares": 14.4884
@@ -883,7 +883,7 @@
         "payments": [
           {
             "period": "2026年3月09日",
-            "type": "predicted",
+            "type": "confirmed",
             "amount": 21.47,
             "date": "2026-03-09"
           },
@@ -917,5 +917,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-03-16T09:11:26.253Z"
+  "lastSync": "2026-03-20T06:20:43.502Z"
 }
