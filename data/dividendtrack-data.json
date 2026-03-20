@@ -42,7 +42,15 @@
         "name": "3070平安香港高息股 ETF",
         "code": "3070",
         "shares": 100,
-        "dividends": [],
+        "dividends": [
+          {
+            "period": "3月",
+            "type": "confirmed",
+            "amount": 0.13,
+            "date": "2026-03-31",
+            "shares": 100
+          }
+        ],
         "currency": "HKD"
       },
       "3416": {
@@ -917,5 +925,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-03-20T06:20:43.502Z"
+  "lastSync": "2026-03-20T12:30:55.999Z"
 }
