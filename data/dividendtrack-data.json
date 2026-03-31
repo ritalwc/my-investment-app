@@ -835,7 +835,7 @@
           {
             "period": "2026年3月31日",
             "type": "confirmed",
-            "amount": 89.75,
+            "amount": 90,
             "date": "2026-03-31"
           }
         ]
@@ -854,7 +854,7 @@
           {
             "period": "2026年3月31日",
             "type": "confirmed",
-            "amount": 69.81,
+            "amount": 70,
             "date": "2026-03-31"
           },
           {
@@ -925,5 +925,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-03-20T12:36:56.707Z"
+  "lastSync": "2026-03-31T01:32:08.876Z"
 }
