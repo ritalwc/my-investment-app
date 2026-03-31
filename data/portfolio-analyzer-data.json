@@ -102,12 +102,6 @@
     "currency": "USD"
   },
   {
-    "name": "4.5Mar31'26",
-    "type": "us_bond",
-    "originalValue": 4000,
-    "currency": "USD"
-  },
-  {
     "name": "3.5Sep30'26",
     "type": "us_bond",
     "originalValue": 4000,
