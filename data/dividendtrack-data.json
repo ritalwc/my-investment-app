@@ -921,9 +921,22 @@
             "date": "2026-11-15"
           }
         ]
+      },
+      {
+        "currency": "USD",
+        "name": "4.625Feb15'40",
+        "maturityDate": "2040-02-15",
+        "payments": [
+          {
+            "period": "2026年8月15",
+            "type": "confirmed",
+            "amount": 92.5,
+            "date": "2026-08-15"
+          }
+        ]
       }
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-03-31T01:32:08.876Z"
+  "lastSync": "2026-03-31T02:17:32.096Z"
 }
