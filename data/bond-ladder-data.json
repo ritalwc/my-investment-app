@@ -48,5 +48,15 @@
     "purchasePrice": 4014.96,
     "couponRate": 4.7,
     "type": "公司債"
+  },
+  {
+    "id": "mndzgyz2bv1yyngdksq",
+    "purchaseDate": "2026-03-31",
+    "name": "4.625Feb15'40",
+    "maturityDate": "2040-02-15",
+    "faceValue": 4000,
+    "purchasePrice": 3999.55,
+    "couponRate": 4.625,
+    "type": "國債"
   }
 ]
