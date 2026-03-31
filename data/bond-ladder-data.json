@@ -1,15 +1,5 @@
 [
   {
-    "id": "mj3wrofy2r4mhjr3x5g",
-    "purchaseDate": "2025-09-01",
-    "name": "4.5Mar31'26",
-    "maturityDate": "2026-03-31",
-    "faceValue": 4000,
-    "purchasePrice": 4016.42,
-    "couponRate": 4.5,
-    "type": "國債"
-  },
-  {
     "id": "mj3wsuu62bun19grz7c",
     "purchaseDate": "2025-12-13",
     "name": "HNDA 2.3 Sep09'26",
