@@ -497,7 +497,7 @@
       "SPLG": {
         "name": "SPLG",
         "code": "SPLG",
-        "shares": 9.0234,
+        "shares": 10,
         "dividends": [
           {
             "period": "3月",
@@ -511,21 +511,21 @@
             "type": "predicted",
             "amount": 0.166726,
             "date": "2026-06-30",
-            "shares": 9
+            "shares": 10
           },
           {
             "period": "9月",
             "type": "predicted",
             "amount": 0.166726,
             "date": "2026-09-30",
-            "shares": 9
+            "shares": 10
           },
           {
             "period": "12月",
             "type": "predicted",
             "amount": 0.166726,
             "date": "2026-12-30",
-            "shares": 9
+            "shares": 10
           }
         ],
         "currency": "USD"
@@ -533,7 +533,7 @@
       "VXUS": {
         "name": "VXUS",
         "code": "VXUS",
-        "shares": 8.0823,
+        "shares": 9.0823,
         "dividends": [
           {
             "period": "3月",
@@ -547,21 +547,21 @@
             "type": "predicted",
             "amount": 0.95417,
             "date": "2026-06-25",
-            "shares": 8
+            "shares": 9
           },
           {
             "period": "9月",
             "type": "predicted",
             "amount": 0.25,
             "date": "2026-09-25",
-            "shares": 8
+            "shares": 9
           },
           {
             "period": "12月",
             "type": "predicted",
             "amount": 0.25,
             "date": "2026-12-25",
-            "shares": 8
+            "shares": 9
           }
         ],
         "currency": "USD"
@@ -938,5 +938,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-03-31T02:26:06.105Z"
+  "lastSync": "2026-04-02T00:45:19.810Z"
 }
