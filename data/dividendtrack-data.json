@@ -23,9 +23,9 @@
         "dividends": [
           {
             "period": "中期息",
-            "type": "predicted",
-            "amount": 0.22,
-            "date": "2026-05-30",
+            "type": "confirmed",
+            "amount": 0.19,
+            "date": "2026-05-29",
             "shares": 9224
           },
           {
@@ -253,9 +253,9 @@
           },
           {
             "period": "每月股息",
-            "type": "predicted",
-            "amount": 0.81,
-            "date": "2026-05-28",
+            "type": "confirmed",
+            "amount": 1.36,
+            "date": "2026-05-22",
             "shares": 100
           },
           {
@@ -437,9 +437,9 @@
           },
           {
             "period": "每月股息",
-            "type": "predicted",
-            "amount": 0.0122,
-            "date": "2026-05-12",
+            "type": "confirmed",
+            "amount": 0.0111,
+            "date": "2026-05-13",
             "shares": 1500
           },
           {
@@ -938,5 +938,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-04-20T09:32:25.467Z"
+  "lastSync": "2026-04-26T12:32:46.362Z"
 }
