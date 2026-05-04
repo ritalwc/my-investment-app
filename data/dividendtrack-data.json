@@ -12,6 +12,13 @@
             "amount": 1.255,
             "date": "2026-07-17",
             "shares": 1500
+          },
+          {
+            "period": "第一季中期",
+            "type": "confirmed",
+            "amount": 0.29,
+            "date": "2026-05-28",
+            "shares": 1500
           }
         ],
         "currency": "HKD"
@@ -938,5 +945,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-04-26T12:32:46.362Z"
+  "lastSync": "2026-05-04T12:43:17.627Z"
 }
