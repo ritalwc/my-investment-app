@@ -128,8 +128,8 @@
       "exDate": "2025-12-21",
       "announcementCycle": "monthlyDate",
       "exCycle": "monthlyDate",
-      "announcementMonthlyDay": 6,
-      "exMonthlyDay": 21
+      "announcementMonthlyDay": 25,
+      "exMonthlyDay": 15
     }
   ]
 }
