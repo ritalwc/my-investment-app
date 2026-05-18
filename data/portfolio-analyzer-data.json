@@ -2,97 +2,79 @@
   {
     "name": "2800盈富",
     "type": "hk_stock",
-    "originalValue": 244436,
+    "originalValue": 238163.68,
     "currency": "HKD"
   },
   {
     "name": "2388 中銀香港",
     "type": "hk_stock",
-    "originalValue": 63000,
+    "originalValue": 69180,
     "currency": "HKD"
   },
   {
     "name": "3466恒生高息股30指數ETF",
     "type": "hk_stock",
-    "originalValue": 35552,
+    "originalValue": 52032,
     "currency": "HKD"
   },
   {
     "name": "3476 恒生摩根美國股票高入息主動型ETF",
     "type": "hk_stock",
-    "originalValue": 22650,
+    "originalValue": 22080,
     "currency": "HKD"
   },
   {
     "name": "3437 博時央企紅利ETF",
     "type": "hk_stock",
-    "originalValue": 23436,
-    "currency": "HKD"
-  },
-  {
-    "name": "3417 Global X 恆科備兌認購期權主動型ETF",
-    "type": "hk_stock",
-    "originalValue": 8200,
-    "currency": "HKD"
-  },
-  {
-    "name": "3419 Global X 恆指備兌認購期權主動型ETF",
-    "type": "hk_stock",
-    "originalValue": 10400,
+    "originalValue": 22281,
     "currency": "HKD"
   },
   {
     "name": "3195 恆生標普 500",
     "type": "hk_stock",
-    "originalValue": 10700,
+    "originalValue": 15145,
     "currency": "HKD"
   },
   {
     "name": "3416 Global X 國指備兌認購期權主動型ETF",
     "type": "hk_stock",
-    "originalValue": 9700,
+    "originalValue": 9490,
     "currency": "HKD"
   },
   {
     "name": "3451 GLOBAL X 納斯達克100",
     "type": "hk_stock",
-    "originalValue": 7928,
+    "originalValue": 8050,
     "currency": "HKD"
   },
   {
     "name": "3070",
     "type": "hk_stock",
-    "originalValue": 4054,
+    "originalValue": 4240,
     "currency": "HKD"
   },
   {
     "name": "SPYM",
     "type": "us_stock",
-    "originalValue": 648.05,
+    "originalValue": 958.93,
     "currency": "USD"
   },
   {
     "name": "VXUS",
     "type": "us_stock",
-    "originalValue": 583.58,
+    "originalValue": 837.94,
     "currency": "USD"
   },
   {
     "name": "PTY",
     "type": "us_stock",
-    "originalValue": 185.74,
+    "originalValue": 172.56,
     "currency": "USD"
   },
   {
     "name": "VT",
     "type": "us_stock",
-    "originalValue": 157.57,
-    "currency": "USD"
-  },
-  {
-    "name": "QDTY",
-    "type": "us_stock",
-    "originalValue": 48.53,
+    "originalValue": 164.62,
     "currency": "USD"
   },
   {
@@ -110,7 +92,7 @@
   {
     "name": "美元定期",
     "type": "usd_fixed",
-    "originalValue": 60648.39,
+    "originalValue": 6171.48,
     "currency": "USD"
   },
   {
@@ -135,6 +117,12 @@
     "name": "4.625Feb15'40",
     "type": "us_bond",
     "originalValue": 4000,
+    "currency": "USD"
+  },
+  {
+    "name": "BXDC",
+    "type": "us_stock",
+    "originalValue": 482.4,
     "currency": "USD"
   }
 ]
