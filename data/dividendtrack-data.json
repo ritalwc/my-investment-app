@@ -917,7 +917,7 @@
         "payments": [
           {
             "period": "2026年5月15",
-            "type": "predicted",
+            "type": "confirmed",
             "amount": 63.19,
             "date": "2026-05-15"
           },
@@ -945,5 +945,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-05-27T13:00:54.405Z"
+  "lastSync": "2026-05-31T08:40:30.791Z"
 }
