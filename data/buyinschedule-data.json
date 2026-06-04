@@ -102,26 +102,6 @@
       "exMonthlyDay": 30
     },
     {
-      "id": 1760576250435,
-      "stockName": "QDTY",
-      "announcementDate": "2025-10-14",
-      "exDate": "2025-10-15",
-      "announcementCycle": "weekly",
-      "exCycle": "weekly",
-      "announcementWeekday": 2,
-      "exWeekday": 3
-    },
-    {
-      "id": 1761743918569,
-      "stockName": "PTY",
-      "announcementDate": "2025-11-01",
-      "exDate": "2025-11-11",
-      "announcementCycle": "monthlyDate",
-      "exCycle": "monthlyDate",
-      "announcementMonthlyDay": 1,
-      "exMonthlyDay": 11
-    },
-    {
       "id": 1763190327140,
       "stockName": "3451",
       "announcementDate": "2025-12-06",
