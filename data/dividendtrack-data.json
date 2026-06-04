@@ -648,55 +648,6 @@
             "amount": 0.89656,
             "date": "2026-05-30",
             "shares": 1.2046
-          },
-          {
-            "period": "6月總",
-            "type": "predicted",
-            "amount": 0.89656,
-            "date": "2026-06-30",
-            "shares": 1.2046
-          },
-          {
-            "period": "7月總",
-            "type": "predicted",
-            "amount": 0.89656,
-            "date": "2026-07-30",
-            "shares": 1.2046
-          },
-          {
-            "period": "8月總",
-            "type": "predicted",
-            "amount": 0.89656,
-            "date": "2026-08-30",
-            "shares": 1.2046
-          },
-          {
-            "period": "9月總",
-            "type": "predicted",
-            "amount": 0.89656,
-            "date": "2026-09-30",
-            "shares": 1.2046
-          },
-          {
-            "period": "10月總",
-            "type": "predicted",
-            "amount": 0.89656,
-            "date": "2026-10-30",
-            "shares": 1.2046
-          },
-          {
-            "period": "11月總",
-            "type": "predicted",
-            "amount": 0.89656,
-            "date": "2026-11-30",
-            "shares": 1.2046
-          },
-          {
-            "period": "12月總",
-            "type": "predicted",
-            "amount": 0.89656,
-            "date": "2026-12-30",
-            "shares": 1.2046
           }
         ],
         "currency": "USD"
@@ -739,55 +690,6 @@
             "type": "predicted",
             "amount": 0.08316,
             "date": "2026-05-02",
-            "shares": 14.4884
-          },
-          {
-            "period": "6月",
-            "type": "predicted",
-            "amount": 0.08316,
-            "date": "2026-06-02",
-            "shares": 14.4884
-          },
-          {
-            "period": "7月",
-            "type": "predicted",
-            "amount": 0.08316,
-            "date": "2026-07-02",
-            "shares": 14.4884
-          },
-          {
-            "period": "8月",
-            "type": "predicted",
-            "amount": 0.08316,
-            "date": "2026-08-02",
-            "shares": 14.4884
-          },
-          {
-            "period": "9月",
-            "type": "predicted",
-            "amount": 0.08316,
-            "date": "2026-09-02",
-            "shares": 14.4884
-          },
-          {
-            "period": "10月",
-            "type": "predicted",
-            "amount": 0.08316,
-            "date": "2026-10-02",
-            "shares": 14.4884
-          },
-          {
-            "period": "11月",
-            "type": "predicted",
-            "amount": 0.08316,
-            "date": "2026-11-02",
-            "shares": 14.4884
-          },
-          {
-            "period": "12月",
-            "type": "predicted",
-            "amount": 0.08316,
-            "date": "2026-12-02",
             "shares": 14.4884
           }
         ],
@@ -945,5 +847,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-05-31T08:47:23.117Z"
+  "lastSync": "2026-06-04T13:48:03.422Z"
 }
