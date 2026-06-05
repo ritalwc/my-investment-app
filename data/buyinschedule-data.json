@@ -92,16 +92,6 @@
       "exEveryXMonthsDay": 29
     },
     {
-      "id": 1759368757911,
-      "stockName": "3416 3417 3419",
-      "announcementDate": "2025-10-15",
-      "exDate": "2025-10-30",
-      "announcementCycle": "monthlyDate",
-      "exCycle": "monthlyDate",
-      "announcementMonthlyDay": 15,
-      "exMonthlyDay": 30
-    },
-    {
       "id": 1763190327140,
       "stockName": "3451",
       "announcementDate": "2025-12-06",
