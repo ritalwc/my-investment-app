@@ -106,48 +106,6 @@
             "amount": 0.15,
             "date": "2026-06-04",
             "shares": 1000
-          },
-          {
-            "period": "每月股息",
-            "type": "predicted",
-            "amount": 0.14,
-            "date": "2026-07-07",
-            "shares": 1000
-          },
-          {
-            "period": "每月股息",
-            "type": "predicted",
-            "amount": 0.14,
-            "date": "2026-08-07",
-            "shares": 1000
-          },
-          {
-            "period": "每月股息",
-            "type": "predicted",
-            "amount": 0.14,
-            "date": "2026-09-07",
-            "shares": 1000
-          },
-          {
-            "period": "每月股息",
-            "type": "predicted",
-            "amount": 0.14,
-            "date": "2026-10-07",
-            "shares": 1000
-          },
-          {
-            "period": "每月股息",
-            "type": "predicted",
-            "amount": 0.14,
-            "date": "2026-11-07",
-            "shares": 1000
-          },
-          {
-            "period": "每月股息",
-            "type": "predicted",
-            "amount": 0.14,
-            "date": "2026-12-07",
-            "shares": 1000
           }
         ],
         "currency": "HKD"
@@ -369,42 +327,42 @@
             "type": "predicted",
             "amount": 0.13,
             "date": "2026-07-12",
-            "shares": 2400
+            "shares": 2800
           },
           {
             "period": "每月股息",
             "type": "predicted",
             "amount": 0.13,
             "date": "2026-08-12",
-            "shares": 2400
+            "shares": 2800
           },
           {
             "period": "每月股息",
             "type": "predicted",
             "amount": 0.13,
             "date": "2026-09-12",
-            "shares": 2400
+            "shares": 2800
           },
           {
             "period": "每月股息",
             "type": "predicted",
             "amount": 0.13,
             "date": "2026-10-12",
-            "shares": 2400
+            "shares": 2800
           },
           {
             "period": "每月股息",
             "type": "predicted",
             "amount": 0.13,
             "date": "2026-11-12",
-            "shares": 2400
+            "shares": 2800
           },
           {
             "period": "每月股息",
             "type": "predicted",
             "amount": 0.13,
             "date": "2026-12-12",
-            "shares": 2400
+            "shares": 2800
           }
         ],
         "currency": "HKD"
@@ -847,5 +805,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-06-04T13:48:03.422Z"
+  "lastSync": "2026-06-05T06:40:14.065Z"
 }
