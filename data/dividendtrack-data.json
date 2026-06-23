@@ -60,6 +60,21 @@
         ],
         "currency": "HKD"
       },
+      "3145": {
+        "name": "3145 華夏亞洲高息",
+        "code": "3145",
+        "shares": 200,
+        "dividends": [
+          {
+            "period": "每息",
+            "type": "confirmed",
+            "amount": 0.1,
+            "date": "2026-07-15",
+            "shares": 200
+          }
+        ],
+        "currency": "HKD"
+      },
       "3416": {
         "name": "3416 Global X 國指備兌認購期權主動型ETF",
         "code": "3416",
@@ -805,5 +820,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-06-18T02:13:38.637Z"
+  "lastSync": "2026-06-23T12:47:18.228Z"
 }
