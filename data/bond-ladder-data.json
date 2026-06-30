@@ -48,5 +48,15 @@
     "purchasePrice": 3999.55,
     "couponRate": 4.625,
     "type": "國債"
+  },
+  {
+    "id": "mr0gxln56vg9k9o3qql",
+    "purchaseDate": "2026-06-30",
+    "name": "4.625May31'31",
+    "maturityDate": "2031-05-31",
+    "faceValue": 4000,
+    "purchasePrice": 4090,
+    "couponRate": 4.625,
+    "type": "國債"
   }
 ]
