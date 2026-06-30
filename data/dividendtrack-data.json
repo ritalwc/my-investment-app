@@ -816,9 +816,22 @@
             "date": "2026-08-15"
           }
         ]
+      },
+      {
+        "currency": "USD",
+        "name": "4.625May31'31",
+        "maturityDate": "2031-05-31",
+        "payments": [
+          {
+            "period": "2026年11月30",
+            "type": "confirmed",
+            "amount": 92.5,
+            "date": "2026-11-30"
+          }
+        ]
       }
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-06-30T09:27:43.812Z"
+  "lastSync": "2026-06-30T09:56:15.513Z"
 }
