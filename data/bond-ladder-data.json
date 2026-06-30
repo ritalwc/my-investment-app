@@ -10,16 +10,6 @@
     "type": "公司債"
   },
   {
-    "id": "mj3wu2db41zn80qti6u",
-    "purchaseDate": "2025-09-01",
-    "name": "1.875Jun30'26",
-    "maturityDate": "2026-06-30",
-    "faceValue": 4000,
-    "purchasePrice": 3939.23,
-    "couponRate": 1.875,
-    "type": "國債"
-  },
-  {
     "id": "mj3wv4ub1u3yu3ouf2e",
     "purchaseDate": "2025-09-01",
     "name": "3.5Sep30'26",
