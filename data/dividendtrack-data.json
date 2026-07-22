@@ -71,6 +71,41 @@
             "amount": 0.1,
             "date": "2026-07-15",
             "shares": 200
+          },
+          {
+            "period": "每息",
+            "type": "predicted",
+            "amount": 0.1,
+            "date": "2026-08-17",
+            "shares": 200
+          },
+          {
+            "period": "每息",
+            "type": "predicted",
+            "amount": 0.1,
+            "date": "2026-09-15",
+            "shares": 200
+          },
+          {
+            "period": "每息",
+            "type": "predicted",
+            "amount": 0.1,
+            "date": "2026-10-15",
+            "shares": 200
+          },
+          {
+            "period": "每息",
+            "type": "predicted",
+            "amount": 0.1,
+            "date": "2026-11-16",
+            "shares": 200
+          },
+          {
+            "period": "每息",
+            "type": "predicted",
+            "amount": 0.1,
+            "date": "2026-12-15",
+            "shares": 200
           }
         ],
         "currency": "HKD"
@@ -193,6 +228,13 @@
             "type": "confirmed",
             "amount": 0.35,
             "date": "2026-04-09",
+            "shares": 2100
+          },
+          {
+            "period": "股息",
+            "type": "predicted",
+            "amount": 0.35,
+            "date": "2026-10-08",
             "shares": 2100
           }
         ],
@@ -833,5 +875,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-07-22T05:54:55.761Z"
+  "lastSync": "2026-07-22T05:58:51.088Z"
 }
