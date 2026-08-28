@@ -303,9 +303,9 @@
           },
           {
             "period": "每月股息",
-            "type": "predicted",
-            "amount": 0.81,
-            "date": "2026-09-28",
+            "type": "confirmed",
+            "amount": 1.38,
+            "date": "2026-09-25",
             "shares": 100
           },
           {
@@ -875,5 +875,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-08-27T08:43:20.220Z"
+  "lastSync": "2026-08-28T13:03:49.131Z"
 }
