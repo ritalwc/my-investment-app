@@ -827,8 +827,8 @@
           },
           {
             "period": "到期派息贖回(票息+資本)",
-            "type": "predicted",
-            "amount": 46,
+            "type": "confirmed",
+            "amount": 94,
             "date": "2026-09-09"
           }
         ]
@@ -881,5 +881,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-08-28T13:07:09.723Z"
+  "lastSync": "2026-08-28T13:09:30.081Z"
 }
