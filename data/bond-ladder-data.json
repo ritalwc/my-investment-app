@@ -1,15 +1,5 @@
 [
   {
-    "id": "mj3wsuu62bun19grz7c",
-    "purchaseDate": "2025-12-13",
-    "name": "HNDA 2.3 Sep09'26",
-    "maturityDate": "2026-09-09",
-    "faceValue": 4000,
-    "purchasePrice": 3955.96,
-    "couponRate": 2.3,
-    "type": "公司債"
-  },
-  {
     "id": "mj3wv4ub1u3yu3ouf2e",
     "purchaseDate": "2025-09-01",
     "name": "3.5Sep30'26",
@@ -58,5 +48,15 @@
     "purchasePrice": 4090,
     "couponRate": 4.625,
     "type": "國債"
+  },
+  {
+    "id": "mtuswlhtcrc9ex3nm5u",
+    "purchaseDate": "2026-09-10",
+    "name": "ACN 4.75 Jul10'29",
+    "maturityDate": "2029-07-10",
+    "faceValue": 4000,
+    "purchasePrice": 3983.4,
+    "couponRate": 4.75,
+    "type": "公司債"
   }
 ]
