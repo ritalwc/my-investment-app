@@ -544,10 +544,10 @@
           },
           {
             "period": "9月",
-            "type": "predicted",
-            "amount": 0.166726,
-            "date": "2026-09-30",
-            "shares": 10
+            "type": "confirmed",
+            "amount": 0.23907,
+            "date": "2026-09-15",
+            "shares": 15
           },
           {
             "period": "12月",
@@ -900,5 +900,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-09-11T01:37:42.269Z"
+  "lastSync": "2026-09-11T23:58:37.627Z"
 }
