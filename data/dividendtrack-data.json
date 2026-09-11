@@ -736,6 +736,12 @@
         "principal": 61734.26,
         "maturityDate": "2026-09-11",
         "interest": 544.29
+      },
+      {
+        "currency": "USD",
+        "principal": 62278.55,
+        "maturityDate": "2026-12-11",
+        "interest": 535.25
       }
     ],
     "bonds": [
@@ -894,5 +900,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-09-10T00:52:50.155Z"
+  "lastSync": "2026-09-11T01:16:16.290Z"
 }
