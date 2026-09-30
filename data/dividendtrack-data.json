@@ -95,9 +95,9 @@
           },
           {
             "period": "每息",
-            "type": "predicted",
+            "type": "confirmed",
             "amount": 0.1,
-            "date": "2026-10-15",
+            "date": "2026-10-22",
             "shares": 200
           },
           {
@@ -317,9 +317,9 @@
           },
           {
             "period": "每月股息",
-            "type": "predicted",
-            "amount": 0.81,
-            "date": "2026-10-28",
+            "type": "confirmed",
+            "amount": 1.38,
+            "date": "2026-10-26",
             "shares": 100
           },
           {
@@ -896,9 +896,15 @@
         "name": "ACN 4.75 Jul10'29",
         "maturityDate": "2029-07-10",
         "payments": []
+      },
+      {
+        "currency": "HKD",
+        "name": "4.5May31'29",
+        "maturityDate": "2029-05-31",
+        "payments": []
       }
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-09-20T23:32:55.322Z"
+  "lastSync": "2026-09-30T03:40:33.860Z"
 }
