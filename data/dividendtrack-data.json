@@ -901,10 +901,17 @@
         "currency": "HKD",
         "name": "4.5May31'29",
         "maturityDate": "2029-05-31",
-        "payments": []
+        "payments": [
+          {
+            "period": "2026年11月30",
+            "type": "confirmed",
+            "amount": 29.51,
+            "date": "2026-11-30"
+          }
+        ]
       }
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-09-30T03:40:33.860Z"
+  "lastSync": "2026-10-04T16:32:36.001Z"
 }
