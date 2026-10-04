@@ -898,7 +898,7 @@
         "payments": []
       },
       {
-        "currency": "HKD",
+        "currency": "USD",
         "name": "4.5May31'29",
         "maturityDate": "2029-05-31",
         "payments": [
@@ -913,5 +913,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-10-04T16:32:36.001Z"
+  "lastSync": "2026-10-04T16:33:11.264Z"
 }
