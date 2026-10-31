@@ -51,8 +51,8 @@
           },
           {
             "period": "末期息",
-            "type": "predicted",
-            "amount": 0.55,
+            "type": "confirmed",
+            "amount": 0.57,
             "date": "2026-11-30",
             "shares": 9224
           }
@@ -109,9 +109,9 @@
           },
           {
             "period": "每息",
-            "type": "predicted",
-            "amount": 0.1,
-            "date": "2026-11-16",
+            "type": "confirmed",
+            "amount": 0.09,
+            "date": "2026-11-19",
             "shares": 200
           },
           {
@@ -331,9 +331,9 @@
           },
           {
             "period": "每月股息",
-            "type": "predicted",
-            "amount": 0.81,
-            "date": "2026-11-28",
+            "type": "confirmed",
+            "amount": 1.38,
+            "date": "2026-11-27",
             "shares": 100
           },
           {
@@ -423,9 +423,9 @@
           },
           {
             "period": "每月股息",
-            "type": "predicted",
-            "amount": 0.13,
-            "date": "2026-11-12",
+            "type": "confirmed",
+            "amount": 0.11,
+            "date": "2026-11-10",
             "shares": 3200
           },
           {
@@ -515,9 +515,9 @@
           },
           {
             "period": "每月股息",
-            "type": "predicted",
-            "amount": 0.0122,
-            "date": "2026-11-12",
+            "type": "confirmed",
+            "amount": 0.0128,
+            "date": "2026-11-10",
             "shares": 1500
           },
           {
@@ -920,5 +920,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-10-04T16:47:16.920Z"
+  "lastSync": "2026-10-31T06:02:23.008Z"
 }
