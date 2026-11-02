@@ -257,7 +257,7 @@
       "3451": {
         "name": "3451 GLOBAL X 納斯達克100",
         "code": "3451",
-        "shares": 100,
+        "shares": 125,
         "dividends": [
           {
             "period": "每月股息",
@@ -334,14 +334,14 @@
             "type": "confirmed",
             "amount": 1.38,
             "date": "2026-11-27",
-            "shares": 100
+            "shares": 125
           },
           {
             "period": "每月股息",
             "type": "predicted",
             "amount": 0.81,
             "date": "2026-12-28",
-            "shares": 100
+            "shares": 125
           }
         ],
         "currency": "HKD"
@@ -920,5 +920,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-10-31T06:02:23.008Z"
+  "lastSync": "2026-11-02T02:38:59.107Z"
 }
