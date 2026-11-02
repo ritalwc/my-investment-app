@@ -866,7 +866,7 @@
           },
           {
             "period": "2026年11月15",
-            "type": "predicted",
+            "type": "confirmed",
             "amount": 94,
             "date": "2026-11-15"
           }
@@ -920,5 +920,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-11-02T02:39:38.241Z"
+  "lastSync": "2026-11-02T02:41:21.968Z"
 }
