@@ -33,6 +33,13 @@
             "amount": 0.29,
             "date": "2026-09-25",
             "shares": 1500
+          },
+          {
+            "period": "末期",
+            "type": "confirmed",
+            "amount": 0.29,
+            "date": "2026-11-26",
+            "shares": 1500
           }
         ],
         "currency": "HKD"
@@ -920,5 +927,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-11-02T02:47:12.318Z"
+  "lastSync": "2026-11-03T06:19:41.414Z"
 }
