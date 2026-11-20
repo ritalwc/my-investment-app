@@ -356,7 +356,7 @@
       "3466": {
         "name": "3466恒生高息股30指數ETF",
         "code": "3466",
-        "shares": 3200,
+        "shares": 3300,
         "dividends": [
           {
             "period": "每月股息",
@@ -440,7 +440,7 @@
             "type": "confirmed",
             "amount": 0.11,
             "date": "2026-12-09",
-            "shares": 3200
+            "shares": 3300
           }
         ],
         "currency": "HKD"
@@ -927,5 +927,5 @@
     ],
     "usdHkdRate": 7.78
   },
-  "lastSync": "2026-11-20T01:48:54.344Z"
+  "lastSync": "2026-11-20T02:06:02.403Z"
 }
